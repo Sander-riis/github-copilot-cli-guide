@@ -239,7 +239,6 @@
     .content-panel--active {
       display: block;
       opacity: 1;
-      transition: opacity 0.2s ease-in;
     }
 
     /* Section 9: Section Headings */
@@ -366,6 +365,22 @@
       transition: background 0.15s ease;
     }
     .collapsible__trigger::-webkit-details-marker { display: none; }
+    .collapsible__trigger::before {
+      content: '›';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .collapsible__trigger:has(.collapsible__chevron)::before { display: none; }
+    details[open] > .collapsible__trigger::before { transform: rotate(90deg); }
     .collapsible__trigger:hover { background: rgba(255,255,255,0.03); }
     .collapsible__chevron {
       width: 16px;
@@ -438,7 +453,106 @@
     /* Section 15b: Selection */
     ::selection { background: rgba(63,185,80,0.25); color: var(--color-text-primary); }
 
-    /* Section 16: github-dark highlight.js theme (inlined — do NOT add CDN link) */
+    /* Section 15c: Lists */
+    .content-section ul,
+    .content-section ol {
+      padding-left: 24px;
+      margin: 12px 0;
+      color: var(--color-text-primary);
+    }
+    .content-section li {
+      margin-bottom: 6px;
+      line-height: 1.6;
+      padding-left: 4px;
+    }
+    .content-section ul > li::marker { color: var(--color-accent); }
+    .content-section ol > li::marker { color: var(--color-text-secondary); font-weight: 600; font-size: 13px; }
+
+    /* Section 15d: Keyboard keys */
+    kbd {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 2px 7px;
+      background: var(--color-bg-subtle);
+      border: 1px solid var(--color-border-subtle);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      color: var(--color-text-primary);
+      line-height: 1.4;
+      white-space: nowrap;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    }
+
+    /* Section 15e: Content section headings */
+    .content-section h3 {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin: 28px 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .content-section h3:first-child { margin-top: 0; }
+
+    /* Section 15f: Strong emphasis */
+    .content-section strong { color: var(--color-text-primary); font-weight: 600; }
+
+    /* Section 15g: Code block pre fallback — catches pre without .code-block__pre class */
+    .code-block > pre:not(.code-block__pre),
+    .code-block > button + pre {
+      margin: 0;
+      padding: var(--spacing-md) var(--spacing-lg);
+      overflow-x: auto;
+      background: var(--color-bg-overlay);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.55;
+      tab-size: 2;
+    }
+
+    /* Section 15h: Header meta (verified date) */
+    .site-header__meta {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-left: auto;
+      opacity: 0.7;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Section 15i: Responsive */
+    @media (max-width: 900px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-areas: "header" "main";
+      }
+      .page-body {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main";
+      }
+      .sidebar { display: none; }
+      .content-panel { padding: var(--spacing-lg) var(--spacing-md); }
+      .tab-nav__tab { padding: 8px 14px; font-size: 13px; }
+    }
+    @media (max-width: 600px) {
+      .site-header__brand { padding: 8px 12px 0; gap: 8px; }
+      .site-header__subtitle { display: none; }
+      .site-header__meta { font-size: 11px; }
+      .tab-nav { padding: 0 6px; }
+      .tab-nav__tab { padding: 6px 10px; font-size: 12px; }
+      table { font-size: 12px; }
+      th, td { padding: 8px 10px; }
+    }
+
+    /* Section 15j: Content entrance animation */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .content-panel--active {
+      animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Section 16: github-dark highlight.js theme(inlined — do NOT add CDN link) */
     pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}/*!
   Theme: GitHub Dark
   Description: Dark theme as seen on github.com
@@ -446,7 +560,7 @@
   Maintainer: @Hirse
   Updated: 2021-05-15  Outdated base version: https://github.com/primer/github-syntax-dark
   Current colors taken from GitHub's CSS
-*/.hljs{color:#c9d1d9;background:#0d1117}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+*/.hljs{color:#c9d1d9;background:var(--color-bg-overlay, #181d27)}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
   </style>
 </head>
 <body>
@@ -467,7 +581,7 @@
       </svg>
       <span class="site-header__title">GitHub Copilot CLI</span>
       <span class="site-header__subtitle">Agents &amp; Skills Guide</span>
-      <span style="color: var(--color-text-secondary); font-size: 13px; margin-left: 12px;">Last verified: 2026-04-10</span>
+      <span class="site-header__meta">Last verified: 2026-04-10</span>
     </div>
     <nav class="tab-nav" role="tablist" aria-label="Guide sections">
       <button class="tab-nav__tab tab-nav__tab--active"
@@ -555,7 +669,7 @@
           <p>GitHub Copilot CLI is a standalone terminal AI agent — not a wrapper around <code>gh</code> and not the same as the IDE extension. You invoke it with <code>copilot</code> from any shell, and it maintains its own session context, tool permissions, and execution mode stack. Unlike the IDE extension, the CLI can traverse your filesystem, run shell commands, create and modify files, and interact with GitHub — without switching context from your terminal.</p>
           <p>The CLI is built for developers who work in the terminal. Run it interactively for open-ended exploration, send focused one-shot prompts with <code>-p</code>, or wire it into scripts. The same agents and skills ecosystem available in Copilot cloud works here too — your custom <code>.agent.md</code> files and <code>.github/skills/</code> directory are picked up automatically.</p>
 
-          <h3 style="margin: 24px 0 8px;">Command Patterns</h3>
+          <h3>Command Patterns</h3>
           <p>Four core invocation forms cover the majority of use cases. The bare <code>copilot</code> command opens a persistent interactive session; <code>-p</code> sends a single prompt and exits.</p>
 
           <div class="code-block" data-lang="bash">
@@ -760,7 +874,7 @@ copilot --resume</code></pre>
           <p>A Copilot CLI agent is a persona with its own isolated context window, a defined set of tool permissions, and a system prompt that shapes its behavior. When you invoke an agent, Copilot doesn't continue the current session — it opens a separate context and routes your request through the agent's instructions. This means agents can be highly specialized: a security auditor that never writes files, a test runner that only touches test directories, or a GSD executor that follows a strict task workflow.</p>
           <p>Agents differ from <code>copilot-instructions.md</code> custom instructions in that they're invokable on demand and session-scoped, rather than always-on. You can have many agents in your repo and invoke only the one suited to the current task. Agents can also be invoked by other agents as subagents — enabling parallel, coordinated workflows.</p>
 
-          <h3 style="margin: 24px 0 8px;">Agent Profile Format</h3>
+          <h3>Agent Profile Format</h3>
           <p>A CLI agent is a file with the <code>.agent.md</code> double extension. The YAML frontmatter defines the agent's identity and capabilities; the Markdown body becomes the agent's system prompt — the instructions Copilot follows when this agent is active. Only <code>description</code> is required; all other frontmatter fields are optional.</p>
 
           <div class="code-block" data-lang="yaml">
@@ -905,7 +1019,7 @@ precision and in the correct order.
         <section id="agents-reference" class="content-section">
           <h2 class="section-heading">Agents Reference</h2>
 
-          <h3 style="margin: 0 0 8px;">Built-in Agents</h3>
+          <h3>Built-in Agents</h3>
           <p>Copilot ships with five built-in agents. They are always available — no <code>.agent.md</code> file required. Most are invoked automatically through trigger-word inference; <code>research</code> is the exception and must be called explicitly via <code>/research</code>.</p>
 
           <table>
@@ -1016,7 +1130,7 @@ copilot --agent gsd-executor --autopilot -p "execute phase 3"</code></pre>
             </div>
           </details>
 
-          <h3 style="margin: 32px 0 8px;">Subagent Orchestration</h3>
+          <h3>Subagent Orchestration</h3>
           <p>An agent becomes an orchestrator when it invokes other agents as subagents. The orchestrating agent receives the full task, decomposes it, assigns each piece to the appropriate subagent, dispatches them, and synthesizes the results. Each subagent runs in its own isolated context window — it does not share memory with the orchestrator or with other subagents running simultaneously.</p>
           <p>Context isolation is the architectural property that makes parallelism safe. A <code>code-review</code> subagent and a <code>task</code> subagent can both inspect the same codebase simultaneously without their findings interfering. The orchestrator sees only the subagent outputs, not the intermediate reasoning each accumulated. This also means subagents cannot accidentally leak sensitive context between tasks.</p>
 
@@ -1099,7 +1213,7 @@ copilot --autopilot
             <p><strong>Skills are an open standard.</strong> The Agent Skills specification defines a portable format that works across Copilot CLI, GitHub cloud agents, and VS Code agent mode. A <code>SKILL.md</code> file you write for the CLI works identically in all three surfaces — no adaptation needed.</p>
           </div>
 
-          <h3 style="margin: 24px 0 8px;">SKILL.md Format</h3>
+          <h3>SKILL.md Format</h3>
           <p>A skill is defined by a <code>SKILL.md</code> file inside a named subdirectory under <code>.github/skills/</code>. The directory name becomes the skill's invocation name. YAML frontmatter declares the skill's identity and permissions; the Markdown body becomes the instructions Copilot follows when the skill is active.</p>
 
           <div class="code-block" data-lang="yaml">
@@ -1293,7 +1407,7 @@ echo "Migrations complete."</code></pre>
         <section id="skills-reference" class="content-section">
           <h2 class="section-heading">Skills Reference</h2>
 
-          <h3 style="margin: 0 0 8px;">Skills CLI Commands</h3>
+          <h3>Skills CLI Commands</h3>
           <p>Manage and invoke skills from the Copilot CLI. The <code>/skills</code> prefix handles discovery and management; invoking a skill directly uses <code>/skill-name</code> syntax with the skill's directory name.</p>
 
           <details class="collapsible">
@@ -1503,7 +1617,7 @@ gh copilot mcp add github -- npx -y @modelcontextprotocol/server-github</code></
               </div>
               <p>Access GitHub's API through Copilot. Create issues, review PRs, search repositories, and manage projects — all from your terminal conversation.</p>
               <p><strong>Tools provided:</strong> <code>create_issue</code>, <code>list_issues</code>, <code>create_pull_request</code>, <code>search_repositories</code>, <code>get_file_contents</code></p>
-              <div class="callout callout--warn">
+              <div class="callout callout--warning">
                 <span class="callout__type">Auth required</span>
                 <p>Set <code>GITHUB_TOKEN</code> in the env field or ensure <code>gh auth</code> is configured.</p>
               </div>
@@ -1521,7 +1635,7 @@ gh copilot mcp add postgres -- npx -y @modelcontextprotocol/server-postgres</cod
               </div>
               <p>Let Copilot query your database directly. It can inspect schemas, run SELECT queries, and help debug data issues without you leaving the conversation.</p>
               <p><strong>Tools provided:</strong> <code>query</code>, <code>list_tables</code>, <code>describe_table</code></p>
-              <div class="callout callout--warn">
+              <div class="callout callout--warning">
                 <span class="callout__type">Caution</span>
                 <p>Only connect to development databases. The server executes real SQL — never point it at production.</p>
               </div>
@@ -1767,11 +1881,18 @@ function initTabs() {
 
 /* -- COPY TO CLIPBOARD -- */
 function initCopyButtons() {
+  // Upgrade plain-text copy buttons (MCP tab) to consistent format
+  document.querySelectorAll('.code-block__copy').forEach(btn => {
+    if (!btn.querySelector('.code-block__copy-label')) {
+      btn.textContent = '';
+      btn.innerHTML = '<span class="code-block__copy-label">⧉ Copy</span>';
+    }
+  });
+
   document.addEventListener('click', async (e) => {
     const btn = e.target.closest('.code-block__copy');
     if (!btn) return;
 
-    // CRITICAL: .textContent NOT .innerText — innerText returns empty for display:none elements
     const code = btn.closest('.code-block').querySelector('code').textContent;
 
     try {
@@ -1791,13 +1912,13 @@ function initCopyButtons() {
     const iconCheck = btn.querySelector('.icon--check');
 
     btn.classList.add('code-block__copy--copied');
-    if (label)     label.textContent = 'Copied!';
+    if (label)     label.textContent = '✓ Copied!';
     if (iconCopy)  iconCopy.classList.add('icon--hidden');
     if (iconCheck) iconCheck.classList.remove('icon--hidden');
 
     setTimeout(() => {
       btn.classList.remove('code-block__copy--copied');
-      if (label)     label.textContent = 'Copy code';
+      if (label)     label.textContent = iconCopy ? 'Copy code' : '⧉ Copy';
       if (iconCopy)  iconCopy.classList.remove('icon--hidden');
       if (iconCheck) iconCheck.classList.add('icon--hidden');
     }, 2000);
