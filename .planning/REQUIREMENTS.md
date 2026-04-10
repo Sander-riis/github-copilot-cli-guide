@@ -43,17 +43,17 @@
 
 ### Skills Section
 
-- [ ] **SKIL-01**: Section explains what skills are and how they differ from agents and custom instructions
-- [ ] **SKIL-02**: Skills as an open standard (Agent Skills spec, works across Copilot CLI, cloud agent, VS Code agent mode) is noted
-- [ ] **SKIL-03**: Skill directory structure is shown: `.github/skills/my-skill/SKILL.md` (subdirectory + exact filename `SKILL.md`)
-- [ ] **SKIL-04**: SKILL.md frontmatter fields are documented: `name` (required, lowercase-hyphens), `description` (required), `license` (optional), `allowed-tools` (optional)
-- [ ] **SKIL-05**: A complete annotated `SKILL.md` example is included — every field and body section explained
-- [ ] **SKIL-06**: A script-enabled skill example is shown: `SKILL.md` + companion shell script, demonstrating `allowed-tools: shell`
-- [ ] **SKIL-07**: A security warning is included alongside any `allowed-tools: shell` or `allowed-tools: bash` usage
-- [ ] **SKIL-08**: Skill file locations are documented: `.github/skills/` (project), `~/.copilot/skills/` (personal)
-- [ ] **SKIL-09**: All key Skills CLI commands are shown: `/skills list`, `/skills info SKILL`, `/skills add PATH`, `/skills reload`, `/skills remove SKILL-DIRECTORY`
-- [ ] **SKIL-10**: Skill invocation syntax is shown: `/skill-name` in a prompt
-- [ ] **SKIL-11**: Community skill resources are referenced: `anthropics/skills`, `github/awesome-copilot`
+- [x] **SKIL-01**: Section explains what skills are and how they differ from agents and custom instructions
+- [x] **SKIL-02**: Skills as an open standard (Agent Skills spec, works across Copilot CLI, cloud agent, VS Code agent mode) is noted
+- [x] **SKIL-03**: Skill directory structure is shown: `.github/skills/my-skill/SKILL.md` (subdirectory + exact filename `SKILL.md`)
+- [x] **SKIL-04**: SKILL.md frontmatter fields are documented: `name` (required, lowercase-hyphens), `description` (required), `license` (optional), `allowed-tools` (optional)
+- [x] **SKIL-05**: A complete annotated `SKILL.md` example is included — every field and body section explained
+- [x] **SKIL-06**: A script-enabled skill example is shown: `SKILL.md` + companion shell script, demonstrating `allowed-tools: shell`
+- [x] **SKIL-07**: A security warning is included alongside any `allowed-tools: shell` or `allowed-tools: bash` usage
+- [x] **SKIL-08**: Skill file locations are documented: `.github/skills/` (project), `~/.copilot/skills/` (personal)
+- [x] **SKIL-09**: All key Skills CLI commands are shown: `/skills list`, `/skills info SKILL`, `/skills add PATH`, `/skills reload`, `/skills remove SKILL-DIRECTORY`
+- [x] **SKIL-10**: Skill invocation syntax is shown: `/skill-name` in a prompt
+- [x] **SKIL-11**: Community skill resources are referenced: `anthropics/skills`, `github/awesome-copilot`
 
 ---
 
@@ -118,17 +118,17 @@
 | AGNT-08 | Phase 2 | Complete |
 | AGNT-09 | Phase 2 | Complete |
 | AGNT-10 | Phase 2 | Complete |
-| SKIL-01 | Phase 3 | Pending |
-| SKIL-02 | Phase 3 | Pending |
-| SKIL-03 | Phase 3 | Pending |
-| SKIL-04 | Phase 3 | Pending |
-| SKIL-05 | Phase 3 | Pending |
-| SKIL-06 | Phase 3 | Pending |
-| SKIL-07 | Phase 3 | Pending |
-| SKIL-08 | Phase 3 | Pending |
-| SKIL-09 | Phase 3 | Pending |
-| SKIL-10 | Phase 3 | Pending |
-| SKIL-11 | Phase 3 | Pending |
+| SKIL-01 | Phase 3 | Complete |
+| SKIL-02 | Phase 3 | Complete |
+| SKIL-03 | Phase 3 | Complete |
+| SKIL-04 | Phase 3 | Complete |
+| SKIL-05 | Phase 3 | Complete |
+| SKIL-06 | Phase 3 | Complete |
+| SKIL-07 | Phase 3 | Complete |
+| SKIL-08 | Phase 3 | Complete |
+| SKIL-09 | Phase 3 | Complete |
+| SKIL-10 | Phase 3 | Complete |
+| SKIL-11 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 36 total
