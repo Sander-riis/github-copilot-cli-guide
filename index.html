@@ -121,17 +121,18 @@
     .site-header {
       grid-area: header;
       display: flex;
-      flex-direction: column;
-      background: linear-gradient(180deg, #141924 0%, var(--color-bg-surface) 100%);
+      align-items: center;
+      background: var(--color-bg-surface);
       border-bottom: 1px solid var(--color-border);
+      padding: 0 20px;
+      gap: 16px;
       z-index: 10;
     }
     .site-header__brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 14px 20px 0;
-      flex: 1;
+      flex-shrink: 0;
     }
     .site-header__icon {
       width: 22px;
@@ -141,33 +142,33 @@
       filter: drop-shadow(0 0 6px rgba(63,185,80,0.3));
     }
     .site-header__title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--color-text-primary);
       line-height: 1.2;
       letter-spacing: -0.02em;
     }
     .site-header__subtitle {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 400;
       color: var(--color-text-secondary);
-      margin-left: 4px;
+      margin-left: 2px;
     }
 
     /* Section 6: Tab Navigation — Pill Tabs */
     .tab-nav {
       display: flex;
       align-items: center;
-      padding: 10px 16px 14px;
-      gap: 6px;
+      gap: 4px;
+      margin-left: auto;
     }
     .tab-nav__tab {
-      padding: 7px 20px;
+      padding: 6px 18px;
       background: none;
       border: 1px solid transparent;
       border-radius: 100px;
       color: var(--color-text-secondary);
-      font-size: 13.5px;
+      font-size: 13px;
       font-family: var(--font-sans);
       font-weight: 500;
       cursor: pointer;
@@ -535,14 +536,17 @@
       }
       .sidebar { display: none; }
       .content-panel { padding: var(--spacing-lg) var(--spacing-md); }
-      .tab-nav__tab { padding: 8px 14px; font-size: 13px; }
+      .site-header { flex-wrap: wrap; padding: 10px 16px; gap: 8px; }
+      .site-header__subtitle { display: none; }
+      .site-header__meta { display: none; }
+      .tab-nav { margin-left: 0; }
+      .tab-nav__tab { padding: 5px 14px; font-size: 12.5px; }
     }
     @media (max-width: 600px) {
-      .site-header__brand { padding: 8px 12px 0; gap: 8px; }
-      .site-header__subtitle { display: none; }
-      .site-header__meta { font-size: 11px; }
-      .tab-nav { padding: 0 6px; }
-      .tab-nav__tab { padding: 6px 10px; font-size: 12px; }
+      .site-header__brand { gap: 8px; }
+      .site-header__title { font-size: 15px; }
+      .tab-nav { gap: 2px; }
+      .tab-nav__tab { padding: 5px 10px; font-size: 11.5px; }
       table { font-size: 12px; }
       th, td { padding: 8px 10px; }
     }
@@ -585,7 +589,6 @@
       </svg>
       <span class="site-header__title">GitHub Copilot CLI</span>
       <span class="site-header__subtitle">Agents &amp; Skills Guide</span>
-      <span class="site-header__meta">Last verified: 2026-04-10</span>
     </div>
     <nav class="tab-nav" role="tablist" aria-label="Guide sections">
       <button class="tab-nav__tab tab-nav__tab--active"
@@ -613,6 +616,7 @@
               aria-controls="section-mcp"
               data-tab="mcp">MCP Servers</button>
     </nav>
+    <span class="site-header__meta">Last verified: 2026-04-10</span>
   </header>
 
   <!-- PAGE BODY: sidebar + main -->
