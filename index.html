@@ -1020,10 +1020,8 @@ copilot --autopilot
                class="content-panel content-panel--hidden">
 
         <section id="skills-overview" class="content-section">
-          <h2 class="section-heading">Skills — Overview</h2>
-          <p>Content for this section will be added in Phase 2.</p>
+          <h2 class="section-heading">Skills Overview</h2>
 
-          <!-- Code block sample (bash) -->
           <div class="code-block" data-lang="bash">
             <div class="code-block__header">
               <span class="code-block__lang">bash</span>
@@ -1037,39 +1035,210 @@ copilot --autopilot
                 <span class="code-block__copy-label">Copy code</span>
               </button>
             </div>
-            <pre class="code-block__pre"><code class="language-bash">copilot /skills list</code></pre>
+            <pre class="code-block__pre"><code class="language-bash">.github/
+└── skills/
+    └── my-skill/
+        ├── SKILL.md          # required — skill definition
+        └── helpers/           # optional — companion scripts
+            └── run.sh</code></pre>
           </div>
 
-          <!-- Collapsible sample -->
+          <p>Skills are reusable instruction bundles — unlike agents, they don't get their own context window. When you invoke a skill with <code>/skill-name</code>, Copilot loads the skill's instructions into the current session alongside your conversation. Think of skills as modular expertise you can pull in on demand: a deploy checklist, a code review procedure, a database migration workflow. They're lighter than agents (no isolated context, no persona) but more structured than a raw prompt.</p>
+
+          <div class="callout callout--info">
+            <span class="callout__type">Info</span>
+            <p><strong>Skills are an open standard.</strong> The Agent Skills specification defines a portable format that works across Copilot CLI, GitHub cloud agents, and VS Code agent mode. A <code>SKILL.md</code> file you write for the CLI works identically in all three surfaces — no adaptation needed.</p>
+          </div>
+
+          <h3 style="margin: 24px 0 8px;">SKILL.md Format</h3>
+          <p>A skill is defined by a <code>SKILL.md</code> file inside a named subdirectory under <code>.github/skills/</code>. The directory name becomes the skill's invocation name. YAML frontmatter declares the skill's identity and permissions; the Markdown body becomes the instructions Copilot follows when the skill is active.</p>
+
+          <div class="code-block" data-lang="yaml">
+            <div class="code-block__header">
+              <span class="code-block__filepath">
+                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75z"/>
+                </svg>
+                .github/skills/deploy/SKILL.md
+              </span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-yaml">---
+name: deploy                              # required — lowercase-hyphens; invoked as /deploy
+description: >                            # required — Copilot reads this to decide when to suggest
+  Deploys the current project to the configured environment. Reads deployment
+  config from deploy.yaml, runs pre-deploy checks, and executes the deploy
+  pipeline. Use when asked to deploy, release, or push to production.
+license: MIT                              # optional — metadata only; not enforced by Copilot
+allowed-tools:                            # optional — restricts which tools this skill may use
+  - shell                                 #   ⚠ grants arbitrary command execution
+  - view                                  #   read files and directories
+---
+
+# Deploy Skill
+
+When invoked, follow this sequence:
+
+1. Read `deploy.yaml` from the project root
+2. Run pre-deploy checks: `npm test` and `npm run lint`
+3. If checks pass, execute the deploy command from the config
+4. Report the deployment status with the environment URL</code></pre>
+          </div>
+
           <details class="collapsible">
             <summary class="collapsible__trigger">
               <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
               </svg>
-              Reference Details
+              Frontmatter Field Reference
             </summary>
             <div class="collapsible__body">
-              <p>Content for this section will be added in Phase 2.</p>
+              <table>
+                <thead>
+                  <tr><th>Field</th><th>Required?</th><th>Type</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>name</code></td>
+                    <td>Yes</td>
+                    <td>string (lowercase-hyphens)</td>
+                    <td>Skill identifier — this is what you type after <code>/</code> to invoke the skill (e.g., <code>/deploy</code>). Must match the directory name.</td>
+                  </tr>
+                  <tr>
+                    <td><code>description</code></td>
+                    <td>Yes</td>
+                    <td>string</td>
+                    <td>Tells Copilot <em>what</em> this skill does. Used for suggestion matching — when a prompt aligns with the description, Copilot may recommend the skill. Be specific about the task domain.</td>
+                  </tr>
+                  <tr>
+                    <td><code>license</code></td>
+                    <td>No</td>
+                    <td>string</td>
+                    <td>License identifier (e.g., <code>"MIT"</code>). Metadata only — not enforced by Copilot. Useful for shared or community skills.</td>
+                  </tr>
+                  <tr>
+                    <td><code>allowed-tools</code></td>
+                    <td>No</td>
+                    <td>list of strings</td>
+                    <td>Tools this skill may use. Valid values: <code>shell</code>, <code>view</code>, <code>write</code>, <code>search</code>. If omitted, the skill inherits the session's tool permissions. <strong><code>shell</code> grants arbitrary command execution — see security warning below.</strong></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </details>
 
-          <!-- All four callout variants -->
-          <div class="callout callout--info">
-            <span class="callout__type">Info</span>
-            <p>Sample callout — content will be added in Phase 2.</p>
-          </div>
-          <div class="callout callout--warning">
-            <span class="callout__type">Warning</span>
-            <p>Sample callout — content will be added in Phase 2.</p>
-          </div>
-          <div class="callout callout--danger">
-            <span class="callout__type">Danger</span>
-            <p>Sample callout — content will be added in Phase 2.</p>
-          </div>
-          <div class="callout callout--tip">
-            <span class="callout__type">Tip</span>
-            <p>Sample callout — content will be added in Phase 2.</p>
-          </div>
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Script-Enabled Skill Example
+            </summary>
+            <div class="collapsible__body">
+              <p>A skill can include companion scripts that Copilot executes via <code>allowed-tools: shell</code>. The SKILL.md body references the script by relative path; Copilot runs it when the skill is invoked.</p>
+
+              <div class="code-block" data-lang="yaml">
+                <div class="code-block__header">
+                  <span class="code-block__filepath">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75z"/>
+                    </svg>
+                    .github/skills/db-migrate/SKILL.md
+                  </span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-yaml">---
+name: db-migrate
+description: >
+  Runs database migrations using the companion shell script. Use when asked
+  to migrate, update schema, or apply pending database changes.
+allowed-tools:
+  - shell
+---
+
+# Database Migration Skill
+
+Run the companion migration script located at `./helpers/migrate.sh`.
+Pass the target environment as the first argument.</code></pre>
+              </div>
+
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header">
+                  <span class="code-block__filepath">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75z"/>
+                    </svg>
+                    .github/skills/db-migrate/helpers/migrate.sh
+                  </span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+ENV="${1:-development}"
+echo "Running migrations for: $ENV"
+npx prisma migrate deploy --schema=./prisma/schema.prisma
+echo "Migrations complete."</code></pre>
+              </div>
+
+              <div class="callout callout--danger">
+                <span class="callout__type">Danger</span>
+                <p><strong><code>allowed-tools: shell</code> grants arbitrary command execution.</strong> A skill with shell access can run any command on your machine with your user permissions — including modifying files, installing packages, accessing credentials, and making network requests. Only enable shell access for skills you have personally reviewed and trust. Never grant shell access to third-party skills without reading every line of their source.</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Skill File Locations
+            </summary>
+            <div class="collapsible__body">
+              <table>
+                <thead>
+                  <tr><th>Scope</th><th>Path</th><th>Available To</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Project (repo)</td>
+                    <td><code>.github/skills/</code></td>
+                    <td>Anyone with repo access</td>
+                  </tr>
+                  <tr>
+                    <td>Personal (user)</td>
+                    <td><code>~/.copilot/skills/</code></td>
+                    <td>Only you, across all repos</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
         </section>
 
         <section id="skills-reference" class="content-section">
