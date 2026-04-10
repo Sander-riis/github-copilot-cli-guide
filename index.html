@@ -130,7 +130,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 20px 0;
+      padding: 14px 20px 0;
       flex: 1;
     }
     .site-header__icon {
@@ -154,38 +154,42 @@
       margin-left: 4px;
     }
 
-    /* Section 6: Tab Navigation */
+    /* Section 6: Tab Navigation — Pill Tabs */
     .tab-nav {
       display: flex;
-      align-items: flex-end;
-      padding: 0 12px;
-      gap: 2px;
+      align-items: center;
+      padding: 10px 16px 14px;
+      gap: 6px;
     }
     .tab-nav__tab {
-      padding: 8px 22px;
+      padding: 7px 20px;
       background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
+      border: 1px solid transparent;
+      border-radius: 100px;
       color: var(--color-text-secondary);
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: var(--font-sans);
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
-      min-height: 40px;
       white-space: nowrap;
-      letter-spacing: 0.01em;
-      border-radius: 6px 6px 0 0;
     }
     .tab-nav__tab:hover {
       color: var(--color-text-primary);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.05);
+      border-color: var(--color-border-muted);
     }
     .tab-nav__tab--active {
-      color: var(--color-text-primary);
-      border-bottom-color: var(--color-accent);
+      color: #fff;
+      background: var(--color-accent);
+      border-color: var(--color-accent);
       font-weight: 600;
-      background: rgba(63,185,80,0.06);
+      box-shadow: 0 0 12px rgba(63,185,80,0.25);
+    }
+    .tab-nav__tab--active:hover {
+      background: #46c958;
+      border-color: #46c958;
+      color: #fff;
     }
 
     /* Section 7: Sidebar Navigation */
