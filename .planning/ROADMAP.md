@@ -61,7 +61,10 @@ Plans:
   3. All Skills CLI commands (`/skills list`, `info`, `add`, `reload`, `remove`) and `/skill-name` invocation syntax are documented
   4. Community skill resources (`anthropics/skills`, `github/awesome-copilot`) are referenced and skills-as-open-standard is noted
   5. File opens offline with no network requests and carries a "last verified" date in the header
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 03-01-PLAN.md — Skills tab content (overview + reference sections + header date)
+- [ ] 03-02-PLAN.md — Human verification checkpoint for all Phase 3 content
 
 ## Progress
 
