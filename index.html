@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Copilot CLI — AI Agents &amp; Skills Guide</title>
+  <style>
+    /* Section 1: CSS Custom Properties */
+    :root {
+      /* Backgrounds */
+      --color-bg-canvas:     #0d1117;
+      --color-bg-surface:    #161b22;
+      --color-bg-overlay:    #1c2128;
+      --color-bg-subtle:     #21262d;
+
+      /* Borders */
+      --color-border:        #30363d;
+      --color-border-muted:  #21262d;
+      --color-border-subtle: #484f58;
+
+      /* Text */
+      --color-text-primary:  #e6edf3;
+      --color-text-secondary:#8b949e;
+      --color-text-link:     #58a6ff;
+
+      /* Accent */
+      --color-accent:        #3fb950;
+      --color-accent-subtle: #1a3a25;
+
+      /* Semantic */
+      --color-success:       #3fb950;
+      --color-warning:       #e3b341;
+      --color-danger:        #f85149;
+      --color-info:          #58a6ff;
+
+      /* Spacing (8-point sub-grid) */
+      --spacing-xs:  4px;
+      --spacing-sm:  8px;
+      --spacing-md:  16px;
+      --spacing-lg:  24px;
+      --spacing-xl:  32px;
+      --spacing-2xl: 48px;
+
+      /* Typography */
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      --font-size-base: 15px;
+      --font-size-sm:   13px;
+      --font-size-lg:   17px;
+      --font-size-xl:   20px;
+      --line-height-base:  1.6;
+      --line-height-tight: 1.3;
+
+      /* Layout */
+      --sidebar-width:     260px;
+      --header-height:     56px;
+      --content-max-width: 860px;
+      --border-radius:     6px;
+      --border-radius-lg:  12px;
+    }
+
+    /* Section 2: Reset / Base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-base);
+      font-weight: 400;
+      line-height: var(--line-height-base);
+      color: var(--color-text-primary);
+      background: var(--color-bg-canvas);
+    }
+    a { color: var(--color-text-link); }
+    p { margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* Section 3: Typography */
+    h1 { font-size: 20px; font-weight: 600; line-height: 1.2; color: var(--color-text-primary); }
+    h2, h3 { font-size: 17px; font-weight: 600; line-height: 1.3; color: var(--color-text-primary); }
+    h4 { font-size: 15px; font-weight: 600; color: var(--color-text-primary); }
+    :not(pre) > code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: var(--color-bg-overlay);
+      padding: 2px 4px;
+      border-radius: 3px;
+      color: var(--color-text-primary);
+    }
+
+    /* Section 4: Layout Grid */
+    body {
+      display: grid;
+      grid-template-rows: var(--header-height) 1fr;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      grid-template-areas:
+        "header header"
+        "sidebar main";
+      height: 100vh;
+      overflow: hidden;
+    }
+    .page-body {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      grid-template-areas: "sidebar main";
+      overflow: hidden;
+    }
+    .sidebar      { grid-area: sidebar; overflow-y: auto; background: var(--color-bg-surface); border-right: 1px solid var(--color-border); }
+    .main-content { grid-area: main;    overflow-y: auto; }
+
+    /* Section 5: Site Header */
+    .site-header {
+      grid-area: header;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg-surface);
+      border-bottom: 1px solid var(--color-border);
+      z-index: 10;
+    }
+    .site-header__brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px 0;
+      flex: 1;
+    }
+    .site-header__icon {
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-secondary);
+      flex-shrink: 0;
+    }
+    .site-header__title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      line-height: 1.2;
+    }
+    .site-header__subtitle {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      margin-left: 4px;
+    }
+
+    /* Section 6: Tab Navigation */
+    .tab-nav {
+      display: flex;
+      align-items: flex-end;
+      padding: 0 8px;
+    }
+    .tab-nav__tab {
+      padding: 8px 24px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--color-text-secondary);
+      font-size: 15px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      min-height: 44px;
+      white-space: nowrap;
+    }
+    .tab-nav__tab:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-subtle);
+    }
+    .tab-nav__tab--active {
+      color: var(--color-text-primary);
+      border-bottom-color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* Section 7: Sidebar Navigation */
+    .sidebar-nav { padding: 12px 0; }
+    .sidebar-nav--hidden { display: none; }
+    .sidebar-nav__group-label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 8px 4px 16px;
+    }
+    .sidebar-nav__list,
+    .sidebar-nav__sublist { list-style: none; }
+    .sidebar-nav__link {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      padding: 4px 8px 4px 16px;
+      text-decoration: none;
+      transition: color 0.1s, background 0.1s;
+      border-radius: 0;
+    }
+    .sidebar-nav__link:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-subtle);
+    }
+    /* CRITICAL: Use box-shadow inset — NOT border-left — to avoid shifting padding-left */
+    .sidebar-nav__link--active {
+      color: var(--color-text-link);
+      box-shadow: inset 3px 0 0 var(--color-accent);
+      font-weight: 600;
+      /* padding-left: 16px is UNCHANGED — box-shadow does not consume layout space */
+    }
+
+    /* Section 8: Content Panels */
+    .content-panel {
+      max-width: var(--content-max-width);
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+      opacity: 0;
+    }
+    .content-panel--hidden {
+      display: none;
+      opacity: 0;
+    }
+    .content-panel--active {
+      display: block;
+      opacity: 1;
+      transition: opacity 0.15s ease-in;
+    }
+
+    /* Section 9: Section Headings */
+    .content-section {
+      margin-bottom: var(--spacing-2xl);
+    }
+    .section-heading {
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--color-text-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .content-section p {
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    /* Section 10: Code Block Component */
+    .code-block {
+      margin: var(--spacing-lg) 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+    .code-block__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 12px;
+      background: var(--color-bg-subtle);
+      border-bottom: 1px solid var(--color-border);
+      height: 36px;
+    }
+    .code-block__lang {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      text-transform: lowercase;
+    }
+    .code-block__filepath {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--color-text-link);
+    }
+    .code-block__copy {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: 2px 8px;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      color: var(--color-text-secondary);
+      font-size: 13px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      min-height: 28px;
+    }
+    .code-block__copy:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-border-subtle);
+    }
+    .code-block__copy--copied {
+      color: var(--color-success);
+      border-color: var(--color-success);
+    }
+    .code-block__pre {
+      margin: 0;
+      padding: var(--spacing-md);
+      overflow-x: auto;
+      background: var(--color-bg-overlay);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      tab-size: 2;
+    }
+    .code-block__pre code {
+      font-family: inherit;
+      font-size: inherit;
+      background: none;
+      padding: 0;
+      border-radius: 0;
+    }
+    .icon { display: inline-block; vertical-align: middle; }
+    .icon--hidden { display: none !important; }
+
+    /* Section 11: Collapsible Component */
+    .collapsible {
+      margin: var(--spacing-md) 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      background: var(--color-bg-surface);
+    }
+    .collapsible__trigger {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 12px 16px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--color-text-primary);
+      font-size: 15px;
+      font-weight: 600;
+      user-select: none;
+    }
+    .collapsible__trigger::-webkit-details-marker { display: none; }
+    .collapsible__trigger:hover { background: var(--color-bg-subtle); }
+    .collapsible__chevron {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-secondary);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    /* CSS-only rotation — no JS required for collapsible open/close */
+    details[open] .collapsible__chevron {
+      transform: rotate(90deg);
+    }
+    .collapsible__body {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-bg-canvas);
+    }
+
+    /* Section 12: Callout Boxes — 4 variants */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+    .callout__type {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .callout p { margin-bottom: 0; }
+
+    .callout--info    { border-color: #58a6ff; background: rgba(88, 166, 255, 0.08); }
+    .callout--info    .callout__type { color: #58a6ff; }
+
+    .callout--warning { border-color: #e3b341; background: rgba(227, 179, 65, 0.08); }
+    .callout--warning .callout__type { color: #e3b341; }
+
+    .callout--danger  { border-color: #f85149; background: rgba(248, 81, 73, 0.08); }
+    .callout--danger  .callout__type { color: #f85149; }
+
+    .callout--tip     { border-color: #3fb950; background: rgba(63, 185, 80, 0.08); }
+    .callout--tip     .callout__type { color: #3fb950; }
+
+    /* Section 13: Tables */
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th, td { padding: 8px 12px; border: 1px solid var(--color-border); text-align: left; }
+    th { background: var(--color-bg-surface); font-weight: 600; color: var(--color-text-primary); }
+    td { color: var(--color-text-primary); }
+    tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+    /* Section 14: Scrollbar styling */
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: var(--color-bg-canvas); }
+    *::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+    *::-webkit-scrollbar-thumb:hover { background: var(--color-border-subtle); }
+
+    /* Section 15: Focus visible */
+    *:focus-visible {
+      outline: 2px solid var(--color-text-link);
+      outline-offset: 2px;
+    }
+
+    /* Section 16: github-dark highlight.js theme (inlined — do NOT add CDN link) */
+    pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}/*!
+  Theme: GitHub Dark
+  Description: Dark theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15  Outdated base version: https://github.com/primer/github-syntax-dark
+  Current colors taken from GitHub's CSS
+*/.hljs{color:#c9d1d9;background:#0d1117}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+  </style>
+</head>
+<body>
+
+  <!-- HEADER: brand + tab nav -->
+  <header class="site-header">
+    <div class="site-header__brand">
+      <!-- Copilot SVG icon — inline, 20×20, currentColor fill -->
+      <svg class="site-header__icon" aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+          0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+          -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+          .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+          -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27
+          .68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12
+          .51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+          0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      <span class="site-header__title">GitHub Copilot CLI</span>
+      <span class="site-header__subtitle">Agents &amp; Skills Guide</span>
+    </div>
+    <nav class="tab-nav" role="tablist" aria-label="Guide sections">
+      <button class="tab-nav__tab tab-nav__tab--active"
+              role="tab"
+              id="tab-cli-intro"
+              aria-selected="true"
+              aria-controls="section-cli-intro"
+              data-tab="cli-intro">CLI Intro</button>
+      <button class="tab-nav__tab"
+              role="tab"
+              id="tab-agents"
+              aria-selected="false"
+              aria-controls="section-agents"
+              data-tab="agents">Agents</button>
+      <button class="tab-nav__tab"
+              role="tab"
+              id="tab-skills"
+              aria-selected="false"
+              aria-controls="section-skills"
+              data-tab="skills">Skills</button>
+    </nav>
+  </header>
+
+  <!-- PAGE BODY: sidebar + main -->
+  <div class="page-body">
+
+    <!-- SIDEBAR: three pre-authored navs, one shown per active tab -->
+    <aside class="sidebar" aria-label="Section navigation">
+
+      <!-- CLI Intro sidebar nav — visible by default -->
+      <nav class="sidebar-nav" id="sidebar-nav-cli-intro" aria-label="CLI Intro navigation">
+        <ul class="sidebar-nav__list">
+          <li><span class="sidebar-nav__group-label">CLI Intro</span></li>
+          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#cli-overview">Overview</a></li>
+          <li><a class="sidebar-nav__link" href="#cli-reference">Reference</a></li>
+        </ul>
+      </nav>
+
+      <!-- Agents sidebar nav — hidden initially -->
+      <nav class="sidebar-nav sidebar-nav--hidden" id="sidebar-nav-agents" aria-label="Agents navigation">
+        <ul class="sidebar-nav__list">
+          <li><span class="sidebar-nav__group-label">Agents</span></li>
+          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#agents-overview">Overview</a></li>
+          <li><a class="sidebar-nav__link" href="#agents-reference">Reference</a></li>
+        </ul>
+      </nav>
+
+      <!-- Skills sidebar nav — hidden initially -->
+      <nav class="sidebar-nav sidebar-nav--hidden" id="sidebar-nav-skills" aria-label="Skills navigation">
+        <ul class="sidebar-nav__list">
+          <li><span class="sidebar-nav__group-label">Skills</span></li>
+          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#skills-overview">Overview</a></li>
+          <li><a class="sidebar-nav__link" href="#skills-reference">Reference</a></li>
+        </ul>
+      </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT: three articles, one visible at a time -->
+    <main class="main-content" id="main-content">
+
+      <!-- CLI INTRO TAB PANEL — active by default -->
+      <article id="section-cli-intro"
+               role="tabpanel"
+               aria-labelledby="tab-cli-intro"
+               class="content-panel content-panel--active">
+
+        <section id="cli-overview" class="content-section">
+          <h2 class="section-heading">CLI Intro — Overview</h2>
+          <p>Content for this section will be added in Phase 2.</p>
+
+          <!-- Code block sample (bash) — verifies syntax highlighting -->
+          <div class="code-block" data-lang="bash">
+            <div class="code-block__header">
+              <span class="code-block__lang">bash</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-bash">copilot -p "placeholder example command"</code></pre>
+          </div>
+
+          <!-- Collapsible sample — verifies open/close and chevron rotation -->
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Reference Details
+            </summary>
+            <div class="collapsible__body">
+              <p>Content for this section will be added in Phase 2.</p>
+            </div>
+          </details>
+
+          <!-- All four callout variants — verifies color rendering -->
+          <div class="callout callout--info">
+            <span class="callout__type">Info</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--warning">
+            <span class="callout__type">Warning</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--danger">
+            <span class="callout__type">Danger</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--tip">
+            <span class="callout__type">Tip</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+        </section>
+
+        <section id="cli-reference" class="content-section">
+          <h2 class="section-heading">CLI Intro — Reference</h2>
+          <p>Content for this section will be added in Phase 2.</p>
+
+          <!-- YAML code block sample — verifies yaml language pack -->
+          <div class="code-block" data-lang="yaml">
+            <div class="code-block__header">
+              <span class="code-block__lang">yaml</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-yaml">name: placeholder-agent
+description: Placeholder agent — content in Phase 2
+tools: []</code></pre>
+          </div>
+        </section>
+
+      </article>
+
+      <!-- AGENTS TAB PANEL — hidden initially -->
+      <article id="section-agents"
+               role="tabpanel"
+               aria-labelledby="tab-agents"
+               class="content-panel content-panel--hidden">
+
+        <section id="agents-overview" class="content-section">
+          <h2 class="section-heading">Agents — Overview</h2>
+          <p>Content for this section will be added in Phase 2.</p>
+
+          <!-- Code block sample (bash) -->
+          <div class="code-block" data-lang="bash">
+            <div class="code-block__header">
+              <span class="code-block__lang">bash</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-bash">copilot --agent placeholder-agent "describe this repository"</code></pre>
+          </div>
+
+          <!-- Collapsible sample -->
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Reference Details
+            </summary>
+            <div class="collapsible__body">
+              <p>Content for this section will be added in Phase 2.</p>
+            </div>
+          </details>
+
+          <!-- All four callout variants -->
+          <div class="callout callout--info">
+            <span class="callout__type">Info</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--warning">
+            <span class="callout__type">Warning</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--danger">
+            <span class="callout__type">Danger</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--tip">
+            <span class="callout__type">Tip</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+        </section>
+
+        <section id="agents-reference" class="content-section">
+          <h2 class="section-heading">Agents — Reference</h2>
+          <p>Content for this section will be added in Phase 2.</p>
+
+          <!-- YAML code block sample -->
+          <div class="code-block" data-lang="yaml">
+            <div class="code-block__header">
+              <span class="code-block__lang">yaml</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-yaml">name: placeholder-agent
+description: Placeholder agent — content in Phase 2
+tools: []</code></pre>
+          </div>
+        </section>
+
+      </article>
+
+      <!-- SKILLS TAB PANEL — hidden initially -->
+      <article id="section-skills"
+               role="tabpanel"
+               aria-labelledby="tab-skills"
+               class="content-panel content-panel--hidden">
+
+        <section id="skills-overview" class="content-section">
+          <h2 class="section-heading">Skills — Overview</h2>
+          <p>Content for this section will be added in Phase 2.</p>
+
+          <!-- Code block sample (bash) -->
+          <div class="code-block" data-lang="bash">
+            <div class="code-block__header">
+              <span class="code-block__lang">bash</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-bash">copilot /skills list</code></pre>
+          </div>
+
+          <!-- Collapsible sample -->
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Reference Details
+            </summary>
+            <div class="collapsible__body">
+              <p>Content for this section will be added in Phase 2.</p>
+            </div>
+          </details>
+
+          <!-- All four callout variants -->
+          <div class="callout callout--info">
+            <span class="callout__type">Info</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--warning">
+            <span class="callout__type">Warning</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--danger">
+            <span class="callout__type">Danger</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+          <div class="callout callout--tip">
+            <span class="callout__type">Tip</span>
+            <p>Sample callout — content will be added in Phase 2.</p>
+          </div>
+        </section>
+
+        <section id="skills-reference" class="content-section">
+          <h2 class="section-heading">Skills — Reference</h2>
+          <p>Content for this section will be added in Phase 2.</p>
+
+          <!-- Bash code block sample -->
+          <div class="code-block" data-lang="bash">
+            <div class="code-block__header">
+              <span class="code-block__lang">bash</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-bash">copilot /skills invoke my-skill "do something useful"</code></pre>
+          </div>
+        </section>
+
+      </article>
+
+    </main>
+  </div>
+
+  <!-- SCRIPT BLOCK — Plan 02 fills this with inlined hljs + all JS -->
+  <script>
+  </script>
+
+</body>
+</html>
