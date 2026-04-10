@@ -69,15 +69,15 @@ font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, mono
 | Role | Size | Weight | Line Height | Font Family | Usage |
 |------|------|--------|-------------|-------------|-------|
 | Body | 15px | 400 (regular) | 1.6 | sans | All prose paragraph text |
-| Label/Caption | 13px | 400 (regular) | 1.4 | sans | Code block lang badge, sidebar link text, callout type label, `<summary>` secondary text, muted meta |
-| Heading (h2/h3) | 17px | 600 (semibold) | 1.3 | sans | Section headings (`<h2>` in content panels), sidebar group labels, collapsible `<summary>` primary text |
+| Label/Caption | 13px | 400 (regular) | 1.4 | sans | Sidebar link text, copy button text, `<summary>` secondary text, muted meta |
+| Heading (h2/h3) | 17px | 600 (semibold) | 1.3 | sans | Section headings (`<h2>` in content panels), sidebar group labels, callout type label, collapsible `<summary>` primary text |
 | Display (h1) | 20px | 600 (semibold) | 1.2 | sans | Page header title only — "GitHub Copilot CLI" |
-| Code | 13px | 400 (regular) | 1.5 | mono | All `<code>` and `<pre>` content |
+| Code | 13px | 400 (regular) | 1.5 | mono | All `<code>` and `<pre>` content, language badge, file path label |
 
 **Rules:**
 - Maximum 2 weights in use: 400 (regular) and 600 (semibold). Never use 500, 700, or bold.
 - Heading line-height 1.3, body line-height 1.6, code 1.5 — no exceptions.
-- Inline `<code>` in prose uses 13px mono, with `--color-bg-overlay` background and 2px horizontal padding.
+- Inline `<code>` in prose uses 13px mono, with `--color-bg-overlay` background and 4px horizontal padding.
 
 ---
 
@@ -152,6 +152,12 @@ Destructive: `#f85149` (`--color-danger`) — reserved for `callout--danger` box
 
 ---
 
+## Visual Hierarchy
+
+**Primary visual anchor:** the active tab panel content area — the tab underline accent and heading hierarchy direct the eye from the tab bar into the article body.
+
+---
+
 ## Component Specifications
 
 ### 1. Page Header
@@ -217,7 +223,7 @@ body {
 Three pre-authored `<nav>` elements (one per tab), shown/hidden with tabs.
 
 **Section group label:**
-- Font: 11px/600, `--color-text-secondary`, letter-spacing 0.08em, UPPERCASE
+- Font: 13px/600, `--color-text-secondary`, letter-spacing 0.08em, UPPERCASE
 - Padding: 16px left, 8px top
 - Not a link
 
@@ -230,8 +236,8 @@ Three pre-authored `<nav>` elements (one per tab), shown/hidden with tabs.
 
 **Active scrollspy link:**
 - Color: `--color-text-link` (`#58a6ff`)
-- Left border: 3px solid `--color-accent` (`#3fb950`)
-- Padding-left: 13px (compensates for 3px border)
+- Box-shadow: `inset 3px 0 0 var(--color-accent)` (replaces border-left — does not affect layout)
+- Padding-left: 16px (standard md scale value; box-shadow does not consume layout space)
 - Font weight: 600
 
 **Scrollspy mechanism:** `IntersectionObserver` with `threshold: 0.4` on each `<section>` within the active article. Fires `sidebar-nav__link--active` class on the corresponding anchor link.
@@ -258,22 +264,22 @@ Three pre-authored `<nav>` elements (one per tab), shown/hidden with tabs.
 - Border-radius: 6px 6px 0 0
 
 **Language badge:**
-- Font: 11px/400 mono, `--color-text-secondary`
+- Font: 13px/400 mono, `--color-text-secondary`
 - Uppercase
 - Left-aligned with 12px padding
 
 **File path variant** (`.code-block--file`):
-- Replace lang badge with file icon SVG (12×12) + filepath text in 12px mono `--color-text-secondary`
+- Replace lang badge with file icon SVG (12×12) + filepath text in 13px mono `--color-text-secondary`
 
 **Copy button (default):**
-- Position: absolute top-right, 6px offset
+- Position: absolute top-right, 8px offset
 - Background: transparent
 - Border: 1px solid `--color-border`
 - Border-radius: 6px
 - Padding: 4px 8px
-- Font: 12px/400, `--color-text-secondary`
+- Font: 13px/400, `--color-text-secondary`
 - Icon: clipboard SVG 14×14, `--color-text-secondary` fill
-- Label: "Copy" (text visible alongside icon)
+- Label: "Copy code" (text visible alongside icon)
 - Hover: border-color → `--color-border-subtle`, color → `--color-text-primary`
 - Transition: `border-color 0.15s, color 0.15s`
 
@@ -349,7 +355,7 @@ Four variants, all with left border accent. No icons required (Phase 1 shell —
 - Margin: 16px 0
 
 **Type label:**
-- Font: 11px/600, `{variant-color}`, uppercase, letter-spacing 0.08em
+- Font: 13px/600, `{variant-color}`, uppercase, letter-spacing 0.08em
 - Display: block
 - Margin-bottom: 4px
 
@@ -378,7 +384,7 @@ This phase delivers a functional shell with placeholder content. Copywriting con
 | Tab 1 label | `CLI Intro` |
 | Tab 2 label | `Agents` |
 | Tab 3 label | `Skills` |
-| Copy button default | `Copy` |
+| Copy button default | `Copy code` |
 | Copy button success | `Copied!` |
 | Copy button aria-label | `Copy to clipboard` |
 | Collapsible closed state (aria) | `[section title] — collapsed` |
@@ -457,7 +463,7 @@ This phase delivers a functional shell with placeholder content. Copywriting con
 | Registry | Blocks Used | Safety Gate |
 |----------|-------------|-------------|
 | shadcn official | none | not applicable — no shadcn |
-| npm / CDN | highlight.js 11.11.1 (inlined at build time, not runtime CDN link) | inlined — no runtime fetch; source verified against jsdelivr |
+| npm / CDN | highlight.js 11.11.1 (inlined at build time, not runtime CDN link) | view passed — no flags — 2026-04-10 |
 | Third-party | none | not applicable |
 
 **Note:** All external assets (highlight.js core, language packs, github-dark theme) are fetched once during authoring and inlined directly into the `<script>` and `<style>` blocks. The delivered `index.html` makes zero network requests. CDN URLs are used as fetch sources during assembly only, never in the production file.
