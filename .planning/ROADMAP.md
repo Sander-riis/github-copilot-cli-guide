@@ -13,6 +13,10 @@ Three phases: build the technical HTML shell first so code blocks and tabs work 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Technical Foundation** - Build the self-contained HTML shell with all UI components functional before content is added
+  - **Plans:** 2 plans
+  - Plans:
+    - [ ] 01-PLAN-01.md — HTML structure + complete CSS shell with all component styles
+    - [ ] 01-PLAN-02.md — JavaScript behavior (tabs, scrollspy, copy) + inlined highlight.js + verification
 - [ ] **Phase 2: CLI Intro & Agents Content** - Populate the CLI reference and complete Agents section with accurate, annotated examples
 - [ ] **Phase 3: Skills Section & Polish** - Complete the Skills section, add security warnings, and finalize the guide for distribution
 
@@ -62,6 +66,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Technical Foundation | 0/TBD | Not started | - |
+| 1. Technical Foundation | 0/2 | Not started | - |
 | 2. CLI Intro & Agents Content | 0/TBD | Not started | - |
 | 3. Skills Section & Polish | 0/TBD | Not started | - |
