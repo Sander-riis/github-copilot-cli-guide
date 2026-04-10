@@ -99,10 +99,10 @@
     body {
       display: grid;
       grid-template-rows: var(--header-height) 1fr;
-      grid-template-columns: var(--sidebar-width) 1fr;
+      grid-template-columns: 1fr;
       grid-template-areas:
-        "header header"
-        "sidebar main";
+        "header"
+        "main";
       height: 100vh;
       overflow: hidden;
     }
@@ -110,11 +110,11 @@
       grid-column: 1 / -1;
       grid-row: 2;
       display: grid;
-      grid-template-columns: var(--sidebar-width) 1fr;
-      grid-template-areas: "sidebar main";
+      grid-template-columns: 1fr;
+      grid-template-areas: "main";
       overflow: hidden;
     }
-    .sidebar      { grid-area: sidebar; overflow-y: auto; background: var(--color-bg-surface); border-right: 1px solid var(--color-border); }
+    .sidebar      { display: none; }
     .main-content { grid-area: main;    overflow-y: auto; scroll-behavior: smooth; }
 
     /* Section 5: Site Header */
@@ -193,42 +193,7 @@
       color: #fff;
     }
 
-    /* Section 7: Sidebar Navigation */
-    .sidebar-nav { padding: 16px 0; }
-    .sidebar-nav--hidden { display: none; }
-    .sidebar-nav__group-label {
-      display: block;
-      font-family: var(--font-sans);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--color-text-secondary);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 12px 8px 6px 20px;
-    }
-    .sidebar-nav__list,
-    .sidebar-nav__sublist { list-style: none; }
-    .sidebar-nav__link {
-      display: block;
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--color-text-secondary);
-      padding: 6px 8px 6px 20px;
-      text-decoration: none;
-      transition: all 0.15s ease;
-      border-radius: 0;
-    }
-    .sidebar-nav__link:hover {
-      color: var(--color-text-primary);
-      background: rgba(255,255,255,0.04);
-    }
-    /* CRITICAL: Use box-shadow inset — NOT border-left — to avoid shifting padding-left */
-    .sidebar-nav__link--active {
-      color: var(--color-text-link);
-      box-shadow: inset 3px 0 0 var(--color-accent);
-      font-weight: 600;
-      background: rgba(63,185,80,0.04);
-    }
+    /* Section 7: (Sidebar removed) */
 
     /* Section 8: Content Panels */
     .content-panel {
@@ -526,15 +491,6 @@
 
     /* Section 15i: Responsive */
     @media (max-width: 900px) {
-      body {
-        grid-template-columns: 1fr;
-        grid-template-areas: "header" "main";
-      }
-      .page-body {
-        grid-template-columns: 1fr;
-        grid-template-areas: "main";
-      }
-      .sidebar { display: none; }
       .content-panel { padding: var(--spacing-lg) var(--spacing-md); }
       .site-header { flex-wrap: wrap; padding: 10px 16px; gap: 8px; }
       .site-header__subtitle { display: none; }
@@ -622,48 +578,9 @@
   <!-- PAGE BODY: sidebar + main -->
   <div class="page-body">
 
-    <!-- SIDEBAR: three pre-authored navs, one shown per active tab -->
-    <aside class="sidebar" aria-label="Section navigation">
+    <!-- SIDEBAR: removed — content uses full width -->
 
-      <!-- CLI Intro sidebar nav — visible by default -->
-      <nav class="sidebar-nav" id="sidebar-nav-cli-intro" aria-label="CLI Intro navigation">
-        <ul class="sidebar-nav__list">
-          <li><span class="sidebar-nav__group-label">CLI Intro</span></li>
-          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#cli-overview">Overview</a></li>
-          <li><a class="sidebar-nav__link" href="#cli-reference">Reference</a></li>
-        </ul>
-      </nav>
-
-      <!-- Agents sidebar nav — hidden initially -->
-      <nav class="sidebar-nav sidebar-nav--hidden" id="sidebar-nav-agents" aria-label="Agents navigation">
-        <ul class="sidebar-nav__list">
-          <li><span class="sidebar-nav__group-label">Agents</span></li>
-          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#agents-overview">Overview</a></li>
-          <li><a class="sidebar-nav__link" href="#agents-reference">Reference</a></li>
-        </ul>
-      </nav>
-
-      <!-- Skills sidebar nav — hidden initially -->
-      <nav class="sidebar-nav sidebar-nav--hidden" id="sidebar-nav-skills" aria-label="Skills navigation">
-        <ul class="sidebar-nav__list">
-          <li><span class="sidebar-nav__group-label">Skills</span></li>
-          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#skills-overview">Overview</a></li>
-          <li><a class="sidebar-nav__link" href="#skills-reference">Reference</a></li>
-        </ul>
-      </nav>
-
-      <!-- MCP sidebar nav — hidden initially -->
-      <nav class="sidebar-nav sidebar-nav--hidden" id="sidebar-nav-mcp" aria-label="MCP navigation">
-        <ul class="sidebar-nav__list">
-          <li><span class="sidebar-nav__group-label">MCP Servers</span></li>
-          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#mcp-overview">Overview</a></li>
-          <li><a class="sidebar-nav__link" href="#mcp-reference">Reference</a></li>
-        </ul>
-      </nav>
-
-    </aside>
-
-    <!-- MAIN CONTENT: three articles, one visible at a time -->
+    <!-- MAIN CONTENT: four articles, one visible at a time -->
     <main class="main-content" id="main-content">
 
       <!-- CLI INTRO TAB PANEL — active by default -->
@@ -1854,7 +1771,6 @@ hljs.registerLanguage('shell',    hljsShell);
 function initTabs() {
   const tabNav   = document.querySelector('.tab-nav');
   const panels   = document.querySelectorAll('.content-panel');
-  const sidebars = document.querySelectorAll('.sidebar-nav');
 
   tabNav.addEventListener('click', (e) => {
     const tab = e.target.closest('[data-tab]');
@@ -1878,12 +1794,7 @@ function initTabs() {
       }
     });
 
-    sidebars.forEach(nav => {
-      nav.classList.toggle('sidebar-nav--hidden', nav.id !== 'sidebar-nav-' + target);
-    });
-
     document.querySelector('.main-content').scrollTop = 0;
-    document.querySelector('.sidebar').scrollTop = 0;
   });
 }
 
@@ -1933,35 +1844,11 @@ function initCopyButtons() {
   });
 }
 
-/* -- SCROLLSPY -- */
-function initScrollspy() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const id   = entry.target.id;
-      const link = document.querySelector('.sidebar-nav__link[href="#' + id + '"]');
-      if (!link) return;
-      if (entry.isIntersecting) {
-        const activeSidebar = document.querySelector('.sidebar-nav:not(.sidebar-nav--hidden)');
-        if (activeSidebar) {
-          activeSidebar.querySelectorAll('.sidebar-nav__link--active')
-            .forEach(l => l.classList.remove('sidebar-nav__link--active'));
-        }
-        link.classList.add('sidebar-nav__link--active');
-      }
-    });
-  }, {
-    threshold:  0.4,
-    rootMargin: '-56px 0px 0px 0px'
-  });
-  document.querySelectorAll('.content-section[id]').forEach(s => observer.observe(s));
-}
-
 /* -- INIT -- */
 document.addEventListener('DOMContentLoaded', () => {
   try { hljs.highlightAll(); } catch(e) { console.error('hljs error:', e); }
   initTabs();
   initCopyButtons();
-  initScrollspy();
 });
   </script>
 
