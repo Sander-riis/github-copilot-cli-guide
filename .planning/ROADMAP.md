@@ -45,7 +45,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A complete annotated `.agent.md` example is shown with every frontmatter field (`name`, `description`, `tools`, `mcp-servers`) explained inline
   4. All five built-in agents are listed with capabilities and constraints; all four invocation methods are documented
   5. Subagent orchestration, `/fleet` parallel execution, and naming conflict resolution (user > repo > org) are explained
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — CLI Intro tab content (cli-overview: commands/modes/shortcuts/power-flags + cli-reference: slash commands)
+- [ ] 02-02-PLAN.md — Agents tab content (agents-overview: disambiguation/format/example/locations + agents-reference: built-ins/invocation/orchestration/fleet)
+- [ ] 02-03-PLAN.md — Human verification checkpoint for all Phase 2 content
 
 ### Phase 3: Skills Section & Polish
 **Goal**: The guide is complete and production-ready — Skills section fully documented with security warnings, and the file passes an offline smoke test
