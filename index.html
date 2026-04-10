@@ -434,6 +434,7 @@
       </svg>
       <span class="site-header__title">GitHub Copilot CLI</span>
       <span class="site-header__subtitle">Agents &amp; Skills Guide</span>
+      <span style="color: var(--color-text-secondary); font-size: 13px; margin-left: 12px;">Last verified: 2026-04-10</span>
     </div>
     <nav class="tab-nav" role="tablist" aria-label="Guide sections">
       <button class="tab-nav__tab tab-nav__tab--active"
@@ -1242,24 +1243,62 @@ echo "Migrations complete."</code></pre>
         </section>
 
         <section id="skills-reference" class="content-section">
-          <h2 class="section-heading">Skills — Reference</h2>
-          <p>Content for this section will be added in Phase 2.</p>
+          <h2 class="section-heading">Skills Reference</h2>
 
-          <!-- Bash code block sample -->
-          <div class="code-block" data-lang="bash">
-            <div class="code-block__header">
-              <span class="code-block__lang">bash</span>
-              <button class="code-block__copy" aria-label="Copy to clipboard">
-                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
-                </svg>
-                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
-                </svg>
-                <span class="code-block__copy-label">Copy code</span>
-              </button>
+          <h3 style="margin: 0 0 8px;">Skills CLI Commands</h3>
+          <p>Manage and invoke skills from the Copilot CLI. The <code>/skills</code> prefix handles discovery and management; invoking a skill directly uses <code>/skill-name</code> syntax with the skill's directory name.</p>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Skills Command Reference
+            </summary>
+            <div class="collapsible__body">
+              <table>
+                <thead>
+                  <tr><th>Command</th><th>Purpose</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>/skills list</code></td>
+                    <td>List all discovered skills</td>
+                    <td>Shows project + personal skills; includes skill name and source path</td>
+                  </tr>
+                  <tr>
+                    <td><code>/skills info SKILL</code></td>
+                    <td>Show details about a specific skill</td>
+                    <td>Displays name, description, allowed-tools, and file location</td>
+                  </tr>
+                  <tr>
+                    <td><code>/skills add PATH</code></td>
+                    <td>Add a skill from a filesystem path</td>
+                    <td>The path must contain a <code>SKILL.md</code> file in the expected directory structure</td>
+                  </tr>
+                  <tr>
+                    <td><code>/skills reload</code></td>
+                    <td>Reload all skills</td>
+                    <td>Pick up changes to SKILL.md files without restarting the session</td>
+                  </tr>
+                  <tr>
+                    <td><code>/skills remove SKILL-DIRECTORY</code></td>
+                    <td>Remove a previously added skill</td>
+                    <td>Removes by directory name, not by skill name</td>
+                  </tr>
+                  <tr>
+                    <td><code>/skill-name</code></td>
+                    <td>Invoke a skill directly</td>
+                    <td>Use the skill's directory name (e.g., <code>/deploy</code>, <code>/db-migrate</code>). Loads the skill's instructions into the current session.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <pre class="code-block__pre"><code class="language-bash">copilot /skills invoke my-skill "do something useful"</code></pre>
+          </details>
+
+          <div class="callout callout--tip">
+            <span class="callout__type">Tip</span>
+            <p><strong>Community skills are available.</strong> Check <code>github.com/anthropics/skills</code> for Anthropic's public skills repository and <code>github.com/github/awesome-copilot</code> for GitHub's curated list of Copilot resources. Skills follow an open standard — any SKILL.md you find in the community works with your local Copilot CLI installation.</p>
           </div>
         </section>
 
