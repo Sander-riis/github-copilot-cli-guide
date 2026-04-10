@@ -1800,11 +1800,25 @@ function initTabs() {
 
 /* -- COPY TO CLIPBOARD -- */
 function initCopyButtons() {
-  // Upgrade plain-text copy buttons (MCP tab) to consistent format
-  document.querySelectorAll('.code-block__copy').forEach(btn => {
-    if (!btn.querySelector('.code-block__copy-label')) {
-      btn.textContent = '';
-      btn.innerHTML = '<span class="code-block__copy-label">⧉ Copy</span>';
+  // Normalize MCP tab code blocks: move copy buttons into headers, add lang labels
+  document.querySelectorAll('.code-block').forEach(block => {
+    const header = block.querySelector('.code-block__header');
+    const btn = block.querySelector(':scope > .code-block__copy');
+    if (header && btn) {
+      // Button is a direct child of code-block — move into header
+      const lang = block.dataset.lang;
+      if (lang && !header.querySelector('.code-block__lang')) {
+        const span = document.createElement('span');
+        span.className = 'code-block__lang';
+        span.textContent = lang;
+        header.prepend(span);
+      }
+      header.appendChild(btn);
+    }
+    // Upgrade plain-text copy buttons to consistent label format
+    const copyBtn = block.querySelector('.code-block__copy');
+    if (copyBtn && !copyBtn.querySelector('.code-block__copy-label')) {
+      copyBtn.innerHTML = '<span class="code-block__copy-label">⧉ Copy</span>';
     }
   });
 
