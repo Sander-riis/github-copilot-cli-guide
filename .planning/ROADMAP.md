@@ -47,7 +47,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. Subagent orchestration, `/fleet` parallel execution, and naming conflict resolution (user > repo > org) are explained
 **Plans**: 3 plans
 Plans:
-- [ ] 02-01-PLAN.md — CLI Intro tab content (cli-overview: commands/modes/shortcuts/power-flags + cli-reference: slash commands)
+- [x] 02-01-PLAN.md — CLI Intro tab content (cli-overview: commands/modes/shortcuts/power-flags + cli-reference: slash commands)
 - [ ] 02-02-PLAN.md — Agents tab content (agents-overview: disambiguation/format/example/locations + agents-reference: built-ins/invocation/orchestration/fleet)
 - [ ] 02-03-PLAN.md — Human verification checkpoint for all Phase 2 content
 
@@ -71,5 +71,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Technical Foundation | 0/2 | Not started | - |
-| 2. CLI Intro & Agents Content | 0/TBD | Not started | - |
+| 2. CLI Intro & Agents Content | 1/3 | In Progress|  |
 | 3. Skills Section & Polish | 0/TBD | Not started | - |

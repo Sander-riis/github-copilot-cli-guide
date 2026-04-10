@@ -20,13 +20,13 @@
 
 ### CLI Intro Section
 
-- [ ] **CLI-01**: Section opens with a narrative explanation of how the Copilot CLI works (not a beginner walkthrough — context for power users)
-- [ ] **CLI-02**: Key command-line patterns are shown: `copilot`, `copilot -p "..."`, `copilot -sp "..."`, `copilot --agent NAME`
-- [ ] **CLI-03**: Mode cycling is explained: standard → plan → autopilot via `Shift+Tab`
-- [ ] **CLI-04**: Key shortcuts are documented: `@FILENAME` context inclusion, `!COMMAND` shell passthrough, `Esc`, `Ctrl+L`, `/help`
-- [ ] **CLI-05**: Top slash commands are covered narratively (at minimum: `/plan`, `/fleet`, `/model`, `/review`, `/delegate`, `/research`, `/diff`, `/pr`, `/skills`, `/agent`)
-- [ ] **CLI-06**: Power-user flags are listed: `--allow-all-tools`, `--autopilot`, `--agent`, `--resume`, `--allow-tool`, `--deny-tool`
-- [ ] **CLI-07**: The `/research` agent's special status is noted — only invokable via `/research`, never auto-triggered
+- [x] **CLI-01**: Section opens with a narrative explanation of how the Copilot CLI works (not a beginner walkthrough — context for power users)
+- [x] **CLI-02**: Key command-line patterns are shown: `copilot`, `copilot -p "..."`, `copilot -sp "..."`, `copilot --agent NAME`
+- [x] **CLI-03**: Mode cycling is explained: standard → plan → autopilot via `Shift+Tab`
+- [x] **CLI-04**: Key shortcuts are documented: `@FILENAME` context inclusion, `!COMMAND` shell passthrough, `Esc`, `Ctrl+L`, `/help`
+- [x] **CLI-05**: Top slash commands are covered narratively (at minimum: `/plan`, `/fleet`, `/model`, `/review`, `/delegate`, `/research`, `/diff`, `/pr`, `/skills`, `/agent`)
+- [x] **CLI-06**: Power-user flags are listed: `--allow-all-tools`, `--autopilot`, `--agent`, `--resume`, `--allow-tool`, `--deny-tool`
+- [x] **CLI-07**: The `/research` agent's special status is noted — only invokable via `/research`, never auto-triggered
 
 ### Agents Section
 
@@ -101,13 +101,13 @@
 | FOUND-06 | Phase 1 | Pending |
 | FOUND-07 | Phase 1 | Pending |
 | FOUND-08 | Phase 1 | Pending |
-| CLI-01 | Phase 2 | Pending |
-| CLI-02 | Phase 2 | Pending |
-| CLI-03 | Phase 2 | Pending |
-| CLI-04 | Phase 2 | Pending |
-| CLI-05 | Phase 2 | Pending |
-| CLI-06 | Phase 2 | Pending |
-| CLI-07 | Phase 2 | Pending |
+| CLI-01 | Phase 2 | Complete |
+| CLI-02 | Phase 2 | Complete |
+| CLI-03 | Phase 2 | Complete |
+| CLI-04 | Phase 2 | Complete |
+| CLI-05 | Phase 2 | Complete |
+| CLI-06 | Phase 2 | Complete |
+| CLI-07 | Phase 2 | Complete |
 | AGNT-01 | Phase 2 | Pending |
 | AGNT-02 | Phase 2 | Pending |
 | AGNT-03 | Phase 2 | Pending |
