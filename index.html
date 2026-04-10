@@ -488,6 +488,12 @@
               aria-selected="false"
               aria-controls="section-skills"
               data-tab="skills">Skills</button>
+      <button class="tab-nav__tab"
+              role="tab"
+              id="tab-mcp"
+              aria-selected="false"
+              aria-controls="section-mcp"
+              data-tab="mcp">MCP Servers</button>
     </nav>
   </header>
 
@@ -521,6 +527,15 @@
           <li><span class="sidebar-nav__group-label">Skills</span></li>
           <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#skills-overview">Overview</a></li>
           <li><a class="sidebar-nav__link" href="#skills-reference">Reference</a></li>
+        </ul>
+      </nav>
+
+      <!-- MCP sidebar nav — hidden initially -->
+      <nav class="sidebar-nav sidebar-nav--hidden" id="sidebar-nav-mcp" aria-label="MCP navigation">
+        <ul class="sidebar-nav__list">
+          <li><span class="sidebar-nav__group-label">MCP Servers</span></li>
+          <li><a class="sidebar-nav__link sidebar-nav__link--active" href="#mcp-overview">Overview</a></li>
+          <li><a class="sidebar-nav__link" href="#mcp-reference">Reference</a></li>
         </ul>
       </nav>
 
@@ -1332,6 +1347,316 @@ echo "Migrations complete."</code></pre>
           <div class="callout callout--tip">
             <span class="callout__type">Tip</span>
             <p><strong>Community skills are available.</strong> Check <code>github.com/anthropics/skills</code> for Anthropic's public skills repository and <code>github.com/github/awesome-copilot</code> for GitHub's curated list of Copilot resources. Skills follow an open standard — any SKILL.md you find in the community works with your local Copilot CLI installation.</p>
+          </div>
+        </section>
+
+      </article>
+
+      <!-- MCP SERVERS TAB PANEL — hidden initially -->
+      <article id="section-mcp"
+               role="tabpanel"
+               aria-labelledby="tab-mcp"
+               class="content-panel content-panel--hidden">
+
+        <section id="mcp-overview" class="content-section">
+          <h2 class="section-heading">MCP Overview</h2>
+
+          <div class="code-block" data-lang="bash">
+            <div class="code-block__header"></div>
+            <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+            <pre><code class="language-bash"># Add an MCP server to your project
+gh copilot mcp add -- npx -y @anthropic/mcp-server-filesystem /path/to/dir
+
+# List all registered MCP servers
+gh copilot mcp list
+
+# Remove an MCP server
+gh copilot mcp remove server-name</code></pre>
+          </div>
+
+          <p>The <strong>Model Context Protocol (MCP)</strong> is an open standard that lets Copilot CLI connect to external tools and data sources through lightweight "servers." Think of MCP servers as plugins that give Copilot new abilities — reading files, querying databases, calling APIs, managing cloud resources — all through a standardised interface.</p>
+
+          <h3>How MCP works</h3>
+          <p>MCP follows a client-server pattern:</p>
+          <ol>
+            <li><strong>Copilot CLI (client)</strong> discovers available MCP servers from your configuration</li>
+            <li><strong>MCP server</strong> advertises its tools (functions it can perform)</li>
+            <li>When Copilot decides a tool would help answer your question, it <strong>calls the tool</strong> through the MCP server</li>
+            <li>The server returns results back to Copilot to incorporate into its response</li>
+          </ol>
+
+          <div class="callout callout--info">
+            <span class="callout__type">Key concept</span>
+            <p>MCP servers run <strong>locally on your machine</strong>. They don't send data to third-party services unless the specific server is designed to (e.g., a GitHub API server). You control which servers are active and what directories/resources they can access.</p>
+          </div>
+
+          <h3>Why use MCP servers?</h3>
+          <ul>
+            <li><strong>Extended reach</strong> — Access databases, APIs, file systems, and cloud services directly from your Copilot conversation</li>
+            <li><strong>Context injection</strong> — Let Copilot read project-specific data (Jira tickets, Confluence docs, Slack threads) without copy-pasting</li>
+            <li><strong>Tool augmentation</strong> — Add specialised tools like image processing, data analysis, or deployment automation</li>
+            <li><strong>Standardised protocol</strong> — Any MCP-compatible server works with any MCP-compatible client (not just Copilot)</li>
+          </ul>
+
+          <h3>Configuration scope</h3>
+          <p>MCP servers can be configured at two levels:</p>
+          <table>
+            <thead>
+              <tr><th>Scope</th><th>Config file</th><th>Applies to</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Project</strong></td><td><code>.github/copilot/mcp.json</code></td><td>Everyone working on this repo</td></tr>
+              <tr><td><strong>User</strong></td><td><code>~/.config/github-copilot/mcp.json</code></td><td>All your projects on this machine</td></tr>
+            </tbody>
+          </table>
+
+          <p>Project-level config is committed to the repo so the entire team shares the same MCP servers. User-level config is for personal tools you want available everywhere.</p>
+        </section>
+
+        <section id="mcp-reference" class="content-section">
+          <h2 class="section-heading">MCP Reference</h2>
+
+          <h3>CLI commands</h3>
+          <table>
+            <thead>
+              <tr><th>Command</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>gh copilot mcp add &lt;name&gt; -- &lt;command&gt;</code></td>
+                <td>Register a new MCP server. The command is what starts the server process.</td>
+              </tr>
+              <tr>
+                <td><code>gh copilot mcp list</code></td>
+                <td>Show all registered MCP servers and their status.</td>
+              </tr>
+              <tr>
+                <td><code>gh copilot mcp remove &lt;name&gt;</code></td>
+                <td>Unregister an MCP server by name.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>mcp.json format</h3>
+          <p>The configuration file defines available servers. Each server entry specifies how to start the server process:</p>
+
+          <div class="code-block" data-lang="json">
+            <div class="code-block__header"></div>
+            <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+            <pre><code class="language-json">{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-filesystem", "/home/user/project"],
+      "env": {}
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "postgresql://localhost:5432/mydb"
+      }
+    }
+  }
+}</code></pre>
+          </div>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Configuration fields explained</summary>
+            <div class="collapsible__body">
+              <table>
+                <thead>
+                  <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>command</code></td><td>string</td><td>The executable to run (e.g., <code>npx</code>, <code>node</code>, <code>python</code>)</td></tr>
+                  <tr><td><code>args</code></td><td>string[]</td><td>Arguments passed to the command</td></tr>
+                  <tr><td><code>env</code></td><td>object</td><td>Environment variables set for this server process</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <h3>Popular MCP servers</h3>
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Filesystem — read/write local files</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash"># Add filesystem access to current project
+gh copilot mcp add filesystem -- npx -y @anthropic/mcp-server-filesystem .</code></pre>
+              </div>
+              <p>Gives Copilot the ability to read, write, search, and navigate files in the specified directory. Useful for large repos where Copilot needs to explore beyond its built-in file tools.</p>
+              <p><strong>Tools provided:</strong> <code>read_file</code>, <code>write_file</code>, <code>list_directory</code>, <code>search_files</code>, <code>get_file_info</code>, <code>move_file</code></p>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">GitHub — issues, PRs, repos</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash"># Add GitHub integration
+gh copilot mcp add github -- npx -y @modelcontextprotocol/server-github</code></pre>
+              </div>
+              <p>Access GitHub's API through Copilot. Create issues, review PRs, search repositories, and manage projects — all from your terminal conversation.</p>
+              <p><strong>Tools provided:</strong> <code>create_issue</code>, <code>list_issues</code>, <code>create_pull_request</code>, <code>search_repositories</code>, <code>get_file_contents</code></p>
+              <div class="callout callout--warn">
+                <span class="callout__type">Auth required</span>
+                <p>Set <code>GITHUB_TOKEN</code> in the env field or ensure <code>gh auth</code> is configured.</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">PostgreSQL — query databases</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash"># Add Postgres access
+gh copilot mcp add postgres -- npx -y @modelcontextprotocol/server-postgres</code></pre>
+              </div>
+              <p>Let Copilot query your database directly. It can inspect schemas, run SELECT queries, and help debug data issues without you leaving the conversation.</p>
+              <p><strong>Tools provided:</strong> <code>query</code>, <code>list_tables</code>, <code>describe_table</code></p>
+              <div class="callout callout--warn">
+                <span class="callout__type">Caution</span>
+                <p>Only connect to development databases. The server executes real SQL — never point it at production.</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Fetch — retrieve web pages</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash"># Add web fetching
+gh copilot mcp add fetch -- npx -y @anthropic/mcp-server-fetch</code></pre>
+              </div>
+              <p>Gives Copilot the ability to fetch and read web pages. Useful for pulling documentation, checking API responses, or referencing online resources during a conversation.</p>
+              <p><strong>Tools provided:</strong> <code>fetch</code> (URL → markdown or raw HTML)</p>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Memory — persistent key-value store</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash"># Add persistent memory
+gh copilot mcp add memory -- npx -y @anthropic/mcp-server-memory</code></pre>
+              </div>
+              <p>A simple key-value store that persists across conversations. Use it to store project conventions, preferences, or any context you want Copilot to remember between sessions.</p>
+              <p><strong>Tools provided:</strong> <code>store</code>, <code>retrieve</code>, <code>list_keys</code>, <code>delete</code></p>
+            </div>
+          </details>
+
+          <h3>Building custom MCP servers</h3>
+          <p>You can create your own MCP servers for project-specific tooling. The protocol is language-agnostic — any process that speaks JSON-RPC over stdio can be an MCP server.</p>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Minimal Python MCP server example</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="python">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-python">from mcp.server import Server
+from mcp.types import Tool, TextContent
+
+server = Server("my-tools")
+
+@server.tool()
+async def lookup_ticket(ticket_id: str) -> list[TextContent]:
+    """Look up a Jira ticket by ID."""
+    # Your logic here — call Jira API, query DB, etc.
+    result = fetch_from_jira(ticket_id)
+    return [TextContent(type="text", text=result)]
+
+if __name__ == "__main__":
+    server.run()</code></pre>
+              </div>
+              <p>Install the MCP SDK with <code>pip install mcp</code>, then register your server:</p>
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash">gh copilot mcp add my-tools -- python my_mcp_server.py</code></pre>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Minimal Node.js MCP server example</summary>
+            <div class="collapsible__body">
+              <div class="code-block" data-lang="javascript">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-javascript">import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+
+const server = new McpServer({ name: "my-tools", version: "1.0.0" });
+
+server.tool("lookup-ticket",
+  { ticket_id: z.string() },
+  async ({ ticket_id }) => ({
+    content: [{ type: "text", text: `Ticket ${ticket_id}: ...` }]
+  })
+);
+
+const transport = new StdioServerTransport();
+await server.connect(transport);</code></pre>
+              </div>
+              <p>Install with <code>npm install @modelcontextprotocol/sdk zod</code>, then register:</p>
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header"></div>
+                <button class="code-block__copy" aria-label="Copy command">⧉ Copy</button>
+                <pre><code class="language-bash">gh copilot mcp add my-tools -- node my_mcp_server.js</code></pre>
+              </div>
+            </div>
+          </details>
+
+          <h3>Troubleshooting</h3>
+          <details class="collapsible">
+            <summary class="collapsible__trigger">Common issues and fixes</summary>
+            <div class="collapsible__body">
+              <table>
+                <thead>
+                  <tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>"Server not found"</td>
+                    <td>Server not in <code>mcp.json</code> or wrong scope</td>
+                    <td>Check <code>gh copilot mcp list</code> and verify config file location</td>
+                  </tr>
+                  <tr>
+                    <td>"Connection refused"</td>
+                    <td>Server process failed to start</td>
+                    <td>Run the command manually to check for errors (e.g., missing deps)</td>
+                  </tr>
+                  <tr>
+                    <td>Tools not appearing</td>
+                    <td>Server started but tools not registered</td>
+                    <td>Verify the server's tool definitions and restart Copilot CLI</td>
+                  </tr>
+                  <tr>
+                    <td>Env vars not set</td>
+                    <td>Missing <code>env</code> field in config</td>
+                    <td>Add required env vars to the server's <code>env</code> object in mcp.json</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <div class="callout callout--tip">
+            <span class="callout__type">Tip</span>
+            <p><strong>Discover more servers</strong> at <code>github.com/modelcontextprotocol/servers</code> — the official MCP servers registry. The ecosystem is growing fast with community contributions for Slack, Linear, Notion, Docker, Kubernetes, and more.</p>
           </div>
         </section>
 
