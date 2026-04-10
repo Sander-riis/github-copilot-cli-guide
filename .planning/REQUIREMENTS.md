@@ -30,16 +30,16 @@
 
 ### Agents Section
 
-- [ ] **AGNT-01**: Section explains what agents are and how they differ from regular Copilot prompts (separate context window, persistent persona)
-- [ ] **AGNT-02**: Agent profile file format is shown: `.agent.md` extension (not `.md`), YAML frontmatter with `name`, `description`, `tools`, `mcp-servers` fields
-- [ ] **AGNT-03**: A complete annotated `.agent.md` example file is included — every field explained inline
-- [ ] **AGNT-04**: Agent file locations are documented: `.github/agents/` (repo), `~/.copilot/agents/` (user), `/agents/` in `.github-private` (org/enterprise)
-- [ ] **AGNT-05**: All five built-in agents are listed with their capabilities and constraints: `explore`, `task`, `general-purpose`, `code-review`, `research`
-- [ ] **AGNT-06**: All four agent invocation methods are covered: `/agent NAME`, prompt mention, trigger-word inference, `--agent NAME` flag
-- [ ] **AGNT-07**: Subagent orchestration is explained: main agent as orchestrator, subagents with isolated context windows, why this matters
-- [ ] **AGNT-08**: `/fleet` command is explained: how main agent decomposes tasks and runs subagents in parallel
-- [ ] **AGNT-09**: Naming conflict resolution is documented: user-level overrides repo-level, repo-level overrides org-level
-- [ ] **AGNT-10**: A disambiguation callout is included early in the section distinguishing CLI agents (`.agent.md`) from cloud agents (GitHub.com UI)
+- [x] **AGNT-01**: Section explains what agents are and how they differ from regular Copilot prompts (separate context window, persistent persona)
+- [x] **AGNT-02**: Agent profile file format is shown: `.agent.md` extension (not `.md`), YAML frontmatter with `name`, `description`, `tools`, `mcp-servers` fields
+- [x] **AGNT-03**: A complete annotated `.agent.md` example file is included — every field explained inline
+- [x] **AGNT-04**: Agent file locations are documented: `.github/agents/` (repo), `~/.copilot/agents/` (user), `/agents/` in `.github-private` (org/enterprise)
+- [x] **AGNT-05**: All five built-in agents are listed with their capabilities and constraints: `explore`, `task`, `general-purpose`, `code-review`, `research`
+- [x] **AGNT-06**: All four agent invocation methods are covered: `/agent NAME`, prompt mention, trigger-word inference, `--agent NAME` flag
+- [x] **AGNT-07**: Subagent orchestration is explained: main agent as orchestrator, subagents with isolated context windows, why this matters
+- [x] **AGNT-08**: `/fleet` command is explained: how main agent decomposes tasks and runs subagents in parallel
+- [x] **AGNT-09**: Naming conflict resolution is documented: user-level overrides repo-level, repo-level overrides org-level
+- [x] **AGNT-10**: A disambiguation callout is included early in the section distinguishing CLI agents (`.agent.md`) from cloud agents (GitHub.com UI)
 
 ### Skills Section
 
@@ -108,16 +108,16 @@
 | CLI-05 | Phase 2 | Complete |
 | CLI-06 | Phase 2 | Complete |
 | CLI-07 | Phase 2 | Complete |
-| AGNT-01 | Phase 2 | Pending |
-| AGNT-02 | Phase 2 | Pending |
-| AGNT-03 | Phase 2 | Pending |
-| AGNT-04 | Phase 2 | Pending |
-| AGNT-05 | Phase 2 | Pending |
-| AGNT-06 | Phase 2 | Pending |
-| AGNT-07 | Phase 2 | Pending |
-| AGNT-08 | Phase 2 | Pending |
-| AGNT-09 | Phase 2 | Pending |
-| AGNT-10 | Phase 2 | Pending |
+| AGNT-01 | Phase 2 | Complete |
+| AGNT-02 | Phase 2 | Complete |
+| AGNT-03 | Phase 2 | Complete |
+| AGNT-04 | Phase 2 | Complete |
+| AGNT-05 | Phase 2 | Complete |
+| AGNT-06 | Phase 2 | Complete |
+| AGNT-07 | Phase 2 | Complete |
+| AGNT-08 | Phase 2 | Complete |
+| AGNT-09 | Phase 2 | Complete |
+| AGNT-10 | Phase 2 | Complete |
 | SKIL-01 | Phase 3 | Pending |
 | SKIL-02 | Phase 3 | Pending |
 | SKIL-03 | Phase 3 | Pending |

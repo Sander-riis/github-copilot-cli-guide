@@ -48,7 +48,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 Plans:
 - [x] 02-01-PLAN.md — CLI Intro tab content (cli-overview: commands/modes/shortcuts/power-flags + cli-reference: slash commands)
-- [ ] 02-02-PLAN.md — Agents tab content (agents-overview: disambiguation/format/example/locations + agents-reference: built-ins/invocation/orchestration/fleet)
+- [x] 02-02-PLAN.md — Agents tab content (agents-overview: disambiguation/format/example/locations + agents-reference: built-ins/invocation/orchestration/fleet)
 - [ ] 02-03-PLAN.md — Human verification checkpoint for all Phase 2 content
 
 ### Phase 3: Skills Section & Polish
