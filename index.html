@@ -1367,7 +1367,9 @@ hljs.registerLanguage('yaml',     hljsYaml);
 hljs.registerLanguage('json',     hljsJson);
 hljs.registerLanguage('markdown', hljsMarkdown);
 hljs.registerLanguage('shell',    hljsShell);
+  </script>
 
+  <script>
 /* -- TAB NAVIGATION -- */
 function initTabs() {
   const tabNav   = document.querySelector('.tab-nav');
@@ -1469,7 +1471,7 @@ function initScrollspy() {
 
 /* -- INIT -- */
 document.addEventListener('DOMContentLoaded', () => {
-  hljs.highlightAll();
+  try { hljs.highlightAll(); } catch(e) { console.error('hljs error:', e); }
   initTabs();
   initCopyButtons();
   initScrollspy();
