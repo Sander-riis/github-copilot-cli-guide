@@ -93,10 +93,42 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 through FOUND-08 | Phase 1 | Pending |
-| CLI-01 through CLI-07 | Phase 2 | Pending |
-| AGNT-01 through AGNT-10 | Phase 2 | Pending |
-| SKIL-01 through SKIL-11 | Phase 3 | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Pending |
+| CLI-01 | Phase 2 | Pending |
+| CLI-02 | Phase 2 | Pending |
+| CLI-03 | Phase 2 | Pending |
+| CLI-04 | Phase 2 | Pending |
+| CLI-05 | Phase 2 | Pending |
+| CLI-06 | Phase 2 | Pending |
+| CLI-07 | Phase 2 | Pending |
+| AGNT-01 | Phase 2 | Pending |
+| AGNT-02 | Phase 2 | Pending |
+| AGNT-03 | Phase 2 | Pending |
+| AGNT-04 | Phase 2 | Pending |
+| AGNT-05 | Phase 2 | Pending |
+| AGNT-06 | Phase 2 | Pending |
+| AGNT-07 | Phase 2 | Pending |
+| AGNT-08 | Phase 2 | Pending |
+| AGNT-09 | Phase 2 | Pending |
+| AGNT-10 | Phase 2 | Pending |
+| SKIL-01 | Phase 3 | Pending |
+| SKIL-02 | Phase 3 | Pending |
+| SKIL-03 | Phase 3 | Pending |
+| SKIL-04 | Phase 3 | Pending |
+| SKIL-05 | Phase 3 | Pending |
+| SKIL-06 | Phase 3 | Pending |
+| SKIL-07 | Phase 3 | Pending |
+| SKIL-08 | Phase 3 | Pending |
+| SKIL-09 | Phase 3 | Pending |
+| SKIL-10 | Phase 3 | Pending |
+| SKIL-11 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 36 total
