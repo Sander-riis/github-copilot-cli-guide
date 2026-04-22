@@ -155,11 +155,13 @@
       grid-area: header;
       display: flex;
       align-items: center;
+      justify-content: center;
       background: var(--color-bg-surface);
       border-bottom: 1px solid var(--color-border);
       padding: 0 20px;
       gap: 16px;
       z-index: 10;
+      position: relative;
     }
     .site-header__brand {
       display: flex;
@@ -181,11 +183,14 @@
       line-height: 1.2;
       letter-spacing: -0.02em;
     }
-    .site-header__subtitle {
-      font-size: 12.5px;
-      font-weight: 400;
-      color: var(--color-text-secondary);
-      margin-left: 2px;
+    .site-header__actions {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     /* Section 6: Tab Navigation — Pill Tabs */
@@ -193,7 +198,6 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      margin-left: auto;
     }
     .tab-nav__tab {
       padding: 6px 18px;
@@ -513,19 +517,9 @@
       tab-size: 2;
     }
 
-    /* Section 15h: Header meta (verified date) */
-    .site-header__meta {
-      font-size: 12px;
-      color: var(--color-text-secondary);
-      margin-left: auto;
-      opacity: 0.7;
-      font-variant-numeric: tabular-nums;
-    }
-
     /* Section 15i: Search widget */
     .search {
       position: relative;
-      margin-left: auto;
       flex-shrink: 1;
       min-width: 0;
     }
@@ -636,13 +630,12 @@
     /* Section 15j: Responsive */
     @media (max-width: 900px) {
       .content-panel { padding: var(--spacing-lg) var(--spacing-md); }
-      .site-header { flex-wrap: wrap; padding: 10px 16px; gap: 8px; }
-      .site-header__subtitle { display: none; }
-      .site-header__meta { display: none; }
+      .site-header { flex-wrap: wrap; padding: 10px 16px; gap: 8px; justify-content: center; }
       .tab-nav { margin-left: 0; }
       .tab-nav__tab { padding: 5px 14px; font-size: 12.5px; }
       .search__input { width: 160px; }
       .search__input:focus { width: 220px; }
+      .site-header__actions { position: static; transform: none; }
     }
     @media (max-width: 600px) {
       .site-header__brand { gap: 8px; }
@@ -693,8 +686,10 @@
     [data-theme="light"] .hljs-deletion{color:#b31d28;background-color:#ffeef0}
 
     /* Section 16c: Light theme extra overrides */
-    [data-theme="light"] .site-header__icon { filter: drop-shadow(0 0 4px rgba(26,127,55,0.2)); }
-    [data-theme="light"] .tab-nav__tab--active { color: #1a7f37; }
+    [data-theme="light"] .site-header__icon { color: #24292f; filter: none; }
+    [data-theme="light"] .tab-nav__tab:hover { background: rgba(0,0,0,0.04); border-color: #d1d9e0; }
+    [data-theme="light"] .tab-nav__tab--active { background: #0969da; border-color: #0969da; color: #fff; box-shadow: 0 0 10px rgba(9,105,218,0.2); }
+    [data-theme="light"] .tab-nav__tab--active:hover { background: #0860ca; border-color: #0860ca; color: #fff; }
     [data-theme="light"] .search__results { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
     [data-theme="light"] .code-block__copy--copied { background: #dafbe1; color: #1a7f37; }
     [data-theme="light"] kbd { background: #e8ecf0; box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
@@ -742,7 +737,6 @@
           0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
       </svg>
       <span class="site-header__title">GitHub Copilot CLI</span>
-      <span class="site-header__subtitle">Agents &amp; Skills Guide</span>
     </div>
     <nav class="tab-nav" role="tablist" aria-label="Guide sections">
       <button class="tab-nav__tab tab-nav__tab--active"
@@ -770,17 +764,18 @@
               aria-controls="section-mcp"
               data-tab="mcp">MCP Servers</button>
     </nav>
-    <div class="search" id="search">
-      <input class="search__input" id="search-input" type="text" placeholder="Search guide…" autocomplete="off" spellcheck="false" />
-      <svg class="search__icon" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>
-      <span class="search__kbd">/</span>
-      <div class="search__results" id="search-results"></div>
+    <div class="site-header__actions">
+      <div class="search" id="search">
+        <input class="search__input" id="search-input" type="text" placeholder="Search guide…" autocomplete="off" spellcheck="false" />
+        <svg class="search__icon" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>
+        <span class="search__kbd">/</span>
+        <div class="search__results" id="search-results"></div>
+      </div>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+        <svg class="theme-toggle__moon" viewBox="0 0 16 16" fill="currentColor"><path d="M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.221-7.832Z"/></svg>
+        <svg class="theme-toggle__sun" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Zm5.657-8.157a.75.75 0 0 1 0 1.06l-1.061 1.06a.749.749 0 1 1-1.06-1.06l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM16 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8ZM3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8Zm10.657 5.657a.75.75 0 0 1-1.06 0l-1.061-1.06a.749.749 0 1 1 1.06-1.061l1.061 1.06a.75.75 0 0 1 0 1.061Zm-9.193-9.193a.75.75 0 0 1-1.06 0L2.343 3.404a.75.75 0 1 1 1.06-1.06l1.061 1.06a.75.75 0 0 1 0 1.06ZM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0Zm0 13a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13Z"/></svg>
+      </button>
     </div>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-      <svg class="theme-toggle__moon" viewBox="0 0 16 16" fill="currentColor"><path d="M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.221-7.832Z"/></svg>
-      <svg class="theme-toggle__sun" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Zm5.657-8.157a.75.75 0 0 1 0 1.06l-1.061 1.06a.749.749 0 1 1-1.06-1.06l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM16 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8ZM3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8Zm10.657 5.657a.75.75 0 0 1-1.06 0l-1.061-1.06a.749.749 0 1 1 1.06-1.061l1.061 1.06a.75.75 0 0 1 0 1.061Zm-9.193-9.193a.75.75 0 0 1-1.06 0L2.343 3.404a.75.75 0 1 1 1.06-1.06l1.061 1.06a.75.75 0 0 1 0 1.06ZM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0Zm0 13a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13Z"/></svg>
-    </button>
-    <span class="site-header__meta">Last verified: 2026-04-22</span>
   </header>
 
   <!-- PAGE BODY: sidebar + main -->
