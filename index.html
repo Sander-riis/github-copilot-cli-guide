@@ -155,13 +155,11 @@
       grid-area: header;
       display: flex;
       align-items: center;
-      justify-content: center;
       background: var(--color-bg-surface);
       border-bottom: 1px solid var(--color-border);
       padding: 0 20px;
       gap: 16px;
       z-index: 10;
-      position: relative;
     }
     .site-header__brand {
       display: flex;
@@ -184,20 +182,19 @@
       letter-spacing: -0.02em;
     }
     .site-header__actions {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-shrink: 0;
     }
 
     /* Section 6: Tab Navigation — Pill Tabs */
     .tab-nav {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
+      flex: 1;
     }
     .tab-nav__tab {
       padding: 6px 18px;
@@ -630,12 +627,11 @@
     /* Section 15j: Responsive */
     @media (max-width: 900px) {
       .content-panel { padding: var(--spacing-lg) var(--spacing-md); }
-      .site-header { flex-wrap: wrap; padding: 10px 16px; gap: 8px; justify-content: center; }
-      .tab-nav { margin-left: 0; }
+      .site-header { flex-wrap: wrap; padding: 10px 16px; gap: 8px; }
+      .tab-nav { margin-left: 0; flex: unset; }
       .tab-nav__tab { padding: 5px 14px; font-size: 12.5px; }
       .search__input { width: 160px; }
       .search__input:focus { width: 220px; }
-      .site-header__actions { position: static; transform: none; }
     }
     @media (max-width: 600px) {
       .site-header__brand { gap: 8px; }
@@ -763,6 +759,12 @@
               aria-selected="false"
               aria-controls="section-mcp"
               data-tab="mcp">MCP Servers</button>
+      <button class="tab-nav__tab"
+              role="tab"
+              id="tab-plugins"
+              aria-selected="false"
+              aria-controls="section-plugins"
+              data-tab="plugins">Plugins</button>
     </nav>
     <div class="site-header__actions">
       <div class="search" id="search">
@@ -823,7 +825,7 @@ copilot -p "refactor src/auth/login.ts to use async/await"
 copilot -sp "what does the payment module do?"
 
 # Launch with a specific custom agent active from the start
-copilot --agent gsd-executor "run the phase 2 plan"</code></pre>
+copilot --agent code-reviewer "review the auth module"</code></pre>
           </div>
 
           <details class="collapsible">
@@ -1353,7 +1355,7 @@ copilot --allow-all</code></pre>
                   <tr><td><code>/diff</code></td><td>Show the current working tree diff within the session</td><td></td></tr>
                   <tr><td><code>/pr</code></td><td>Create a pull request from the current working changes</td><td></td></tr>
                   <tr><td><code>/skills</code></td><td>Manage and list agent skills</td><td><code>/skills list</code>, <code>/skills info NAME</code>, <code>/skills add PATH</code>, <code>/skills reload</code>, <code>/skills remove DIR</code></td></tr>
-                  <tr><td><code>/agent</code></td><td>Switch to or invoke a specific agent by name</td><td>e.g. <code>/agent gsd-executor</code> — switches the active agent mid-session</td></tr>
+                  <tr><td><code>/agent</code></td><td>Switch to or invoke a specific agent by name</td><td>e.g. <code>/agent code-reviewer</code> — switches the active agent mid-session</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1386,7 +1388,7 @@ copilot --allow-all</code></pre>
             <p><strong>Two agent systems share the same directory.</strong> Copilot CLI agents use the <code>.agent.md</code> double extension and are invoked locally from your terminal. GitHub cloud agents (the Copilot coding agent on GitHub.com Issues and PRs) use plain <code>.md</code> files. Both live in <code>.github/agents/</code> — the file extension is the only visual difference. This guide covers CLI agents only.</p>
           </div>
 
-          <p>A Copilot CLI agent is a persona with its own isolated context window, a defined set of tool permissions, and a system prompt that shapes its behavior. When you invoke an agent, Copilot doesn't continue the current session — it opens a separate context and routes your request through the agent's instructions. This means agents can be highly specialized: a security auditor that never writes files, a test runner that only touches test directories, or a GSD executor that follows a strict task workflow.</p>
+          <p>A Copilot CLI agent is a persona with its own isolated context window, a defined set of tool permissions, and a system prompt that shapes its behavior. When you invoke an agent, Copilot doesn't continue the current session — it opens a separate context and routes your request through the agent's instructions. This means agents can be highly specialized: a security auditor that never writes files, a test runner that only touches test directories, or a deployment agent that follows a strict rollout checklist.</p>
           <p>Agents differ from <code>copilot-instructions.md</code> custom instructions in that they're invokable on demand and session-scoped, rather than always-on. You can have many agents in your repo and invoke only the one suited to the current task. Agents can also be invoked by other agents as subagents — enabling parallel, coordinated workflows.</p>
 
           <h3>Agent Profile Format</h3>
@@ -1398,7 +1400,7 @@ copilot --allow-all</code></pre>
                 <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75z"/>
                 </svg>
-                .github/agents/gsd-executor.agent.md
+                .github/agents/code-reviewer.agent.md
               </span>
               <button class="code-block__copy" aria-label="Copy to clipboard">
                 <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
@@ -1411,15 +1413,13 @@ copilot --allow-all</code></pre>
               </button>
             </div>
             <pre class="code-block__pre"><code class="language-yaml">---
-name: gsd-executor                    # optional — filename used as agent ID if omitted
+name: code-reviewer                   # optional — filename used as agent ID if omitted
 description: >                        # required — Copilot reads this to decide WHEN to auto-invoke
-  Executes GSD workflow phases following the .planning/ directory conventions.
-  Use when asked to run a GSD execute command, work through a phase plan, or
-  complete a task list from a PLAN.md file.
+  Reviews code for bugs, security issues, and style violations.
+  Use when asked to review code, audit a PR, or check for vulnerabilities.
 tools:                                # optional — defaults to all available tools if omitted
   - shell                             #   shell: run terminal commands
   - view                              #   view: read files and directories
-  - write                             #   write: create and edit files
   - search                            #   search: grep and file search
 mcp-servers:                          # optional — attach MCP servers to this agent's context
   - name: github
@@ -1427,18 +1427,17 @@ mcp-servers:                          # optional — attach MCP servers to this 
     url: https://api.githubcopilot.com/mcp/
 ---
 
-# GSD Executor Agent
+# Code Reviewer Agent
 
-You are the execution agent for the Get Shit Done (GSD) workflow. Your role
-is to carry out tasks defined in `.planning/phases/*/PLAN.md` files with
-precision and in the correct order.
+You are a code review agent. Your role is to analyze code changes for
+bugs, security vulnerabilities, performance issues, and style violations.
 
 ## Core Principles
 
-- Read the full PLAN.md before starting any task
-- Execute tasks in wave order — never skip ahead
-- Commit after each completed task if `commit_docs: true` in config
-- Stop and report blockers immediately rather than improvising</code></pre>
+- Read the full diff before commenting on individual files
+- Prioritize correctness and security over style nits
+- Provide actionable suggestions with code examples
+- Flag blocking issues separately from minor improvements</code></pre>
           </div>
 
           <details class="collapsible">
@@ -1458,7 +1457,7 @@ precision and in the correct order.
                     <td><code>name</code></td>
                     <td>Optional</td>
                     <td>string</td>
-                    <td>Human-readable display name. If omitted, the filename without <code>.agent.md</code> is used as the agent ID for invocation (e.g., <code>gsd-executor.agent.md</code> → invoked as <code>gsd-executor</code>).</td>
+                    <td>Human-readable display name. If omitted, the filename without <code>.agent.md</code> is used as the agent ID for invocation (e.g., <code>code-reviewer.agent.md</code> → invoked as <code>code-reviewer</code>).</td>
                   </tr>
                   <tr>
                     <td><code>description</code></td>
@@ -1597,7 +1596,7 @@ precision and in the correct order.
                   <tr>
                     <td>1</td>
                     <td>Slash command</td>
-                    <td><code>/agent gsd-executor</code></td>
+                    <td><code>/agent code-reviewer</code></td>
                     <td>Switch the active agent explicitly mid-session</td>
                   </tr>
                   <tr>
@@ -1615,7 +1614,7 @@ precision and in the correct order.
                   <tr>
                     <td>4</td>
                     <td>CLI flag</td>
-                    <td><code>copilot --agent gsd-executor "run the plan"</code></td>
+                    <td><code>copilot --agent code-reviewer "review src/auth"</code></td>
                     <td>Programmatic or scripted use — agent is selected before the session opens</td>
                   </tr>
                 </tbody>
@@ -1634,13 +1633,13 @@ precision and in the correct order.
                   </button>
                 </div>
                 <pre class="code-block__pre"><code class="language-bash"># Method 1: switch agent mid-session
-/agent gsd-executor
+/agent code-reviewer
 
 # Method 4: start session with agent pre-selected (CLI flag)
-copilot --agent gsd-executor "run the phase 3 plan"
+copilot --agent code-reviewer "review the auth module"
 
 # Combine --agent + --autopilot for non-interactive scripted workflows
-copilot --agent gsd-executor --autopilot -p "execute phase 3"</code></pre>
+copilot --agent code-reviewer --autopilot -p "review all changed files"</code></pre>
               </div>
             </div>
           </details>
@@ -2424,6 +2423,71 @@ await server.connect(transport);</code></pre>
 
       </article>
 
+      <!-- ═══════════════════════════ TAB 5 — PLUGINS ═══════════════════════════ -->
+      <article id="section-plugins" role="tabpanel" aria-labelledby="tab-plugins" class="content-panel content-panel--hidden">
+
+        <section id="plugins-overview" class="content-section">
+          <h2 class="section-heading">What Are Plugins?</h2>
+
+          <p>Plugins are third-party tools, workflows, and agent packs built by the community that extend Copilot CLI's capabilities beyond its built-in features. They typically add custom agents, skills, and project conventions that integrate directly into your terminal workflow. A plugin is installed by copying its <code>.agent.md</code> files and <code>.github/skills/</code> directories into your project.</p>
+        </section>
+
+        <section id="plugins-gsd" class="content-section">
+          <h2 class="section-heading">GSD (Get Shit Done)</h2>
+
+          <p>GSD is a structured project management workflow that runs inside Copilot CLI. It provides a phased approach to software development with planning, execution, and verification stages — all orchestrated through custom agents and skills that live in your repo.</p>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Key Features
+            </summary>
+            <div class="collapsible__content">
+              <table>
+                <thead>
+                  <tr><th>Feature</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Project scaffolding</td><td><code>/gsd-new-project</code> initializes a <code>.planning/</code> directory with PROJECT.md, ROADMAP.md</td></tr>
+                  <tr><td>Phased workflow</td><td>Break work into milestones → phases → plans → tasks</td></tr>
+                  <tr><td>Parallel execution</td><td><code>/gsd-fleet</code> dispatches subagents for concurrent work</td></tr>
+                  <tr><td>Autonomous mode</td><td><code>/gsd-autonomous</code> runs all remaining phases without intervention</td></tr>
+                  <tr><td>Built-in verification</td><td><code>/gsd-verify-work</code> validates features through conversational UAT</td></tr>
+                  <tr><td>Session management</td><td><code>/gsd-pause-work</code> and <code>/gsd-resume-work</code> for context handoff</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Installation &amp; Community
+            </summary>
+            <div class="collapsible__content">
+              <p>GSD is installed via the GSD installer, which adds agent files and skills to your project's <code>.github/</code> directory. Once installed, all <code>/gsd-*</code> slash commands become available in your Copilot CLI sessions.</p>
+              <p>Join the <strong>GSD Discord community</strong> to connect with other users, get support, and share workflows.</p>
+            </div>
+          </details>
+        </section>
+
+        <section id="plugins-finding" class="content-section">
+          <h2 class="section-heading">Finding Plugins</h2>
+
+          <p>The Copilot CLI plugin ecosystem is growing. Community plugins are typically distributed as GitHub repos containing <code>.agent.md</code> files and <code>.github/skills/</code> directories that you copy into your project. Search GitHub for repositories tagged with <code>copilot-cli-plugin</code> or <code>copilot-agent</code> to discover new tools.</p>
+
+          <div class="callout callout--tip">
+            <span class="callout__type">Tip</span>
+            <p><strong>Evaluating plugins:</strong> Before installing a community plugin, review its agent files and skill definitions. Since agents can access tools like <code>shell</code> and <code>write</code>, you should understand what permissions a plugin's agents request and what their system prompts instruct them to do.</p>
+          </div>
+        </section>
+
+      </article>
+
     </main>
   </div>
 
@@ -2608,7 +2672,7 @@ function initSearch() {
   // Build index from headings, collapsibles, and inline code terms
   const index = [];
   const seen  = new Set();
-  const tabMap = { 'section-cli-intro': 'CLI Intro', 'section-agents': 'Agents', 'section-skills': 'Skills', 'section-mcp': 'MCP' };
+  const tabMap = { 'section-cli-intro': 'CLI Intro', 'section-agents': 'Agents', 'section-skills': 'Skills', 'section-mcp': 'MCP', 'section-plugins': 'Plugins' };
 
   function addEntry(text, el, tabKey, tabLabel) {
     const key = text.toLowerCase() + '|' + tabKey;
