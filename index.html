@@ -6,6 +6,17 @@
   <title>GitHub Copilot CLI — AI Agents &amp; Skills Guide</title>
   <link rel="icon" type="image/png" href="Icon2.png">
   <style>
+    /* Starfield background canvas */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .site-header { position: relative; z-index: 10; }
+    .load-splash { position: fixed; z-index: 9999; }
+    [data-theme="light"] #starfield { opacity: 0; transition: opacity 0.5s; }
+
     /* Section 1: CSS Custom Properties */
     :root {
       /* Backgrounds — deeper contrast range */
@@ -163,11 +174,10 @@
       z-index: 10;
     }
     .site-header__icon {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       flex-shrink: 0;
       border-radius: 4px;
-      margin-right: 4px;
     }
     .site-header__actions {
       display: flex;
@@ -892,6 +902,8 @@
 </head>
 <body>
 
+  <canvas id="starfield"></canvas>
+
   <!-- 5. PAGE LOAD SPLASH -->
   <div class="load-splash" id="load-splash">
     <img class="load-splash__icon" src="Icon.png" alt="" />
@@ -900,8 +912,8 @@
 
   <!-- HEADER: brand + tab nav -->
   <header class="site-header">
+    <img class="site-header__icon" src="Icon2.png" alt="Copilot icon" width="36" height="36" />
     <nav class="tab-nav" role="tablist" aria-label="Guide sections">
-      <img class="site-header__icon" src="Icon2.png" alt="Copilot icon" width="32" height="32" />
       <button class="tab-nav__tab tab-nav__tab--active"
               role="tab"
               id="tab-cli-intro"
@@ -3094,6 +3106,68 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initCopyButtons();
   initSearch();
+
+  /* Starfield */
+  const canvas = document.getElementById('starfield');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let w, h, stars = [];
+    const STAR_COUNT = 180;
+    const LAYERS = [
+      { speed: 0.15, size: [0.4, 1.0], alpha: [0.15, 0.35] },
+      { speed: 0.35, size: [0.8, 1.6], alpha: [0.25, 0.5] },
+      { speed: 0.7,  size: [1.2, 2.2], alpha: [0.4, 0.75] },
+    ];
+
+    function rand(min, max) { return min + Math.random() * (max - min); }
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    function seed() {
+      stars = [];
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const layer = LAYERS[Math.floor(Math.random() * LAYERS.length)];
+        stars.push({
+          x: Math.random() * w,
+          baseY: Math.random() * (document.documentElement.scrollHeight || h * 3),
+          r: rand(layer.size[0], layer.size[1]),
+          alpha: rand(layer.alpha[0], layer.alpha[1]),
+          speed: layer.speed,
+          twinkle: rand(0.5, 2.5),
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+    }
+
+    let scrollY = 0;
+    window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+    let frame = 0;
+    function draw() {
+      frame++;
+      ctx.clearRect(0, 0, w, h);
+      const t = frame * 0.02;
+      for (const s of stars) {
+        const y = s.baseY - scrollY * s.speed;
+        const screenY = ((y % h) + h) % h;
+        const flicker = 0.7 + 0.3 * Math.sin(t * s.twinkle + s.phase);
+        ctx.globalAlpha = s.alpha * flicker;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(s.x, screenY, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    seed();
+    window.addEventListener('resize', () => { resize(); seed(); });
+    draw();
+  }
 
   /* 5. Dismiss load splash */
   const splash = document.getElementById('load-splash');
