@@ -686,6 +686,8 @@
     [data-theme="light"] .tab-nav__tab:hover { background: rgba(0,0,0,0.04); border-color: #d1d9e0; }
     [data-theme="light"] .tab-nav__tab--active { background: #0969da; border-color: #0969da; color: #fff; box-shadow: 0 0 10px rgba(9,105,218,0.2); }
     [data-theme="light"] .tab-nav__tab--active:hover { background: #0860ca; border-color: #0860ca; color: #fff; }
+    [data-theme="light"] .search__input:focus { border-color: #0969da; box-shadow: 0 0 0 2px rgba(9,105,218,0.15); }
+    [data-theme="light"] .search__result-title mark { color: #0969da; }
     [data-theme="light"] .search__results { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
     [data-theme="light"] .code-block__copy--copied { background: #dafbe1; color: #1a7f37; }
     [data-theme="light"] kbd { background: #e8ecf0; box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
@@ -1392,7 +1394,12 @@ copilot --allow-all</code></pre>
           <p>Agents differ from <code>copilot-instructions.md</code> custom instructions in that they're invokable on demand and session-scoped, rather than always-on. You can have many agents in your repo and invoke only the one suited to the current task. Agents can also be invoked by other agents as subagents — enabling parallel, coordinated workflows.</p>
 
           <h3>Agent Profile Format</h3>
-          <p>A CLI agent is a file with the <code>.agent.md</code> double extension. The YAML frontmatter defines the agent's identity and capabilities; the Markdown body becomes the agent's system prompt — the instructions Copilot follows when this agent is active. Only <code>description</code> is required; all other frontmatter fields are optional.</p>
+          <p>A CLI agent is a file with the <code>.agent.md</code> double extension, placed in <code>.github/agents/</code>. The file has two parts:</p>
+          <ol style="margin: 10px 0 14px 20px; color: var(--color-text-secondary);">
+            <li><strong style="color: var(--color-text-primary);">YAML frontmatter</strong> — defines identity, tool permissions, and MCP connections</li>
+            <li><strong style="color: var(--color-text-primary);">Markdown body</strong> — becomes the agent's system prompt (the instructions it follows)</li>
+          </ol>
+          <p>Only <code>description</code> is required; all other frontmatter fields are optional.</p>
 
           <div class="code-block" data-lang="yaml">
             <div class="code-block__header">
@@ -1413,15 +1420,15 @@ copilot --allow-all</code></pre>
               </button>
             </div>
             <pre class="code-block__pre"><code class="language-yaml">---
-name: code-reviewer                   # optional — filename used as agent ID if omitted
-description: >                        # required — Copilot reads this to decide WHEN to auto-invoke
+name: code-reviewer
+description: >
   Reviews code for bugs, security issues, and style violations.
   Use when asked to review code, audit a PR, or check for vulnerabilities.
-tools:                                # optional — defaults to all available tools if omitted
-  - shell                             #   shell: run terminal commands
-  - view                              #   view: read files and directories
-  - search                            #   search: grep and file search
-mcp-servers:                          # optional — attach MCP servers to this agent's context
+tools:
+  - shell
+  - view
+  - search
+mcp-servers:
   - name: github
     type: http
     url: https://api.githubcopilot.com/mcp/
@@ -1429,8 +1436,9 @@ mcp-servers:                          # optional — attach MCP servers to this 
 
 # Code Reviewer Agent
 
-You are a code review agent. Your role is to analyze code changes for
-bugs, security vulnerabilities, performance issues, and style violations.
+You are a code review agent. Your role is to analyze code changes
+for bugs, security vulnerabilities, performance issues, and
+style violations.
 
 ## Core Principles
 
@@ -1438,6 +1446,11 @@ bugs, security vulnerabilities, performance issues, and style violations.
 - Prioritize correctness and security over style nits
 - Provide actionable suggestions with code examples
 - Flag blocking issues separately from minor improvements</code></pre>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__type">Anatomy</span>
+            <p>The <code>---</code> fences wrap YAML frontmatter. Everything after the closing <code>---</code> is the Markdown system prompt — write it like you're briefing a colleague. The <code>description</code> field is what Copilot reads to decide <em>when</em> to auto-invoke this agent, so be specific.</p>
           </div>
 
           <details class="collapsible">
