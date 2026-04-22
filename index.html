@@ -572,7 +572,7 @@
               aria-controls="section-mcp"
               data-tab="mcp">MCP Servers</button>
     </nav>
-    <span class="site-header__meta">Last verified: 2026-04-10</span>
+    <span class="site-header__meta">Last verified: 2026-04-22</span>
   </header>
 
   <!-- PAGE BODY: sidebar + main -->
@@ -675,12 +675,32 @@ copilot --agent gsd-executor "run the phase 2 plan"</code></pre>
                   <tr><th>Shortcut / Operator</th><th>Effect</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td><code>Shift+Tab</code></td><td>Cycle through Standard → Plan → Autopilot modes</td></tr>
+                  <!-- Prompt Operators -->
                   <tr><td><code>@FILENAME</code></td><td>Include a file's content in the current prompt context — e.g. <code>@src/auth/login.ts</code></td></tr>
-                  <tr><td><code>!COMMAND</code></td><td>Pass a shell command through without Copilot interpreting it — e.g. <code>!git status</code></td></tr>
+                  <tr><td><code>#NUMBER</code></td><td>Include a GitHub issue or pull request in the context</td></tr>
+                  <tr><td><code>!COMMAND</code></td><td>Execute a shell command directly, bypassing Copilot — e.g. <code>!git status</code></td></tr>
+                  <tr><td><code>?</code></td><td>Open quick help (on an empty prompt)</td></tr>
+                  <!-- Mode & Control -->
+                  <tr><td><code>Shift+Tab</code></td><td>Cycle through Standard → Plan → Autopilot modes</td></tr>
                   <tr><td><code>Esc</code></td><td>Cancel the current operation</td></tr>
+                  <tr><td><code>Ctrl+C</code></td><td>Cancel operation / clear input — press twice to exit</td></tr>
+                  <tr><td><code>Ctrl+D</code></td><td>Shutdown the CLI session</td></tr>
+                  <!-- Input -->
+                  <tr><td><code>Shift+Enter</code></td><td>Insert a newline in the prompt input</td></tr>
+                  <tr><td><code>Ctrl+Enter</code> / <code>Ctrl+Q</code></td><td>Queue a message to send while the agent is busy</td></tr>
+                  <tr><td><code>Ctrl+G</code></td><td>Edit the current prompt in an external editor (<code>$EDITOR</code>)</td></tr>
+                  <tr><td><code>Ctrl+V</code></td><td>Paste from clipboard as an attachment (images supported)</td></tr>
+                  <tr><td><code>Ctrl+R</code></td><td>Reverse search through command history</td></tr>
+                  <!-- Display -->
                   <tr><td><code>Ctrl+L</code></td><td>Clear the terminal screen — session context is preserved</td></tr>
-                  <tr><td><code>/help</code></td><td>List all available slash commands for the current session</td></tr>
+                  <tr><td><code>Ctrl+T</code></td><td>Toggle reasoning visibility — show/hide the model's thinking process</td></tr>
+                  <tr><td><code>Ctrl+O</code></td><td>Expand recent items in the response timeline (empty prompt)</td></tr>
+                  <tr><td><code>Ctrl+E</code></td><td>Expand all timeline items (empty prompt)</td></tr>
+                  <tr><td><code>Page Up/Down</code></td><td>Scroll the timeline up or down by one page</td></tr>
+                  <!-- Navigation -->
+                  <tr><td><code>↑/↓</code></td><td>Navigate command history</td></tr>
+                  <tr><td><code>Alt+←/→</code></td><td>Move cursor by word</td></tr>
+                  <tr><td><code>Ctrl+X</code> then <code>/</code></td><td>Run a slash command without losing your typed prompt</td></tr>
                 </tbody>
               </table>
             </div>
@@ -700,12 +720,30 @@ copilot --agent gsd-executor "run the phase 2 plan"</code></pre>
                   <tr><th>Flag</th><th>Effect</th></tr>
                 </thead>
                 <tbody>
+                  <!-- Permissions -->
                   <tr><td><code>--allow-all-tools</code></td><td>Skip all tool confirmation prompts for the session</td></tr>
-                  <tr><td><code>--autopilot</code></td><td>Start in autopilot mode (equivalent to cycling to Autopilot immediately on launch)</td></tr>
-                  <tr><td><code>--agent NAME</code></td><td>Start with a specific agent active — NAME is the filename without <code>.agent.md</code></td></tr>
-                  <tr><td><code>--resume</code></td><td>Resume the most recent session with its full context intact</td></tr>
+                  <tr><td><code>--allow-all</code> / <code>--yolo</code></td><td>Enable all permissions — tools, paths, and URLs</td></tr>
                   <tr><td><code>--allow-tool='TOOL(ARGS)'</code></td><td>Pre-approve one specific tool call pattern for the session</td></tr>
                   <tr><td><code>--deny-tool='TOOL'</code></td><td>Block a specific tool for the entire session</td></tr>
+                  <tr><td><code>--no-ask-user</code></td><td>Suppress clarifying questions — agent decides on its own</td></tr>
+                  <!-- Mode & Session -->
+                  <tr><td><code>--autopilot</code></td><td>Start in autopilot mode (fully autonomous execution)</td></tr>
+                  <tr><td><code>--mode=MODE</code></td><td>Set initial mode: <code>interactive</code>, <code>plan</code>, or <code>autopilot</code></td></tr>
+                  <tr><td><code>--max-autopilot-continues=N</code></td><td>Limit autonomous continuation steps to prevent runaway loops</td></tr>
+                  <tr><td><code>--agent NAME</code></td><td>Start with a specific agent active — NAME is the filename without <code>.agent.md</code></td></tr>
+                  <tr><td><code>--model=MODEL</code></td><td>Set the AI model — pass <code>auto</code> for automatic selection</td></tr>
+                  <tr><td><code>--effort=LEVEL</code></td><td>Set reasoning effort: <code>low</code>, <code>medium</code>, or <code>high</code></td></tr>
+                  <!-- Resume & Sharing -->
+                  <tr><td><code>--resume</code></td><td>Resume a previous session by choosing from a list</td></tr>
+                  <tr><td><code>--continue</code></td><td>Resume the most recent session directly</td></tr>
+                  <tr><td><code>--share=PATH</code></td><td>Export session to Markdown after a programmatic run</td></tr>
+                  <tr><td><code>--share-gist</code></td><td>Export session to a secret GitHub gist</td></tr>
+                  <tr><td><code>-s</code> / <code>--silent</code></td><td>Output only the agent response — useful for scripting with <code>-p</code></td></tr>
+                  <tr><td><code>--output-format=json</code></td><td>Output JSONL (one JSON object per line) instead of text</td></tr>
+                  <!-- Advanced -->
+                  <tr><td><code>--additional-mcp-config=JSON</code></td><td>Add an MCP server for this session only (JSON string or <code>@file</code> path)</td></tr>
+                  <tr><td><code>--remote</code></td><td>Enable remote access from GitHub.com and GitHub Mobile</td></tr>
+                  <tr><td><code>--experimental</code></td><td>Enable experimental features</td></tr>
                 </tbody>
               </table>
               <div class="code-block" data-lang="bash">
@@ -733,6 +771,355 @@ copilot --deny-tool='shell' -p "review the auth module for security issues"
 # Resume the most recent session with context intact
 copilot --resume</code></pre>
               </div>
+            </div>
+          </details>
+        </section>
+
+        <section id="cli-environment" class="content-section">
+          <h2 class="section-heading">Environment &amp; Configuration</h2>
+          <p>Copilot CLI adapts to your project through instruction files, model selection, and intelligent context management. These features work automatically but are highly configurable.</p>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Custom Instructions
+            </summary>
+            <div class="collapsible__body">
+              <p>Copilot CLI reads instructions from multiple locations automatically. All files combine — there is no fallback hierarchy, every matching file is loaded.</p>
+              <table>
+                <thead>
+                  <tr><th>Location</th><th>Scope</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>~/.copilot/copilot-instructions.md</code></td><td>Global (all sessions)</td></tr>
+                  <tr><td><code>.github/copilot-instructions.md</code></td><td>Repository</td></tr>
+                  <tr><td><code>.github/instructions/**/*.instructions.md</code></td><td>Repository (modular)</td></tr>
+                  <tr><td><code>AGENTS.md</code> (in Git root or cwd)</td><td>Repository</td></tr>
+                  <tr><td><code>Copilot.md</code>, <code>GEMINI.md</code>, <code>CODEX.md</code></td><td>Repository</td></tr>
+                </tbody>
+              </table>
+              <p>Repository instructions always take precedence over global instructions.</p>
+              <div class="code-block" data-lang="markdown">
+                <div class="code-block__header">
+                  <span class="code-block__lang">markdown</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-markdown">## Build Commands
+- `npm run build` — Build the project
+- `npm run test` — Run all tests
+- `npm run lint:fix` — Fix linting issues
+
+## Code Style
+- Use TypeScript strict mode
+- Prefer functional components over class components
+- Always add JSDoc comments for public APIs</code></pre>
+              </div>
+              <div class="callout callout--tip">
+                <span class="callout__type">Tip</span>
+                Keep instructions concise and actionable. Lengthy instructions can dilute effectiveness. Use <code>/instructions</code> to view and toggle active instruction files during a session.
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Model Selection
+            </summary>
+            <div class="collapsible__body">
+              <p>Use <code>/model</code> to switch models mid-session or <code>--model MODEL</code> at startup.</p>
+              <table>
+                <thead>
+                  <tr><th>Model</th><th>Best For</th><th>Tradeoffs</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Auto</strong></td><td>Reduced rate limiting, lower latency</td><td>Copilot picks the best model per-request</td></tr>
+                  <tr><td><strong>Claude Opus 4.5</strong></td><td>Complex architecture, difficult debugging, nuanced refactoring</td><td>Most capable but uses more premium requests</td></tr>
+                  <tr><td><strong>Claude Sonnet 4.5</strong> (default)</td><td>Day-to-day coding, most routine tasks</td><td>Fast, cost-effective</td></tr>
+                  <tr><td><strong>GPT-5.2 Codex</strong></td><td>Code generation, code review, straightforward implementations</td><td>Excellent for reviewing code from other models</td></tr>
+                </tbody>
+              </table>
+              <div class="callout callout--tip">
+                <span class="callout__type">Tip</span>
+                Use Auto to let Copilot intelligently choose models, reducing rate limiting. Switch to Opus for deep reasoning tasks, Sonnet for routine work, and Codex for high-volume generation or second-opinion reviews.
+              </div>
+              <p>You can also bring your own model provider — run <code>copilot help providers</code> for details.</p>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Context &amp; Sessions
+            </summary>
+            <div class="collapsible__body">
+              <p>Copilot CLI features <strong>infinite sessions</strong> via automatic context compaction. When context reaches ~80%, Copilot compresses history in the background into a structured summary — preserving goals, decisions, and next steps.</p>
+              <table>
+                <thead>
+                  <tr><th>Command</th><th>Purpose</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>/context</code></td><td>Visualize current token usage breakdown</td></tr>
+                  <tr><td><code>/compact</code></td><td>Manually compress context to free space</td></tr>
+                  <tr><td><code>/session</code></td><td>Show session info and workspace summary</td></tr>
+                  <tr><td><code>/session checkpoints</code></td><td>View compaction history</td></tr>
+                  <tr><td><code>/session plan</code></td><td>View current plan</td></tr>
+                  <tr><td><code>/session files</code></td><td>View session artifacts</td></tr>
+                  <tr><td><code>/clear</code> or <code>/new</code></td><td>Start a fresh conversation</td></tr>
+                  <tr><td><code>/resume</code></td><td>Resume a previous session</td></tr>
+                  <tr><td><code>--continue</code></td><td>Resume most recent session from CLI</td></tr>
+                </tbody>
+              </table>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">~/.copilot/session-state/{session-id}/
+├── events.jsonl      # Full session history
+├── workspace.yaml    # Metadata
+├── plan.md           # Implementation plan (if created)
+├── checkpoints/      # Compaction history
+└── files/            # Persistent artifacts</code></pre>
+              </div>
+              <div class="callout callout--tip">
+                <span class="callout__type">Tip</span>
+                Keep sessions focused — use <code>/clear</code> between unrelated tasks. This resets context and improves response quality. Use <code>/resume</code> later to pick up where you left off.
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section id="cli-workflows" class="content-section">
+          <h2 class="section-heading">Best Practice Workflows</h2>
+          <p>These workflows combine CLI features for maximum effectiveness. Start with plan mode for complex work, leverage autopilot for well-defined tasks, and use <code>/fleet</code> for parallelizable operations.</p>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Explore → Plan → Code → Commit
+            </summary>
+            <div class="collapsible__body">
+              <p>The recommended workflow for complex, multi-file tasks:</p>
+              <ol>
+                <li><strong>Explore</strong>: <code>Read the authentication files but don't write code yet</code></li>
+                <li><strong>Plan</strong>: <code>/plan Implement password reset flow</code></li>
+                <li><strong>Review</strong>: Check the plan, suggest modifications</li>
+                <li><strong>Implement</strong>: <code>Proceed with the plan</code></li>
+                <li><strong>Verify</strong>: <code>Run the tests and fix any failures</code></li>
+                <li><strong>Commit</strong>: <code>Commit these changes with a descriptive message</code></li>
+              </ol>
+              <table>
+                <thead>
+                  <tr><th>Scenario</th><th>Use plan mode?</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Complex multi-file changes</td><td>✅</td></tr>
+                  <tr><td>Refactoring with many touch points</td><td>✅</td></tr>
+                  <tr><td>New feature implementation</td><td>✅</td></tr>
+                  <tr><td>Quick bug fixes</td><td>❌</td></tr>
+                  <tr><td>Single file changes</td><td>❌</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Common Workflow Patterns
+            </summary>
+            <div class="collapsible__body">
+              <p><strong>Codebase Onboarding</strong> — Ask about architecture, patterns, and conventions:</p>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">How is logging handled across this project?
+What API patterns does this codebase use?
+Walk me through the authentication flow
+How are database migrations managed?</code></pre>
+              </div>
+              <p><strong>Test-Driven Development</strong> — Write tests first, then implement:</p>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">Write failing tests for the password reset feature
+Now implement the code to make those tests pass
+Run the tests and fix any failures
+Commit with message "feat: add password reset"</code></pre>
+              </div>
+              <p><strong>Code Review</strong> — Surface bugs and security issues:</p>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">/review against main — focus on bugs and security
+Review the changes in the last 3 commits for potential issues</code></pre>
+              </div>
+              <p><strong>Git Operations</strong> — Automate common git workflows:</p>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">Summarize what changed between v2.0 and v2.1
+Create a PR for this branch with a detailed description
+Rebase this branch onto main and resolve conflicts
+Commit these changes with a descriptive message</code></pre>
+              </div>
+              <p><strong>Bug Investigation</strong> — Trace issues to root causes:</p>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">The /api/users endpoint returns 500 — find the root cause
+Trace the data flow from the login form to the session store
+Why does this test fail intermittently?</code></pre>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Multi-Repository Work
+            </summary>
+            <div class="collapsible__body">
+              <p><strong>Option 1</strong>: Run from a parent directory — <code>cd ~/projects &amp;&amp; copilot</code></p>
+              <p><strong>Option 2</strong>: Use <code>/add-dir</code> to expand access mid-session:</p>
+              <div class="code-block" data-lang="text">
+                <div class="code-block__header">
+                  <span class="code-block__lang">text</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-text">/add-dir /Users/me/projects/backend-service
+/add-dir /Users/me/projects/shared-libs
+/list-dirs</code></pre>
+              </div>
+              <p>Use <code>@/path/to/dir</code> references in prompts to scope work across repos. Ideal for microservices, coordinated API changes, and cross-repo refactors.</p>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Security &amp; Permissions
+            </summary>
+            <div class="collapsible__body">
+              <p>Copilot requires explicit approval for potentially destructive operations. When Copilot needs a tool, you get three options: <strong>Yes</strong> (once), <strong>Yes</strong> (for session), or <strong>No</strong>.</p>
+              <p>"Yes for session" applies broadly — approving <code>rm</code> for session means <em>any</em> <code>rm</code> command is allowed.</p>
+              <p>Use <code>--allow-tool</code> / <code>--deny-tool</code> for fine-grained control:</p>
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header">
+                  <span class="code-block__lang">bash</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-bash"># Allow all git commands but block push
+copilot --allow-tool='shell(git:*)' --deny-tool='shell(git push)'
+
+# Clear mid-session approvals
+/reset-allowed-tools
+
+# Fully trusted environment — skip all prompts
+copilot --allow-all</code></pre>
+              </div>
+              <div class="callout callout--warning">
+                <span class="callout__type">Warning</span>
+                <code>--allow-all</code> gives Copilot the same filesystem and shell access you have. Only use in trusted, scoped environments. Consider containers or VMs for automated workflows.
+              </div>
+              <p>Only launch Copilot from directories you trust — avoid running from your home directory.</p>
             </div>
           </details>
         </section>
@@ -1094,6 +1481,64 @@ copilot --autopilot
               <div class="callout callout--warning">
                 <span class="callout__type">Warning</span>
                 <p><strong><code>/fleet</code> is a preview feature.</strong> It is functional in current releases but its syntax and parallel execution behavior may change. Check <code>/help</code> in your active session to verify the current interface before building workflows that depend on it.</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Agentic Code Review — /review
+            </summary>
+            <div class="collapsible__body">
+              <p>The <code>/review</code> command invokes the <code>code-review</code> agent to analyze your changes without leaving the CLI. It only surfaces genuine issues — bugs, security vulnerabilities, logic errors — and never comments on style or formatting.</p>
+              <ol>
+                <li>Type <code>/review</code> and optionally specify a scope (path, file pattern, or prompt)</li>
+                <li>If Copilot proposes running a command (e.g., inspecting a diff), review and approve it</li>
+                <li>Read the feedback and apply improvements in your editor</li>
+              </ol>
+              <div class="code-block" data-lang="bash">
+                <div class="code-block__header">
+                  <span class="code-block__lang">bash</span>
+                  <button class="code-block__copy" aria-label="Copy to clipboard">
+                    <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                    </svg>
+                    <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                    </svg>
+                    <span class="code-block__copy-label">Copy code</span>
+                  </button>
+                </div>
+                <pre class="code-block__pre"><code class="language-bash"># Review all uncommitted changes
+/review
+
+# Scoped review with multi-model comparison
+/review Use Opus 4.5 and Codex 5.2 to review changes against main. Focus on bugs and security.</code></pre>
+              </div>
+            </div>
+          </details>
+
+          <details class="collapsible">
+            <summary class="collapsible__trigger">
+              <svg class="collapsible__chevron" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+              </svg>
+              Steering Agents While Thinking
+            </summary>
+            <div class="collapsible__body">
+              <p>While Copilot is working on a task, you can send messages at any time to steer its behavior — no need to wait for it to finish. Input sent while Copilot is thinking is processed in order as part of the active task.</p>
+              <p>Use steering to:</p>
+              <ul>
+                <li><strong>Interrupt</strong> an agent heading in the wrong direction</li>
+                <li><strong>Provide inline feedback</strong> when rejecting a tool permission request</li>
+                <li><strong>Refine scope</strong> or clarify requirements mid-execution</li>
+              </ul>
+              <div class="callout callout--tip">
+                <span class="callout__type">Tip</span>
+                <p>Use <kbd>Ctrl+Enter</kbd> or <kbd>Ctrl+Q</kbd> to queue a message while the agent is busy. The message will be processed when the agent is ready.</p>
               </div>
             </div>
           </details>
@@ -1779,7 +2224,8 @@ await server.connect(transport);</code></pre>
     </main>
   </div>
 
-  <!-- SCRIPT BLOCK — Plan 02 fills this with inlined hljs + all JS -->
+
+  <!-- SCRIPT BLOCK ΓÇö Plan 02 fills this with inlined hljs + all JS -->
   <script>
 /* -- HIGHLIGHT.JS CORE v11.11.1 (inlined -- no CDN) -- */
 /**
@@ -1880,7 +2326,7 @@ function initCopyButtons() {
     const header = block.querySelector('.code-block__header');
     const btn = block.querySelector(':scope > .code-block__copy');
     if (header && btn) {
-      // Button is a direct child of code-block — move into header
+      // Button is a direct child of code-block ΓÇö move into header
       const lang = block.dataset.lang;
       if (lang && !header.querySelector('.code-block__lang')) {
         const span = document.createElement('span');
@@ -1893,7 +2339,7 @@ function initCopyButtons() {
     // Upgrade plain-text copy buttons to consistent label format
     const copyBtn = block.querySelector('.code-block__copy');
     if (copyBtn && !copyBtn.querySelector('.code-block__copy-label')) {
-      copyBtn.innerHTML = '<span class="code-block__copy-label">⧉ Copy</span>';
+      copyBtn.innerHTML = '<span class="code-block__copy-label">Γºë Copy</span>';
     }
   });
 
@@ -1920,168 +2366,13 @@ function initCopyButtons() {
     const iconCheck = btn.querySelector('.icon--check');
 
     btn.classList.add('code-block__copy--copied');
-    if (label)     label.textContent = '✓ Copied!';
+    if (label)     label.textContent = 'Γ£ô Copied!';
     if (iconCopy)  iconCopy.classList.add('icon--hidden');
     if (iconCheck) iconCheck.classList.remove('icon--hidden');
 
     setTimeout(() => {
       btn.classList.remove('code-block__copy--copied');
-      if (label)     label.textContent = iconCopy ? 'Copy code' : '⧉ Copy';
-      if (iconCopy)  iconCopy.classList.remove('icon--hidden');
-      if (iconCheck) iconCheck.classList.add('icon--hidden');
-    }, 2000);
-  });
-}
-
-/* -- INIT -- */
-document.addEventListener('DOMContentLoaded', () => {
-  try { hljs.highlightAll(); } catch(e) { console.error('hljs error:', e); }
-  initTabs();
-  initCopyButtons();
-});
-  </script>
-
-</body>
-</html>
-y.isArray(e.end)){if(e.skip||e.excludeEnd||e.returnEnd)throw error("skip, excludeEnd, returnEnd not compatible with endScope: {}"),MultiClassError;if("object"!=typeof e.endScope||null===e.endScope)throw error("endScope must be object"),MultiClassError;remapScopeNames(e,e.end,{key:"endScope"}),e.end=_rewriteBackreferences(e.end,{joinWith:""})}}function scopeSugar(e){e.scope&&"object"==typeof e.scope&&null!==e.scope&&(e.beginScope=e.scope,delete e.scope)}function MultiClass(e){scopeSugar(e),"string"==typeof e.beginScope&&(e.beginScope={_wrap:e.beginScope}),"string"==typeof e.endScope&&(e.endScope={_wrap:e.endScope}),beginMultiClass(e),endMultiClass(e)}function compileLanguage(e){function n(n,t){return new RegExp(source(n),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(t?"g":""))}class t{constructor(){this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}addRule(e,n){n.position=this.position++,this.matchIndexes[this.matchAt]=n,this.regexes.push([n,e]),this.matchAt+=countMatchGroups(e)+1}compile(){0===this.regexes.length&&(this.exec=()=>null);const e=this.regexes.map((e=>e[1]));this.matcherRe=n(_rewriteBackreferences(e,{joinWith:"|"}),!0),this.lastIndex=0}exec(e){this.matcherRe.lastIndex=this.lastIndex;const n=this.matcherRe.exec(e);if(!n)return null;const t=n.findIndex(((e,n)=>n>0&&void 0!==e)),i=this.matchIndexes[t];return n.splice(0,t),Object.assign(n,i)}}class i{constructor(){this.rules=[],this.multiRegexes=[],this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(e){if(this.multiRegexes[e])return this.multiRegexes[e];const n=new t;return this.rules.slice(e).forEach((([e,t])=>n.addRule(e,t))),n.compile(),this.multiRegexes[e]=n,n}resumingScanAtSamePosition(){return 0!==this.regexIndex}considerAll(){this.regexIndex=0}addRule(e,n){this.rules.push([e,n]),"begin"===n.type&&this.count++}exec(e){const n=this.getMatcher(this.regexIndex);n.lastIndex=this.lastIndex;let t=n.exec(e);if(this.resumingScanAtSamePosition())if(t&&t.index===this.lastIndex);else{const n=this.getMatcher(0);n.lastIndex=this.lastIndex+1,t=n.exec(e)}return t&&(this.regexIndex+=t.position+1,this.regexIndex===this.count&&this.considerAll()),t}}if(e.compilerExtensions||(e.compilerExtensions=[]),e.contains&&e.contains.includes("self"))throw new Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.");return e.classNameAliases=inherit$1(e.classNameAliases||{}),function t(r,o){const s=r;if(r.isCompiled)return s;[scopeClassName,compileMatch,MultiClass,beforeMatchExt].forEach((e=>e(r,o))),e.compilerExtensions.forEach((e=>e(r,o))),r.__beforeBegin=null,[beginKeywords,compileIllegal,compileRelevance].forEach((e=>e(r,o))),r.isCompiled=!0;let a=null;return"object"==typeof r.keywords&&r.keywords.$pattern&&(r.keywords=Object.assign({},r.keywords),a=r.keywords.$pattern,delete r.keywords.$pattern),a=a||/\w+/,r.keywords&&(r.keywords=compileKeywords(r.keywords,e.case_insensitive)),s.keywordPatternRe=n(a,!0),o&&(r.begin||(r.begin=/\B|\b/),s.beginRe=n(s.begin),r.end||r.endsWithParent||(r.end=/\B|\b/),r.end&&(s.endRe=n(s.end)),s.terminatorEnd=source(s.end)||"",r.endsWithParent&&o.terminatorEnd&&(s.terminatorEnd+=(r.end?"|":"")+o.terminatorEnd)),r.illegal&&(s.illegalRe=n(r.illegal)),r.contains||(r.contains=[]),r.contains=[].concat(...r.contains.map((function(e){return expandOrCloneMode("self"===e?r:e)}))),r.contains.forEach((function(e){t(e,s)})),r.starts&&t(r.starts,o),s.matcher=function(e){const n=new i;return e.contains.forEach((e=>n.addRule(e.begin,{rule:e,type:"begin"}))),e.terminatorEnd&&n.addRule(e.terminatorEnd,{type:"end"}),e.illegal&&n.addRule(e.illegal,{type:"illegal"}),n}(s),s}(e)}function dependencyOnParent(e){return!!e&&(e.endsWithParent||dependencyOnParent(e.starts))}function expandOrCloneMode(e){return e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map((function(n){return inherit$1(e,{variants:null},n)}))),e.cachedVariants?e.cachedVariants:dependencyOnParent(e)?inherit$1(e,{starts:e.starts?inherit$1(e.starts):null}):Object.isFrozen(e)?inherit$1(e):e}var version="11.11.1";class HTMLInjectionError extends Error{constructor(e,n){super(e),this.name="HTMLInjectionError",this.html=n}}const escape=escapeHTML,inherit=inherit$1,NO_MATCH=Symbol("nomatch"),MAX_KEYWORD_HITS=7,HLJS=function(e){const n=Object.create(null),t=Object.create(null),i=[];let r=!0;const o="Could not find the language '{}', did you forget to load/include a language module?",s={disableAutodetect:!0,name:"Plain text",contains:[]};let a={ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",cssSelector:"pre code",languages:null,__emitter:TokenTreeEmitter};function c(e){return a.noHighlightRe.test(e)}function l(e,n,t){let i="",r="";"object"==typeof n?(i=e,t=n.ignoreIllegals,r=n.language):(deprecated("10.7.0","highlight(lang, code, ...args) has been deprecated."),deprecated("10.7.0","Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.js/issues/2277"),r=e,i=n),void 0===t&&(t=!0);const o={code:i,language:r};b("before:highlight",o);const s=o.result?o.result:g(o.language,o.code,t);return s.code=o.code,b("after:highlight",s),s}function g(e,t,i,s){const c=Object.create(null);function l(){if(!R.keywords)return void x.addText(y);let e=0;R.keywordPatternRe.lastIndex=0;let n=R.keywordPatternRe.exec(y),t="";for(;n;){t+=y.substring(e,n.index);const r=S.case_insensitive?n[0].toLowerCase():n[0],o=(i=r,R.keywords[i]);if(o){const[e,i]=o;if(x.addText(t),t="",c[r]=(c[r]||0)+1,c[r]<=7&&(A+=i),e.startsWith("_"))t+=n[0];else{const t=S.classNameAliases[e]||e;h(n[0],t)}}else t+=n[0];e=R.keywordPatternRe.lastIndex,n=R.keywordPatternRe.exec(y)}var i;t+=y.substring(e),x.addText(t)}function d(){null!=R.subLanguage?function(){if(""===y)return;let e=null;if("string"==typeof R.subLanguage){if(!n[R.subLanguage])return void x.addText(y);e=g(R.subLanguage,y,!0,T[R.subLanguage]),T[R.subLanguage]=e._top}else e=u(y,R.subLanguage.length?R.subLanguage:null);R.relevance>0&&(A+=e.relevance),x.__addSublanguage(e._emitter,e.language)}():l(),y=""}function h(e,n){""!==e&&(x.startScope(n),x.addText(e),x.endScope())}function p(e,n){let t=1;const i=n.length-1;for(;t<=i;){if(!e._emit[t]){t++;continue}const i=S.classNameAliases[e[t]]||e[t],r=n[t];i?h(r,i):(y=r,l(),y=""),t++}}function E(e,n){return e.scope&&"string"==typeof e.scope&&x.openNode(S.classNameAliases[e.scope]||e.scope),e.beginScope&&(e.beginScope._wrap?(h(y,S.classNameAliases[e.beginScope._wrap]||e.beginScope._wrap),y=""):e.beginScope._multi&&(p(e.beginScope,n),y="")),R=Object.create(e,{parent:{value:R}}),R}function _(e,n,t){let i=startsWith(e.endRe,t);if(i){if(e["on:end"]){const t=new Response(e);e["on:end"](n,t),t.isMatchIgnored&&(i=!1)}if(i){for(;e.endsParent&&e.parent;)e=e.parent;return e}}if(e.endsWithParent)return _(e.parent,n,t)}function b(e){return 0===R.matcher.regexIndex?(y+=e[0],1):(D=!0,0)}function m(e){const n=e[0],i=t.substring(e.index),r=_(R,e,i);if(!r)return NO_MATCH;const o=R;R.endScope&&R.endScope._wrap?(d(),h(n,R.endScope._wrap)):R.endScope&&R.endScope._multi?(d(),p(R.endScope,e)):o.skip?y+=n:(o.returnEnd||o.excludeEnd||(y+=n),d(),o.excludeEnd&&(y=n));do{R.scope&&x.closeNode(),R.skip||R.subLanguage||(A+=R.relevance),R=R.parent}while(R!==r.parent);return r.starts&&E(r.starts,e),o.returnEnd?0:n.length}let M={};function O(n,o){const s=o&&o[0];if(y+=n,null==s)return d(),0;if("begin"===M.type&&"end"===o.type&&M.index===o.index&&""===s){if(y+=t.slice(o.index,o.index+1),!r){const n=new Error(`0 width match regex (${e})`);throw n.languageName=e,n.badRule=M.rule,n}return 1}if(M=o,"begin"===o.type)return function(e){const n=e[0],t=e.rule,i=new Response(t),r=[t.__beforeBegin,t["on:begin"]];for(const t of r)if(t&&(t(e,i),i.isMatchIgnored))return b(n);return t.skip?y+=n:(t.excludeBegin&&(y+=n),d(),t.returnBegin||t.excludeBegin||(y=n)),E(t,e),t.returnBegin?0:n.length}(o);if("illegal"===o.type&&!i){const e=new Error('Illegal lexeme "'+s+'" for mode "'+(R.scope||"<unnamed>")+'"');throw e.mode=R,e}if("end"===o.type){const e=m(o);if(e!==NO_MATCH)return e}if("illegal"===o.type&&""===s)return y+="\n",1;if(k>1e5&&k>3*o.index){throw new Error("potential infinite loop, way more iterations than matches")}return y+=s,s.length}const S=f(e);if(!S)throw error(o.replace("{}",e)),new Error('Unknown language: "'+e+'"');const N=compileLanguage(S);let w="",R=s||N;const T={},x=new a.__emitter(a);!function(){const e=[];for(let n=R;n!==S;n=n.parent)n.scope&&e.unshift(n.scope);e.forEach((e=>x.openNode(e)))}();let y="",A=0,C=0,k=0,D=!1;try{if(S.__emitTokens)S.__emitTokens(t,x);else{for(R.matcher.considerAll();;){k++,D?D=!1:R.matcher.considerAll(),R.matcher.lastIndex=C;const e=R.matcher.exec(t);if(!e)break;const n=O(t.substring(C,e.index),e);C=e.index+n}O(t.substring(C))}return x.finalize(),w=x.toHTML(),{language:e,value:w,relevance:A,illegal:!1,_emitter:x,_top:R}}catch(n){if(n.message&&n.message.includes("Illegal"))return{language:e,value:escape(t),illegal:!0,relevance:0,_illegalBy:{message:n.message,index:C,context:t.slice(C-100,C+100),mode:n.mode,resultSoFar:w},_emitter:x};if(r)return{language:e,value:escape(t),illegal:!1,relevance:0,errorRaised:n,_emitter:x,_top:R};throw n}}function u(e,t){t=t||a.languages||Object.keys(n);const i=function(e){const n={value:escape(e),illegal:!1,relevance:0,_top:s,_emitter:new a.__emitter(a)};return n._emitter.addText(e),n}(e),r=t.filter(f).filter(_).map((n=>g(n,e,!1)));r.unshift(i);const o=r.sort(((e,n)=>{if(e.relevance!==n.relevance)return n.relevance-e.relevance;if(e.language&&n.language){if(f(e.language).supersetOf===n.language)return 1;if(f(n.language).supersetOf===e.language)return-1}return 0})),[c,l]=o,u=c;return u.secondBest=l,u}function d(e){let n=null;const i=function(e){let n=e.className+" ";n+=e.parentNode?e.parentNode.className:"";const t=a.languageDetectRe.exec(n);if(t){const n=f(t[1]);return n||(warn(o.replace("{}",t[1])),warn("Falling back to no-highlight mode for this block.",e)),n?t[1]:"no-highlight"}return n.split(/\s+/).find((e=>c(e)||f(e)))}(e);if(c(i))return;if(b("before:highlightElement",{el:e,language:i}),e.dataset.highlighted)return void console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",e);if(e.children.length>0&&(a.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),console.warn("https://github.com/highlightjs/highlight.js/wiki/security"),console.warn("The element with unescaped HTML:"),console.warn(e)),a.throwUnescapedHTML)){throw new HTMLInjectionError("One of your code blocks includes unescaped HTML.",e.innerHTML)}n=e;const r=n.textContent,s=i?l(r,{language:i,ignoreIllegals:!0}):u(r);e.innerHTML=s.value,e.dataset.highlighted="yes",function(e,n,i){const r=n&&t[n]||i;e.classList.add("hljs"),e.classList.add(`language-${r}`)}(e,i,s.language),e.result={language:s.language,re:s.relevance,relevance:s.relevance},s.secondBest&&(e.secondBest={language:s.secondBest.language,relevance:s.secondBest.relevance}),b("after:highlightElement",{el:e,result:s,text:r})}let h=!1;function p(){if("loading"===document.readyState)return h||window.addEventListener("DOMContentLoaded",(function(){p()}),!1),void(h=!0);document.querySelectorAll(a.cssSelector).forEach(d)}function f(e){return e=(e||"").toLowerCase(),n[e]||n[t[e]]}function E(e,{languageName:n}){"string"==typeof e&&(e=[e]),e.forEach((e=>{t[e.toLowerCase()]=n}))}function _(e){const n=f(e);return n&&!n.disableAutodetect}function b(e,n){const t=e;i.forEach((function(e){e[t]&&e[t](n)}))}Object.assign(e,{highlight:l,highlightAuto:u,highlightAll:p,highlightElement:d,highlightBlock:function(e){return deprecated("10.7.0","highlightBlock will be removed entirely in v12.0"),deprecated("10.7.0","Please use highlightElement now."),d(e)},configure:function(e){a=inherit(a,e)},initHighlighting:()=>{p(),deprecated("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")},initHighlightingOnLoad:function(){p(),deprecated("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")},registerLanguage:function(t,i){let o=null;try{o=i(e)}catch(e){if(error("Language definition for '{}' could not be registered.".replace("{}",t)),!r)throw e;error(e),o=s}o.name||(o.name=t),n[t]=o,o.rawDefinition=i.bind(null,e),o.aliases&&E(o.aliases,{languageName:t})},unregisterLanguage:function(e){delete n[e];for(const n of Object.keys(t))t[n]===e&&delete t[n]},listLanguages:function(){return Object.keys(n)},getLanguage:f,registerAliases:E,autoDetection:_,inherit:inherit,addPlugin:function(e){!function(e){e["before:highlightBlock"]&&!e["before:highlightElement"]&&(e["before:highlightElement"]=n=>{e["before:highlightBlock"](Object.assign({block:n.el},n))}),e["after:highlightBlock"]&&!e["after:highlightElement"]&&(e["after:highlightElement"]=n=>{e["after:highlightBlock"](Object.assign({block:n.el},n))})}(e),i.push(e)},removePlugin:function(e){const n=i.indexOf(e);-1!==n&&i.splice(n,1)}}),e.debugMode=function(){r=!1},e.safeMode=function(){r=!0},e.versionString=version,e.regex={concat:concat,lookahead:lookahead,either:either,optional:optional,anyNumberOfTimes:anyNumberOfTimes};for(const e in MODES)"object"==typeof MODES[e]&&deepFreeze(MODES[e]);return Object.assign(e,MODES),e},highlight=HLJS({});highlight.newInstance=()=>HLJS({}),module.exports=highlight,highlight.HighlightJS=highlight,highlight.default=highlight;
-//# sourceMappingURL=/sm/a9a81e893a491b7723d969b9f566db3955420951fc2cd921869eb681616b6512.map
-
-/* -- LANGUAGE PACKS -- */
-const hljsBash = (function() { var module={exports:{}}; /**
- * Minified by jsDelivr using Terser v5.37.0.
- * Original file: /npm/highlight.js@11.11.1/lib/languages/bash.js
- *
- * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
- */
-function bash(e){const s=e.regex,t={},n={begin:/\$\{/,end:/\}/,contains:["self",{begin:/:-/,contains:[t]}]};Object.assign(t,{className:"variable",variants:[{begin:s.concat(/\$[\w\d#@][\w\d_]*/,"(?![\\w\\d])(?![$])")},n]});const a={className:"subst",begin:/\$\(/,end:/\)/,contains:[e.BACKSLASH_ESCAPE]},i=e.inherit(e.COMMENT(),{match:[/(^|\s)/,/#.*$/],scope:{2:"comment"}}),c={begin:/<<-?\s*(?=\w+)/,starts:{contains:[e.END_SAME_AS_BEGIN({begin:/(\w+)/,end:/(\w+)/,className:"string"})]}},o={className:"string",begin:/"/,end:/"/,contains:[e.BACKSLASH_ESCAPE,t,a]};a.contains.push(o);const r={begin:/\$?\(\(/,end:/\)\)/,contains:[{begin:/\d+#[0-9a-f]+/,className:"number"},e.NUMBER_MODE,t]},l=e.SHEBANG({binary:`(${["fish","bash","zsh","sh","csh","ksh","tcsh","dash","scsh"].join("|")})`,relevance:10}),m={className:"function",begin:/\w[\w\d_]*\s*\(\s*\)\s*\{/,returnBegin:!0,contains:[e.inherit(e.TITLE_MODE,{begin:/\w[\w\d_]*/})],relevance:0};return{name:"Bash",aliases:["sh","zsh"],keywords:{$pattern:/\b[a-z][a-z0-9._-]+\b/,keyword:["if","then","else","elif","fi","time","for","while","until","in","do","done","case","esac","coproc","function","select"],literal:["true","false"],built_in:["break","cd","continue","eval","exec","exit","export","getopts","hash","pwd","readonly","return","shift","test","times","trap","umask","unset","alias","bind","builtin","caller","command","declare","echo","enable","help","let","local","logout","mapfile","printf","read","readarray","source","sudo","type","typeset","ulimit","unalias","set","shopt","autoload","bg","bindkey","bye","cap","chdir","clone","comparguments","compcall","compctl","compdescribe","compfiles","compgroups","compquote","comptags","comptry","compvalues","dirs","disable","disown","echotc","echoti","emulate","fc","fg","float","functions","getcap","getln","history","integer","jobs","kill","limit","log","noglob","popd","print","pushd","pushln","rehash","sched","setcap","setopt","stat","suspend","ttyctl","unfunction","unhash","unlimit","unsetopt","vared","wait","whence","where","which","zcompile","zformat","zftp","zle","zmodload","zparseopts","zprof","zpty","zregexparse","zsocket","zstyle","ztcp","chcon","chgrp","chown","chmod","cp","dd","df","dir","dircolors","ln","ls","mkdir","mkfifo","mknod","mktemp","mv","realpath","rm","rmdir","shred","sync","touch","truncate","vdir","b2sum","base32","base64","cat","cksum","comm","csplit","cut","expand","fmt","fold","head","join","md5sum","nl","numfmt","od","paste","ptx","pr","sha1sum","sha224sum","sha256sum","sha384sum","sha512sum","shuf","sort","split","sum","tac","tail","tr","tsort","unexpand","uniq","wc","arch","basename","chroot","date","dirname","du","echo","env","expr","factor","groups","hostid","id","link","logname","nice","nohup","nproc","pathchk","pinky","printenv","printf","pwd","readlink","runcon","seq","sleep","stat","stdbuf","stty","tee","test","timeout","tty","uname","unlink","uptime","users","who","whoami","yes"]},contains:[l,e.SHEBANG(),m,r,i,c,{match:/(\/[a-z._-]+)+/},o,{match:/\\"/},{className:"string",begin:/'/,end:/'/},{match:/\\'/},t]}}module.exports=bash;
-//# sourceMappingURL=/sm/c187a128c233220328fe3eb0a6ca4418c91211427d85dcdd04e504a000079d55.map ; return module.exports; })();
-const hljsYaml = (function() { var module={exports:{}}; /**
- * Minified by jsDelivr using Terser v5.37.0.
- * Original file: /npm/highlight.js@11.11.1/lib/languages/yaml.js
- *
- * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
- */
-function yaml(e){const n="true false yes no null",a="[\\w#;/?:@&=+$,.~*'()[\\]]+",s={className:"string",relevance:0,variants:[{begin:/"/,end:/"/},{begin:/\S+/}],contains:[e.BACKSLASH_ESCAPE,{className:"template-variable",variants:[{begin:/\{\{/,end:/\}\}/},{begin:/%\{/,end:/\}/}]}]},i=e.inherit(s,{variants:[{begin:/'/,end:/'/,contains:[{begin:/''/,relevance:0}]},{begin:/"/,end:/"/},{begin:/[^\s,{}[\]]+/}]}),l={className:"number",begin:"\\b[0-9]{4}(-[0-9][0-9]){0,2}([Tt \\t][0-9][0-9]?(:[0-9][0-9]){2})?(\\.[0-9]*)?([ \\t])*(Z|[-+][0-9][0-9]?(:[0-9][0-9])?)?\\b"},c={end:",",endsWithParent:!0,excludeEnd:!0,keywords:n,relevance:0},t={begin:/\{/,end:/\}/,contains:[c],illegal:"\\n",relevance:0},b={begin:"\\[",end:"\\]",contains:[c],illegal:"\\n",relevance:0},g=[{className:"attr",variants:[{begin:/[\w*@][\w*@ :()\./-]*:(?=[ \t]|$)/},{begin:/"[\w*@][\w*@ :()\./-]*":(?=[ \t]|$)/},{begin:/'[\w*@][\w*@ :()\./-]*':(?=[ \t]|$)/}]},{className:"meta",begin:"^---\\s*$",relevance:10},{className:"string",begin:"[\\|>]([1-9]?[+-])?[ ]*\\n( +)[^ ][^\\n]*\\n(\\2[^\\n]+\\n?)*"},{begin:"<%[%=-]?",end:"[%-]?%>",subLanguage:"ruby",excludeBegin:!0,excludeEnd:!0,relevance:0},{className:"type",begin:"!\\w+!"+a},{className:"type",begin:"!<"+a+">"},{className:"type",begin:"!"+a},{className:"type",begin:"!!"+a},{className:"meta",begin:"&"+e.UNDERSCORE_IDENT_RE+"$"},{className:"meta",begin:"\\*"+e.UNDERSCORE_IDENT_RE+"$"},{className:"bullet",begin:"-(?=[ ]|$)",relevance:0},e.HASH_COMMENT_MODE,{beginKeywords:n,keywords:{literal:n}},l,{className:"number",begin:e.C_NUMBER_RE+"\\b",relevance:0},t,b,{className:"string",relevance:0,begin:/'/,end:/'/,contains:[{match:/''/,scope:"char.escape",relevance:0}]},s],r=[...g];return r.pop(),r.push(i),c.contains=r,{name:"YAML",case_insensitive:!0,aliases:["yml"],contains:g}}module.exports=yaml;
-//# sourceMappingURL=/sm/2f2bc75cb23df2b10b3c677b94cf4051714f1d8802cf2728b2a1dfbf8123513a.map ; return module.exports; })();
-const hljsJson = (function() { var module={exports:{}}; /**
- * Minified by jsDelivr using Terser v5.37.0.
- * Original file: /npm/highlight.js@11.11.1/lib/languages/json.js
- *
- * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
- */
-function json(e){const n=["true","false","null"],a={scope:"literal",beginKeywords:n.join(" ")};return{name:"JSON",aliases:["jsonc"],keywords:{literal:n},contains:[{className:"attr",begin:/"(\\.|[^\\"\r\n])*"(?=\s*:)/,relevance:1.01},{match:/[{}[\],:]/,className:"punctuation",relevance:0},e.QUOTE_STRING_MODE,a,e.C_NUMBER_MODE,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE],illegal:"\\S"}}module.exports=json;
-//# sourceMappingURL=/sm/eb0d480cde90be53ecc98660ce05d497a191dcd9aa3997bf64c8b81ec6bb4203.map ; return module.exports; })();
-const hljsMarkdown = (function() { var module={exports:{}}; /**
- * Minified by jsDelivr using Terser v5.37.0.
- * Original file: /npm/highlight.js@11.11.1/lib/languages/markdown.js
- *
- * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
- */
-function markdown(e){const n={begin:/<\/?[A-Za-z_]/,end:">",subLanguage:"xml",relevance:0},a={variants:[{begin:/\[.+?\]\[.*?\]/,relevance:0},{begin:/\[.+?\]\(((data|javascript|mailto):|(?:http|ftp)s?:\/\/).*?\)/,relevance:2},{begin:e.regex.concat(/\[.+?\]\(/,/[A-Za-z][A-Za-z0-9+.-]*/,/:\/\/.*?\)/),relevance:2},{begin:/\[.+?\]\([./?&#].*?\)/,relevance:1},{begin:/\[.*?\]\(.*?\)/,relevance:0}],returnBegin:!0,contains:[{match:/\[(?=\])/},{className:"string",relevance:0,begin:"\\[",end:"\\]",excludeBegin:!0,returnEnd:!0},{className:"link",relevance:0,begin:"\\]\\(",end:"\\)",excludeBegin:!0,excludeEnd:!0},{className:"symbol",relevance:0,begin:"\\]\\[",end:"\\]",excludeBegin:!0,excludeEnd:!0}]},i={className:"strong",contains:[],variants:[{begin:/_{2}(?!\s)/,end:/_{2}/},{begin:/\*{2}(?!\s)/,end:/\*{2}/}]},s={className:"emphasis",contains:[],variants:[{begin:/\*(?![*\s])/,end:/\*/},{begin:/_(?![_\s])/,end:/_/,relevance:0}]},c=e.inherit(i,{contains:[]}),t=e.inherit(s,{contains:[]});i.contains.push(t),s.contains.push(c);let l=[n,a];[i,s,c,t].forEach((e=>{e.contains=e.contains.concat(l)})),l=l.concat(i,s);return{name:"Markdown",aliases:["md","mkdown","mkd"],contains:[{className:"section",variants:[{begin:"^#{1,6}",end:"$",contains:l},{begin:"(?=^.+?\\n[=-]{2,}$)",contains:[{begin:"^[=-]*$"},{begin:"^",end:"\\n",contains:l}]}]},n,{className:"bullet",begin:"^[ \t]*([*+-]|(\\d+\\.))(?=\\s+)",end:"\\s+",excludeEnd:!0},i,s,{className:"quote",begin:"^>\\s+",contains:l,end:"$"},{className:"code",variants:[{begin:"(`{3,})[^`](.|\\n)*?\\1`*[ ]*"},{begin:"(~{3,})[^~](.|\\n)*?\\1~*[ ]*"},{begin:"```",end:"```+[ ]*$"},{begin:"~~~",end:"~~~+[ ]*$"},{begin:"`.+?`"},{begin:"(?=^( {4}|\\t))",contains:[{begin:"^( {4}|\\t)",end:"(\\n)$"}],relevance:0}]},{begin:"^[-\\*]{3,}",end:"$"},a,{begin:/^\[[^\n]+\]:/,returnBegin:!0,contains:[{className:"symbol",begin:/\[/,end:/\]/,excludeBegin:!0,excludeEnd:!0},{className:"link",begin:/:\s*/,end:/$/,excludeBegin:!0}]},{scope:"literal",match:/&([a-zA-Z0-9]+|#[0-9]{1,7}|#[Xx][0-9a-fA-F]{1,6});/}]}}module.exports=markdown;
-//# sourceMappingURL=/sm/6896ec5708d27d7f7849a81994b3f43c76c0f8e12da7ba44a68eb1076e90b580.map ; return module.exports; })();
-const hljsShell = (function() { var module={exports:{}}; /**
- * Minified by jsDelivr using Terser v5.37.0.
- * Original file: /npm/highlight.js@11.11.1/lib/languages/shell.js
- *
- * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
- */
-function shell(s){return{name:"Shell Session",aliases:["console","shellsession"],contains:[{className:"meta.prompt",begin:/^\s{0,3}[/~\w\d[\]()@-]*[>%$#][ ]?/,starts:{end:/[^\\](?=\s*$)/,subLanguage:"bash"}}]}}module.exports=shell;
-//# sourceMappingURL=/sm/55022c958dd0ffc6a5414d019fe0f4e09aa8ad6810041c171e3d3e9800887588.map ; return module.exports; })();
-
-/* -- LANGUAGE REGISTRATION -- */
-hljs.registerLanguage('bash',     hljsBash);
-hljs.registerLanguage('yaml',     hljsYaml);
-hljs.registerLanguage('json',     hljsJson);
-hljs.registerLanguage('markdown', hljsMarkdown);
-hljs.registerLanguage('shell',    hljsShell);
-  </script>
-
-  <script>
-/* -- TAB NAVIGATION -- */
-function initTabs() {
-  const tabNav   = document.querySelector('.tab-nav');
-  const panels   = document.querySelectorAll('.content-panel');
-
-  tabNav.addEventListener('click', (e) => {
-    const tab = e.target.closest('[data-tab]');
-    if (!tab) return;
-    const target = tab.dataset.tab;
-
-    tabNav.querySelectorAll('[role="tab"]').forEach(t => {
-      const active = t.dataset.tab === target;
-      t.classList.toggle('tab-nav__tab--active', active);
-      t.setAttribute('aria-selected', String(active));
-    });
-
-    panels.forEach(panel => {
-      const isActive = panel.id === 'section-' + target;
-      if (isActive) {
-        panel.classList.remove('content-panel--hidden');
-        requestAnimationFrame(() => panel.classList.add('content-panel--active'));
-      } else {
-        panel.classList.remove('content-panel--active');
-        panel.classList.add('content-panel--hidden');
-      }
-    });
-
-    document.querySelector('.main-content').scrollTop = 0;
-  });
-}
-
-/* -- COPY TO CLIPBOARD -- */
-function initCopyButtons() {
-  // Normalize MCP tab code blocks: move copy buttons into headers, add lang labels
-  document.querySelectorAll('.code-block').forEach(block => {
-    const header = block.querySelector('.code-block__header');
-    const btn = block.querySelector(':scope > .code-block__copy');
-    if (header && btn) {
-      // Button is a direct child of code-block — move into header
-      const lang = block.dataset.lang;
-      if (lang && !header.querySelector('.code-block__lang')) {
-        const span = document.createElement('span');
-        span.className = 'code-block__lang';
-        span.textContent = lang;
-        header.prepend(span);
-      }
-      header.appendChild(btn);
-    }
-    // Upgrade plain-text copy buttons to consistent label format
-    const copyBtn = block.querySelector('.code-block__copy');
-    if (copyBtn && !copyBtn.querySelector('.code-block__copy-label')) {
-      copyBtn.innerHTML = '<span class="code-block__copy-label">⧉ Copy</span>';
-    }
-  });
-
-  document.addEventListener('click', async (e) => {
-    const btn = e.target.closest('.code-block__copy');
-    if (!btn) return;
-
-    const code = btn.closest('.code-block').querySelector('code').textContent;
-
-    try {
-      await navigator.clipboard.writeText(code);
-    } catch {
-      const ta = document.createElement('textarea');
-      ta.value = code;
-      ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    }
-
-    const label     = btn.querySelector('.code-block__copy-label');
-    const iconCopy  = btn.querySelector('.icon--copy');
-    const iconCheck = btn.querySelector('.icon--check');
-
-    btn.classList.add('code-block__copy--copied');
-    if (label)     label.textContent = '✓ Copied!';
-    if (iconCopy)  iconCopy.classList.add('icon--hidden');
-    if (iconCheck) iconCheck.classList.remove('icon--hidden');
-
-    setTimeout(() => {
-      btn.classList.remove('code-block__copy--copied');
-      if (label)     label.textContent = iconCopy ? 'Copy code' : '⧉ Copy';
+      if (label)     label.textContent = iconCopy ? 'Copy code' : 'Γºë Copy';
       if (iconCopy)  iconCopy.classList.remove('icon--hidden');
       if (iconCheck) iconCheck.classList.add('icon--hidden');
     }, 2000);
