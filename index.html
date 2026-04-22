@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +11,39 @@
       position: fixed;
       inset: 0;
       z-index: 0;
-      pointer-events: none;
+      pointer-events: auto;
+      cursor: default;
+      transition: filter 0.45s ease;
+    }
+    body.moon-target-hover,
+    body.moon-target-hover #starfield,
+    body.moon-target-hover .page-body,
+    body.moon-target-hover .main-content {
+      cursor: pointer;
     }
     .site-header { position: relative; z-index: 10; }
     .load-splash { position: fixed; z-index: 9999; }
     [data-theme="light"] #starfield { display: none; }
+    .site-header,
+    .page-body,
+    .scroll-progress {
+      transition:
+        transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.55s ease,
+        filter 0.55s ease;
+      will-change: transform, opacity, filter;
+    }
+    body.space-invaders-open #starfield {
+      filter: saturate(1.12) brightness(1.08);
+    }
+    body.space-invaders-open .site-header,
+    body.space-invaders-open .page-body,
+    body.space-invaders-open .scroll-progress {
+      transform: translate3d(0, 112vh, 0) rotate(0.8deg);
+      opacity: 0;
+      filter: blur(10px);
+      pointer-events: none;
+    }
 
     /* Section 1: CSS Custom Properties */
     :root {
@@ -214,14 +242,17 @@
     }
     .tab-nav__tab--active {
       color: #fff;
-      background: var(--color-accent);
-      border-color: var(--color-accent);
+      background: linear-gradient(135deg, #6f4df6, #8b5cf6 55%, #5b7cff);
+      border-color: rgba(167, 139, 250, 0.72);
       font-weight: 600;
-      box-shadow: 0 0 12px rgba(63,185,80,0.25);
+      box-shadow:
+        0 0 0 1px rgba(214, 201, 255, 0.08) inset,
+        0 10px 22px rgba(111, 77, 246, 0.28),
+        0 0 18px rgba(139, 92, 246, 0.2);
     }
     .tab-nav__tab--active:hover {
-      background: #46c958;
-      border-color: #46c958;
+      background: linear-gradient(135deg, #6544ed, #8454f5 55%, #5272fb);
+      border-color: rgba(191, 174, 255, 0.86);
       color: #fff;
     }
 
@@ -428,8 +459,25 @@
     .callout--danger  { border-color: #f85149; background: rgba(248, 81, 73, 0.06); }
     .callout--danger  .callout__type { color: #f85149; }
 
-    .callout--tip     { border-color: #3fb950; background: rgba(63, 185, 80, 0.06); }
-    .callout--tip     .callout__type { color: #3fb950; }
+    .callout--tip     {
+      border-color: #8b5cf6;
+      background:
+        linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(76, 29, 149, 0.04) 55%, rgba(18, 10, 40, 0.02)),
+        rgba(139, 92, 246, 0.03);
+      box-shadow: inset 0 1px 0 rgba(203, 181, 255, 0.08);
+    }
+    .callout--tip     .callout__type {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      color: #dcc8ff;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.26), rgba(168, 85, 247, 0.12));
+      border: 1px solid rgba(196, 181, 253, 0.2);
+      box-shadow: 0 0 18px rgba(139, 92, 246, 0.16);
+    }
 
     /* Section 13: Tables */
     table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 18px 0; font-size: 13.5px; border-radius: var(--border-radius); overflow: hidden; border: 1px solid var(--color-border); }
@@ -834,6 +882,665 @@
       to   { transform: scale(1.1); opacity: 1; }
     }
 
+    /* 6. GALAXY INVITE */
+    .galaxy-invite {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(86, 133, 255, 0.24), transparent 30%),
+        radial-gradient(circle at 82% 84%, rgba(126, 84, 255, 0.18), transparent 34%),
+        linear-gradient(180deg, rgba(4, 8, 22, 0.78), rgba(5, 9, 24, 0.92));
+      backdrop-filter: blur(16px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+      z-index: 9998;
+    }
+    .galaxy-invite--visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .galaxy-invite__dialog {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      grid-template-columns: minmax(220px, 0.95fr) minmax(280px, 1fr);
+      align-items: end;
+      gap: 28px;
+      width: min(780px, 100%);
+      min-height: 420px;
+      padding: 52px 52px 46px;
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(90, 145, 255, 0.22), transparent 30%),
+        radial-gradient(circle at 84% 88%, rgba(126, 84, 255, 0.14), transparent 28%),
+        linear-gradient(150deg, rgba(8, 13, 31, 0.97), rgba(11, 19, 42, 0.96) 46%, rgba(6, 12, 28, 0.99));
+      border: 1px solid rgba(130, 160, 230, 0.24);
+      box-shadow:
+        0 36px 100px rgba(0, 0, 0, 0.56),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -24px 60px rgba(73, 102, 161, 0.14);
+      transform: translateY(18px) scale(0.98);
+      transition: transform 0.45s cubic-bezier(0.2, 1, 0.2, 1);
+    }
+    .galaxy-invite--visible .galaxy-invite__dialog {
+      transform: translateY(0) scale(1);
+    }
+    .galaxy-invite__dialog::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(124, 157, 228, 0.18);
+      pointer-events: none;
+    }
+    .galaxy-invite__dialog::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 24%, rgba(255,255,255,0.82) 0 2px, transparent 2.5px),
+        radial-gradient(circle at 72% 20%, rgba(164,198,255,0.62) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 82% 64%, rgba(255,255,255,0.74) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 30% 78%, rgba(168,189,255,0.46) 0 1px, transparent 1.5px);
+      opacity: 0.82;
+      pointer-events: none;
+    }
+    .galaxy-invite__rocketman {
+      position: absolute;
+      user-select: none;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .galaxy-invite__rocketman {
+      top: 12px;
+      left: 18px;
+      width: clamp(104px, 18vw, 132px);
+      filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.42));
+      animation: inviteFloat 6s ease-in-out infinite;
+    }
+    .galaxy-invite__visual {
+      position: relative;
+      min-height: 320px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .galaxy-invite__visual::before {
+      content: "";
+      position: absolute;
+      left: -8%;
+      bottom: 4%;
+      width: clamp(180px, 30vw, 280px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(102, 135, 255, 0.28), rgba(102, 135, 255, 0));
+      filter: blur(18px);
+      opacity: 0.85;
+    }
+    .galaxy-invite__moon-scene {
+      position: absolute;
+      left: -34px;
+      bottom: -62px;
+      width: clamp(250px, 34vw, 390px);
+      transform-origin: 58% 78%;
+      filter: drop-shadow(0 26px 60px rgba(24, 42, 86, 0.34));
+      animation: inviteMoonFly 9s ease-in-out infinite;
+    }
+    .galaxy-invite__moon {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+    .galaxy-invite__flag {
+      position: absolute;
+      left: 60%;
+      top: 14%;
+      width: 82px;
+      height: 118px;
+      transform: rotate(-8deg);
+      transform-origin: bottom left;
+      animation: inviteFlagPlant 9s ease-in-out infinite;
+    }
+    .galaxy-invite__flag-pole {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #dfe9ff, #8ba2d9 55%, #5a6f9d);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.14);
+    }
+    .galaxy-invite__flag-cloth {
+      position: absolute;
+      left: 5px;
+      top: 8px;
+      width: 72px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+      border-radius: 0 14px 14px 10px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(17, 28, 58, 0.94), rgba(50, 83, 171, 0.92));
+      border: 1px solid rgba(155, 183, 255, 0.38);
+      box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.32),
+        inset 0 1px 0 rgba(255,255,255,0.14);
+      transform-origin: left center;
+      animation: inviteFlagWave 2.8s ease-in-out infinite;
+    }
+    .galaxy-invite__flag-cloth::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.18), transparent 42%, rgba(255,255,255,0.12));
+      pointer-events: none;
+    }
+    .galaxy-invite__flag-icon {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.28));
+    }
+    .galaxy-invite__content {
+      position: relative;
+      z-index: 1;
+      max-width: 410px;
+      margin-left: auto;
+      align-self: center;
+    }
+    .galaxy-invite__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(13, 20, 43, 0.72);
+      border: 1px solid rgba(132, 162, 215, 0.22);
+      color: #b4c3e5;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+    .galaxy-invite__eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 35%, #ffffff, #7fb1ff 70%);
+      box-shadow: 0 0 18px rgba(90, 152, 255, 0.45);
+    }
+    .galaxy-invite__title {
+      margin-top: 20px;
+      color: #edf3ff;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 7vw, 62px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+    .galaxy-invite__title span {
+      display: block;
+      color: #8cb3ff;
+    }
+    .galaxy-invite__copy {
+      margin-top: 16px;
+      color: #a7b7d5;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 390px;
+    }
+    .galaxy-invite__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .galaxy-invite__button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font: inherit;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+      cursor: pointer;
+    }
+    .galaxy-invite__button:hover {
+      transform: translateY(-1px);
+    }
+    .galaxy-invite__button:focus-visible {
+      outline: 2px solid #7ca9ff;
+      outline-offset: 3px;
+    }
+    .galaxy-invite__button--primary {
+      color: #f7f9ff;
+      background: linear-gradient(135deg, #3563db, #6d4df8);
+      box-shadow: 0 18px 40px rgba(37, 63, 150, 0.38);
+    }
+    .galaxy-invite__button--primary:hover {
+      background: linear-gradient(135deg, #2e58c5, #6044df);
+    }
+    .galaxy-invite__button--secondary {
+      color: #dce7ff;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(120, 154, 212, 0.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 12px 28px rgba(0, 0, 0, 0.18);
+    }
+    .galaxy-invite__button--secondary:hover {
+      background: rgba(255,255,255,0.12);
+    }
+    body.galaxy-invite-open .main-content {
+      overflow: hidden;
+    }
+    @keyframes inviteFloat {
+      0%, 100% { transform: translateY(0) rotate(-14deg); }
+      50% { transform: translateY(-12px) rotate(-8deg); }
+    }
+    @keyframes inviteMoonFly {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg) scale(1); }
+      30% { transform: translate3d(18px, -22px, 0) rotate(-2deg) scale(1.02); }
+      60% { transform: translate3d(-10px, -42px, 0) rotate(3deg) scale(1.04); }
+      80% { transform: translate3d(12px, -16px, 0) rotate(-1deg) scale(1.01); }
+    }
+    @keyframes inviteFlagPlant {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+      50% { transform: translate3d(4px, -6px, 0) rotate(-4deg); }
+    }
+    @keyframes inviteFlagWave {
+      0%, 100% { transform: perspective(140px) rotateY(0deg) skewY(0deg); }
+      25% { transform: perspective(140px) rotateY(-9deg) skewY(-2deg); }
+      55% { transform: perspective(140px) rotateY(12deg) skewY(2deg); }
+      75% { transform: perspective(140px) rotateY(-6deg) skewY(-1deg); }
+    }
+    @media (max-width: 760px) {
+      .galaxy-invite {
+        padding: 16px;
+      }
+      .galaxy-invite__dialog {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        min-height: auto;
+        padding: 96px 24px 26px;
+      }
+      .galaxy-invite__visual {
+        order: 2;
+        min-height: 190px;
+        margin-top: 4px;
+      }
+      .galaxy-invite__content,
+      .galaxy-invite__copy {
+        max-width: none;
+      }
+      .galaxy-invite__rocketman {
+        top: 6px;
+        left: 10px;
+        width: 90px;
+      }
+      .galaxy-invite__moon-scene {
+        left: -8px;
+        bottom: -44px;
+        width: clamp(210px, 56vw, 290px);
+      }
+      .galaxy-invite__flag {
+        left: 58%;
+        top: 12%;
+        width: 72px;
+        height: 104px;
+      }
+      .galaxy-invite__flag-cloth {
+        width: 62px;
+        height: 40px;
+        padding: 7px;
+      }
+      .galaxy-invite__flag-icon {
+        width: 26px;
+        height: 26px;
+      }
+      .galaxy-invite__actions {
+        flex-direction: column;
+      }
+      .galaxy-invite__button {
+        width: 100%;
+      }
+    }
+
+    /* 7. MOON INVADERS EASTER EGG */
+    .space-invaders {
+      position: fixed;
+      inset: 0;
+      --space-invaders-shell-max: 860px;
+      --space-invaders-canvas-max: 760px;
+      z-index: 9;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+      background:
+        radial-gradient(circle at 20% 16%, rgba(83, 123, 255, 0.16), transparent 28%),
+        radial-gradient(circle at 80% 82%, rgba(0, 238, 255, 0.12), transparent 32%),
+        linear-gradient(180deg, rgba(1, 4, 16, 0.18), rgba(1, 4, 16, 0.42));
+      backdrop-filter: blur(8px);
+      overflow-y: auto;
+    }
+    body.space-invaders-open .space-invaders {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .space-invaders__shell {
+      width: min(var(--space-invaders-shell-max), 100%);
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      border-radius: 28px;
+      border: 1px solid rgba(121, 156, 255, 0.16);
+      background:
+        linear-gradient(180deg, rgba(4, 10, 28, 0.9), rgba(4, 10, 26, 0.78)),
+        radial-gradient(circle at top, rgba(81, 120, 255, 0.18), transparent 48%);
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      transform: translateY(26px) scale(0.98);
+      transition: transform 0.55s cubic-bezier(0.2, 1, 0.2, 1);
+    }
+    body.space-invaders-open .space-invaders__shell {
+      transform: translateY(0) scale(1);
+    }
+    .space-invaders__hud {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+    }
+    .space-invaders__eyebrow {
+      margin-bottom: 5px;
+      color: #7ed0ff;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .space-invaders__title {
+      font-family: var(--font-mono);
+      font-size: clamp(24px, 4vw, 34px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f2f7ff;
+      text-shadow: 0 0 18px rgba(126, 208, 255, 0.2);
+    }
+    .space-invaders__stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .space-invaders__stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(123, 157, 245, 0.16);
+      background: rgba(8, 14, 34, 0.72);
+      color: #9eb5da;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .space-invaders__stat strong {
+      color: #f4f8ff;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+    .space-invaders__lives {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0;
+    }
+    .space-invaders__heart {
+      color: #ff5a76;
+      font-size: 15px;
+      line-height: 1;
+      text-shadow: 0 0 12px rgba(255, 90, 118, 0.4);
+    }
+    .space-invaders__heart--empty {
+      color: rgba(223, 234, 255, 0.18);
+      text-shadow: none;
+    }
+    .space-invaders__exit,
+    .space-invaders__restart {
+      appearance: none;
+      border: 1px solid rgba(124, 160, 245, 0.24);
+      border-radius: 999px;
+      background: rgba(12, 21, 49, 0.8);
+      color: #e3ecff;
+      padding: 11px 18px;
+      font: inherit;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+    .space-invaders__exit:hover,
+    .space-invaders__restart:hover {
+      transform: translateY(-1px);
+      background: rgba(19, 32, 70, 0.92);
+      border-color: rgba(136, 173, 255, 0.34);
+    }
+    .space-invaders__exit:focus-visible,
+    .space-invaders__restart:focus-visible {
+      outline: 2px solid #7ca9ff;
+      outline-offset: 3px;
+    }
+    .space-invaders__stage {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 14px;
+      background:
+        linear-gradient(180deg, rgba(3, 8, 20, 0.92), rgba(4, 8, 18, 0.82)),
+        radial-gradient(circle at 50% 0%, rgba(82, 132, 255, 0.12), transparent 46%);
+      border: 1px solid rgba(120, 153, 232, 0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        inset 0 0 0 1px rgba(82, 132, 255, 0.08);
+    }
+    .space-invaders__stage::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 18px;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px) 0 0 / 100% 8px,
+        linear-gradient(90deg, rgba(90, 130, 255, 0.03) 1px, transparent 1px) 0 0 / 18px 100%;
+      pointer-events: none;
+      opacity: 0.6;
+      mix-blend-mode: screen;
+    }
+    .space-invaders__canvas {
+      position: relative;
+      display: block;
+      width: min(100%, var(--space-invaders-canvas-max));
+      height: auto;
+      margin: 0 auto;
+      border-radius: 18px;
+      background: rgba(1, 5, 14, 0.84);
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .space-invaders__overlay {
+      position: absolute;
+      inset: 14px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      border-radius: 18px;
+      background: rgba(3, 9, 24, 0.82);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      text-align: center;
+    }
+    .space-invaders__overlay--visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .space-invaders__overlay-card {
+      max-width: 420px;
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+    }
+    .space-invaders__overlay-kicker {
+      color: #7ed0ff;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .space-invaders__overlay-title {
+      font-family: var(--font-mono);
+      font-size: clamp(26px, 4vw, 42px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f7faff;
+    }
+    .space-invaders__overlay-copy {
+      color: #adc2ea;
+      line-height: 1.7;
+      max-width: 34ch;
+    }
+    .space-invaders__hint {
+      justify-self: center;
+      color: #93a8cd;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    body.space-invaders-open .scroll-progress {
+      transform: translate3d(0, 60px, 0) scale(0.84);
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (max-width: 1200px) {
+      .space-invaders {
+        --space-invaders-shell-max: 800px;
+        --space-invaders-canvas-max: 700px;
+      }
+    }
+    @media (max-width: 860px) {
+      .space-invaders {
+        --space-invaders-shell-max: 720px;
+        --space-invaders-canvas-max: 620px;
+        padding: 18px;
+      }
+      .space-invaders__shell {
+        padding: 18px;
+      }
+      .space-invaders__hud {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+      .space-invaders__stats {
+        justify-content: center;
+      }
+    }
+    @media (max-width: 600px) {
+      .space-invaders {
+        --space-invaders-shell-max: 100%;
+        --space-invaders-canvas-max: 100%;
+        padding: 12px;
+      }
+      .space-invaders__shell {
+        gap: 14px;
+        padding: 14px;
+        border-radius: 20px;
+      }
+      .space-invaders__stage {
+        padding: 10px;
+      }
+      .space-invaders__overlay {
+        inset: 10px;
+        padding: 18px;
+      }
+      .space-invaders__hint {
+        font-size: 12px;
+      }
+    }
+    @media (max-height: 900px) {
+      .space-invaders {
+        --space-invaders-shell-max: 760px;
+        --space-invaders-canvas-max: 640px;
+        padding: 16px;
+      }
+      .space-invaders__shell {
+        gap: 14px;
+        padding: 18px;
+      }
+      .space-invaders__stage {
+        padding: 12px;
+      }
+      .space-invaders__hint {
+        font-size: 12px;
+        line-height: 1.55;
+      }
+    }
+    @media (max-height: 760px) {
+      .space-invaders {
+        --space-invaders-shell-max: 680px;
+        --space-invaders-canvas-max: 560px;
+        place-items: start center;
+        padding: 10px;
+      }
+      .space-invaders__shell {
+        gap: 12px;
+        padding: 14px;
+        border-radius: 22px;
+      }
+      .space-invaders__stage {
+        padding: 10px;
+      }
+      .space-invaders__overlay {
+        inset: 10px;
+        padding: 16px;
+      }
+      .space-invaders__hint {
+        display: none;
+      }
+    }
+    @media (max-height: 680px) {
+      .space-invaders {
+        --space-invaders-shell-max: 620px;
+        --space-invaders-canvas-max: 500px;
+      }
+      .space-invaders__shell {
+        gap: 10px;
+        padding: 12px;
+      }
+      .space-invaders__stage {
+        padding: 8px;
+      }
+    }
+
     /* Section 16: github-dark highlight.js theme(inlined — do NOT add CDN link) */
     pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}/*!
   Theme: GitHub Dark
@@ -905,6 +1612,61 @@
   <div class="load-splash" id="load-splash">
     <img class="load-splash__icon" src="Icon.png" alt="" />
     <span class="load-splash__text">Loading guide…</span>
+  </div>
+
+  <div class="galaxy-invite" id="galaxy-invite" hidden>
+    <section class="galaxy-invite__dialog" role="dialog" aria-modal="true" aria-labelledby="galaxy-invite-title" aria-describedby="galaxy-invite-copy">
+      <img class="galaxy-invite__rocketman" src="rocketman.png" alt="" />
+      <div class="galaxy-invite__visual" aria-hidden="true">
+        <div class="galaxy-invite__moon-scene">
+          <img class="galaxy-invite__moon" src="Moon.png" alt="" />
+          <div class="galaxy-invite__flag">
+            <span class="galaxy-invite__flag-pole"></span>
+            <span class="galaxy-invite__flag-cloth">
+              <img class="galaxy-invite__flag-icon" src="Icon.png" alt="" />
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="galaxy-invite__content">
+        <div class="galaxy-invite__eyebrow">Invitation to orbit</div>
+        <h2 class="galaxy-invite__title" id="galaxy-invite-title">Galaxy <span>mode</span></h2>
+        <p class="galaxy-invite__copy" id="galaxy-invite-copy">Begin in daylight, then slip into the guide's cinematic side - starfields, rocket trails, drifting astronauts, and your flag already planted on the moon.</p>
+        <div class="galaxy-invite__actions">
+          <button type="button" class="galaxy-invite__button galaxy-invite__button--primary" id="galaxy-enter">Enter the galaxy</button>
+          <button type="button" class="galaxy-invite__button galaxy-invite__button--secondary" id="galaxy-stay">Stay in light mode</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="space-invaders" id="space-invaders" hidden aria-hidden="true">
+    <section class="space-invaders__shell" aria-label="Moon Invaders easter egg">
+      <div class="space-invaders__hud">
+        <div class="space-invaders__title-group">
+          <p class="space-invaders__eyebrow">Moon easter egg</p>
+          <h2 class="space-invaders__title">Moon Invaders</h2>
+        </div>
+        <div class="space-invaders__stats">
+          <span class="space-invaders__stat">Score <strong id="space-invaders-score">00000</strong></span>
+          <span class="space-invaders__stat">Lives <strong id="space-invaders-lives" class="space-invaders__lives" aria-label="3 lives remaining"><span class="space-invaders__heart" aria-hidden="true">♥</span><span class="space-invaders__heart" aria-hidden="true">♥</span><span class="space-invaders__heart" aria-hidden="true">♥</span></strong></span>
+          <span class="space-invaders__stat">Wave <strong id="space-invaders-wave">1</strong></span>
+        </div>
+        <button type="button" class="space-invaders__exit" id="space-invaders-exit">Return to guide</button>
+      </div>
+      <div class="space-invaders__stage">
+        <canvas class="space-invaders__canvas" id="space-invaders-canvas" width="720" height="540"></canvas>
+        <div class="space-invaders__overlay" id="space-invaders-overlay">
+          <div class="space-invaders__overlay-card">
+            <p class="space-invaders__overlay-kicker" id="space-invaders-kicker">Moon breach</p>
+            <h3 class="space-invaders__overlay-title" id="space-invaders-title">Game over</h3>
+            <p class="space-invaders__overlay-copy" id="space-invaders-copy">The invaders slipped past your orbit line. Press Enter or relaunch to try again.</p>
+            <button type="button" class="space-invaders__restart" id="space-invaders-restart">Launch another run</button>
+          </div>
+        </div>
+      </div>
+      <p class="space-invaders__hint">Use <kbd>&larr;</kbd> and <kbd>&rarr;</kbd> to slide, hold <kbd>&uarr;</kbd> for rapid fire, hold <kbd>&darr;</kbd> for precision drift, and press <kbd>Esc</kbd> to return to the guide.</p>
+    </section>
   </div>
 
   <!-- HEADER: brand + tab nav -->
@@ -2984,20 +3746,833 @@ function initCopyButtons() {
 }
 
 /* -- THEME TOGGLE -- */
+function getTheme() {
+  return document.documentElement.getAttribute('data-theme') || 'light';
+}
+
+function syncThemeToggle(toggle) {
+  if (!toggle) return;
+  const inDarkMode = getTheme() === 'dark';
+  toggle.setAttribute('aria-label', inDarkMode ? 'Switch to light mode' : 'Switch to Galaxy mode');
+  toggle.title = inDarkMode ? 'Switch to light mode' : 'Switch to Galaxy mode';
+}
+
+function setTheme(theme, persist = true) {
+  document.documentElement.setAttribute('data-theme', theme);
+  if (persist) localStorage.setItem('theme', theme);
+  syncThemeToggle(document.getElementById('theme-toggle'));
+}
+
 function initThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
+  setTheme('light', false);
   if (!toggle) return;
-  const html = document.documentElement;
-
-  // Restore saved preference
-  const saved = localStorage.getItem('theme');
-  if (saved) html.setAttribute('data-theme', saved);
 
   toggle.addEventListener('click', () => {
-    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
+    const next = getTheme() === 'dark' ? 'light' : 'dark';
+    setTheme(next);
   });
+}
+
+function initGalaxyInvite() {
+  const invite = document.getElementById('galaxy-invite');
+  const enter = document.getElementById('galaxy-enter');
+  const stay  = document.getElementById('galaxy-stay');
+  if (!invite || !enter || !stay) return { open() {}, close() {} };
+
+  let hideTimer = null;
+
+  function close() {
+    invite.classList.remove('galaxy-invite--visible');
+    document.body.classList.remove('galaxy-invite-open');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { invite.hidden = true; }, 360);
+  }
+
+  function open() {
+    setTheme('light', false);
+    invite.hidden = false;
+    document.body.classList.add('galaxy-invite-open');
+    requestAnimationFrame(() => invite.classList.add('galaxy-invite--visible'));
+    enter.focus();
+  }
+
+  enter.addEventListener('click', () => {
+    setTheme('dark');
+    close();
+  });
+
+  stay.addEventListener('click', () => {
+    setTheme('light');
+    close();
+  });
+
+  invite.addEventListener('click', (e) => {
+    if (e.target === invite) close();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (invite.hidden) return;
+    if (e.key === 'Escape') close();
+  });
+
+  return { open, close };
+}
+
+function initMoonInvaders() {
+  const root = document.getElementById('space-invaders');
+  const stage = document.getElementById('space-invaders-canvas');
+  const overlay = document.getElementById('space-invaders-overlay');
+  const overlayKicker = document.getElementById('space-invaders-kicker');
+  const overlayTitle = document.getElementById('space-invaders-title');
+  const overlayCopy = document.getElementById('space-invaders-copy');
+  const scoreEl = document.getElementById('space-invaders-score');
+  const livesEl = document.getElementById('space-invaders-lives');
+  const waveEl = document.getElementById('space-invaders-wave');
+  const restartBtn = document.getElementById('space-invaders-restart');
+  const exitBtn = document.getElementById('space-invaders-exit');
+  const ctx = stage ? stage.getContext('2d') : null;
+
+  if (!root || !stage || !overlay || !overlayKicker || !overlayTitle || !overlayCopy ||
+      !scoreEl || !livesEl || !waveEl || !restartBtn || !exitBtn || !ctx) {
+    return {
+      open() {},
+      close() {},
+      setMoonTargets() {},
+      tryLaunchFromPoint() { return false; },
+      isPointerOverMoon() { return false; },
+      isActive() { return false; },
+    };
+  }
+
+  const STAGE_W = stage.width;
+  const STAGE_H = stage.height;
+  const MAX_LIVES = 3;
+  const moonTargets = [];
+  let hideTimer = null;
+
+  const SPRITES = {
+    player: [
+      '0001000',
+      '0011100',
+      '0111110',
+      '1111111',
+      '1111111',
+      '0111110',
+      '0100010',
+    ],
+    alpha: [
+      [
+        '00111100',
+        '11111111',
+        '11011011',
+        '11111111',
+        '00100100',
+        '01011010',
+        '10100101',
+        '01000010',
+      ],
+      [
+        '00111100',
+        '11111111',
+        '11011011',
+        '11111111',
+        '00100100',
+        '01011010',
+        '10011001',
+        '00100100',
+      ],
+    ],
+    beta: [
+      [
+        '00011000',
+        '00111100',
+        '01111110',
+        '11011011',
+        '11111111',
+        '00100100',
+        '01011010',
+        '10100101',
+      ],
+      [
+        '00011000',
+        '00111100',
+        '01111110',
+        '11011011',
+        '11111111',
+        '01011010',
+        '10011001',
+        '01000010',
+      ],
+    ],
+    gamma: [
+      [
+        '00111100',
+        '01111110',
+        '11111111',
+        '11011011',
+        '11111111',
+        '00100100',
+        '01011010',
+        '10000001',
+      ],
+      [
+        '00111100',
+        '01111110',
+        '11111111',
+        '11011011',
+        '11111111',
+        '01011010',
+        '00100100',
+        '01000010',
+      ],
+    ],
+  };
+
+  const state = {
+    active: false,
+    running: false,
+    gameOver: false,
+    score: 0,
+    wave: 1,
+    lives: MAX_LIVES,
+    time: 0,
+    lastTime: 0,
+    raf: 0,
+    player: null,
+    bullets: [],
+    enemyBullets: [],
+    invaders: [],
+    shields: [],
+    particles: [],
+    backdropStars: [],
+    invaderDir: 1,
+    invaderStepTimer: 0,
+    invaderStepInterval: 0.55,
+    enemyFireTimer: 0.9,
+    keys: {
+      ArrowLeft: false,
+      ArrowRight: false,
+      ArrowUp: false,
+      ArrowDown: false,
+    },
+  };
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function rand(a, b) {
+    return a + Math.random() * (b - a);
+  }
+
+  function getInvaderMaxHp() {
+    return 1 + Math.min(3, Math.floor(state.wave / 2));
+  }
+
+  function getEnemyFireDelay(aliveCount) {
+    return Math.max(0.18, 0.94 - state.wave * 0.08 - aliveCount * 0.003);
+  }
+
+  function renderLives() {
+    const remainingLives = Math.max(0, Math.min(MAX_LIVES, state.lives));
+    const hearts = [];
+
+    for (let i = 0; i < MAX_LIVES; i++) {
+      hearts.push(
+        `<span class="space-invaders__heart${i < remainingLives ? '' : ' space-invaders__heart--empty'}" aria-hidden="true">♥</span>`
+      );
+    }
+
+    livesEl.innerHTML = hearts.join('');
+    livesEl.setAttribute('aria-label', `${remainingLives} ${remainingLives === 1 ? 'life' : 'lives'} remaining`);
+  }
+
+  function updateHud() {
+    scoreEl.textContent = String(state.score).padStart(5, '0');
+    renderLives();
+    waveEl.textContent = String(state.wave);
+  }
+
+  function setOverlay(kicker, title, copy, buttonLabel = 'Launch another run') {
+    overlayKicker.textContent = kicker;
+    overlayTitle.textContent = title;
+    overlayCopy.textContent = copy;
+    restartBtn.textContent = buttonLabel;
+    overlay.classList.add('space-invaders__overlay--visible');
+  }
+
+  function hideOverlay() {
+    overlay.classList.remove('space-invaders__overlay--visible');
+  }
+
+  function seedBackdrop() {
+    state.backdropStars = Array.from({ length: 64 }, () => ({
+      x: rand(10, STAGE_W - 10),
+      y: rand(12, STAGE_H - 18),
+      r: rand(0.8, 2.4),
+      alpha: rand(0.14, 0.85),
+      twinkle: rand(0.5, 2.4),
+      phase: Math.random() * Math.PI * 2,
+    }));
+  }
+
+  function createPlayer() {
+    return {
+      x: STAGE_W / 2,
+      y: STAGE_H - 44,
+      speed: 340,
+      fireCooldown: 0.12,
+      hitFlash: 0,
+      invuln: 0,
+    };
+  }
+
+  function createShields() {
+    const count = 4;
+    const shieldWidth = 92;
+    const shieldHeight = 50;
+    const gap = (STAGE_W - count * shieldWidth) / (count + 1);
+    return Array.from({ length: count }, (_, index) => ({
+      x: gap + index * (shieldWidth + gap),
+      y: STAGE_H - 150,
+      w: shieldWidth,
+      h: shieldHeight,
+      hp: 22,
+      maxHp: 22,
+    }));
+  }
+
+  function buildWave() {
+    const rows = Math.min(6, 5 + Math.floor((state.wave - 1) / 2));
+    const cols = Math.min(11, 8 + Math.floor((state.wave - 1) / 3));
+    const spacingX = 56;
+    const spacingY = 44;
+    const formationWidth = (cols - 1) * spacingX;
+    const startX = (STAGE_W - formationWidth) / 2;
+    const invaderMaxHp = getInvaderMaxHp();
+
+    state.invaders = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const type = row === 0 ? 'alpha' : row < 3 ? 'beta' : 'gamma';
+        state.invaders.push({
+          x: startX + col * spacingX,
+          y: 86 + row * spacingY,
+          type,
+          col,
+          frame: (row + col) % 2,
+          points: type === 'alpha' ? 30 : type === 'beta' ? 20 : 10,
+          hp: invaderMaxHp,
+          maxHp: invaderMaxHp,
+          hitFlash: 0,
+          alive: true,
+        });
+      }
+    }
+
+    state.invaderDir = 1;
+    state.invaderStepTimer = 0;
+    state.invaderStepInterval = Math.max(0.16, 0.58 - state.wave * 0.03);
+    state.enemyFireTimer = Math.max(0.24, getEnemyFireDelay(state.invaders.length) + 0.08);
+    state.bullets = [];
+    state.enemyBullets = [];
+    state.particles = [];
+    state.shields = createShields();
+
+    if (!state.player) state.player = createPlayer();
+    state.player.x = STAGE_W / 2;
+    state.player.fireCooldown = 0.12;
+    state.player.invuln = 0.9;
+    updateHud();
+  }
+
+  function spawnParticles(x, y, color, count = 12, speed = 100) {
+    for (let i = 0; i < count; i++) {
+      state.particles.push({
+        x,
+        y,
+        vx: rand(-speed, speed),
+        vy: rand(-speed, speed),
+        size: rand(2, 4),
+        life: rand(0.22, 0.55),
+        color,
+      });
+    }
+  }
+
+  function shieldContains(shield, x, y) {
+    return x >= shield.x && x <= shield.x + shield.w && y >= shield.y && y <= shield.y + shield.h;
+  }
+
+  function hitShield(projectile, power = 1) {
+    for (const shield of state.shields) {
+      if (shield.hp <= 0) continue;
+      if (!shieldContains(shield, projectile.x, projectile.y)) continue;
+      shield.hp = Math.max(0, shield.hp - power);
+      spawnParticles(projectile.x, projectile.y, '#96ffd8', 5, 46);
+      return true;
+    }
+    return false;
+  }
+
+  function endGame(kicker, title, copy) {
+    state.running = false;
+    state.gameOver = true;
+    state.keys.ArrowLeft = false;
+    state.keys.ArrowRight = false;
+    state.keys.ArrowUp = false;
+    state.keys.ArrowDown = false;
+    setOverlay(kicker, title, copy);
+  }
+
+  function damagePlayer() {
+    if (!state.player || state.player.invuln > 0 || state.gameOver) return;
+    state.lives -= 1;
+    state.player.hitFlash = 1;
+    state.player.invuln = 1.5;
+    state.player.x = STAGE_W / 2;
+    state.enemyBullets = [];
+    spawnParticles(state.player.x, state.player.y, '#ff8da9', 26, 150);
+    updateHud();
+
+    if (state.lives <= 0) {
+      endGame(
+        'Transmission lost',
+        'Game over',
+        'The invaders slipped past your orbit line. Press Enter or relaunch to try again.'
+      );
+    }
+  }
+
+  function enemyFire(aliveInvaders) {
+    const bottomInvaders = new Map();
+    for (const invader of aliveInvaders) {
+      const current = bottomInvaders.get(invader.col);
+      if (!current || invader.y > current.y) bottomInvaders.set(invader.col, invader);
+    }
+
+    const shooters = Array.from(bottomInvaders.values());
+    if (!shooters.length) return;
+
+    const bursts = Math.min(3, 1 + Math.floor((state.wave - 1) / 2));
+    for (let i = 0; i < bursts; i++) {
+      const shooter = shooters[Math.floor(Math.random() * shooters.length)];
+      state.enemyBullets.push({
+        x: shooter.x,
+        y: shooter.y + 14,
+        vy: 190 + state.wave * 20,
+        r: 4,
+      });
+    }
+  }
+
+  function startGame() {
+    state.score = 0;
+    state.wave = 1;
+    state.lives = MAX_LIVES;
+    state.time = 0;
+    state.player = createPlayer();
+    seedBackdrop();
+    buildWave();
+    state.running = true;
+    state.gameOver = false;
+    hideOverlay();
+    updateHud();
+  }
+
+  function drawPixelSprite(sprite, centerX, centerY, scale, fill, glowColor = fill) {
+    const rows = sprite.length;
+    const cols = sprite[0].length;
+    const originX = Math.round(centerX - (cols * scale) / 2);
+    const originY = Math.round(centerY - (rows * scale) / 2);
+
+    ctx.save();
+    ctx.fillStyle = fill;
+    ctx.shadowBlur = scale * 1.8;
+    ctx.shadowColor = glowColor;
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        if (sprite[row][col] !== '1') continue;
+        ctx.fillRect(originX + col * scale, originY + row * scale, scale - 0.3, scale - 0.3);
+      }
+    }
+    ctx.restore();
+  }
+
+  function drawBackdrop() {
+    const bg = ctx.createLinearGradient(0, 0, 0, STAGE_H);
+    bg.addColorStop(0, 'rgba(2, 8, 22, 0.96)');
+    bg.addColorStop(0.5, 'rgba(3, 10, 26, 0.92)');
+    bg.addColorStop(1, 'rgba(2, 7, 18, 0.98)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, STAGE_W, STAGE_H);
+
+    ctx.save();
+    for (const star of state.backdropStars) {
+      const twinkle = 0.55 + 0.45 * Math.sin(state.time * star.twinkle + star.phase);
+      ctx.globalAlpha = star.alpha * twinkle;
+      ctx.fillStyle = '#dbe7ff';
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(83, 121, 214, 0.08)';
+    ctx.lineWidth = 1;
+    for (let y = 18; y < STAGE_H; y += 18) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(STAGE_W, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    ctx.fillStyle = 'rgba(88, 144, 255, 0.08)';
+    ctx.fillRect(0, STAGE_H - 84, STAGE_W, 3);
+  }
+
+  function drawShields() {
+    for (const shield of state.shields) {
+      if (shield.hp <= 0) continue;
+      const strength = shield.hp / shield.maxHp;
+      ctx.save();
+      ctx.globalAlpha = 0.42 + strength * 0.5;
+      ctx.fillStyle = strength > 0.45 ? '#96ffd8' : '#ffd87d';
+      ctx.fillRect(shield.x, shield.y + 10, shield.w, shield.h - 10);
+      ctx.fillRect(shield.x + 10, shield.y, shield.w - 20, 16);
+      ctx.clearRect(shield.x + shield.w / 2 - 10, shield.y + shield.h - 16, 20, 16);
+
+      const cracks = Math.floor((1 - strength) * 8);
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = '#03111f';
+      for (let i = 0; i < cracks; i++) {
+        ctx.fillRect(shield.x + rand(8, shield.w - 12), shield.y + rand(6, shield.h - 10), rand(4, 9), rand(4, 8));
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawInvaders() {
+    for (const invader of state.invaders) {
+      if (!invader.alive) continue;
+      const frames = SPRITES[invader.type];
+      const baseColor = invader.type === 'alpha' ? '#ffe07a' : invader.type === 'beta' ? '#89f3ff' : '#9dfb9c';
+      const flash = invader.hitFlash || 0;
+      const color = flash > 0.12 ? '#f7fbff' : baseColor;
+      drawPixelSprite(frames[invader.frame], invader.x, invader.y, 3, color, color);
+    }
+  }
+
+  function drawBullets() {
+    for (const bullet of state.bullets) {
+      ctx.save();
+      ctx.fillStyle = '#f7fbff';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#9ed7ff';
+      ctx.fillRect(bullet.x - 1.5, bullet.y - 8, 3, 14);
+      ctx.restore();
+    }
+
+    for (const bullet of state.enemyBullets) {
+      ctx.save();
+      ctx.fillStyle = '#ff9ab7';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#ff5e9f';
+      ctx.fillRect(bullet.x - 2, bullet.y - 6, 4, 12);
+      ctx.restore();
+    }
+  }
+
+  function drawParticles() {
+    for (const particle of state.particles) {
+      ctx.save();
+      ctx.globalAlpha = particle.life;
+      ctx.fillStyle = particle.color;
+      ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
+      ctx.restore();
+    }
+  }
+
+  function drawPlayer() {
+    const player = state.player;
+    if (!player) return;
+    const alpha = player.invuln > 0 && Math.sin(state.time * 16) > 0 ? 0.35 : 1;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    if (player.hitFlash > 0) {
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = '#ff8da9';
+    }
+    drawPixelSprite(SPRITES.player, player.x, player.y, 4, '#f7fbff', '#7ed0ff');
+    ctx.restore();
+  }
+
+  function drawGame() {
+    drawBackdrop();
+    drawShields();
+    drawInvaders();
+    drawBullets();
+    drawParticles();
+    drawPlayer();
+  }
+
+  function updateGame(dt) {
+    state.time += dt;
+
+    for (let i = state.particles.length - 1; i >= 0; i--) {
+      const particle = state.particles[i];
+      particle.x += particle.vx * dt;
+      particle.y += particle.vy * dt;
+      particle.life -= dt * 1.8;
+      if (particle.life <= 0) state.particles.splice(i, 1);
+    }
+
+    for (const invader of state.invaders) {
+      invader.hitFlash = Math.max(0, (invader.hitFlash || 0) - dt * 4.8);
+    }
+
+    if (!state.running || !state.player) return;
+
+    state.player.hitFlash = Math.max(0, state.player.hitFlash - dt * 2.4);
+    state.player.invuln = Math.max(0, state.player.invuln - dt);
+
+    const moveAxis = (state.keys.ArrowRight ? 1 : 0) - (state.keys.ArrowLeft ? 1 : 0);
+    const precision = state.keys.ArrowDown ? 0.52 : 1;
+    state.player.x = clamp(state.player.x + moveAxis * state.player.speed * precision * dt, 28, STAGE_W - 28);
+
+    state.player.fireCooldown -= dt;
+    if (state.player.fireCooldown <= 0) {
+      state.bullets.push({
+        x: state.player.x,
+        y: state.player.y - 18,
+        vy: -460,
+        r: 3,
+      });
+      state.player.fireCooldown = state.keys.ArrowUp ? 0.11 : 0.22;
+    }
+
+    for (let i = state.bullets.length - 1; i >= 0; i--) {
+      const bullet = state.bullets[i];
+      bullet.y += bullet.vy * dt;
+
+      if (bullet.y < -24) {
+        state.bullets.splice(i, 1);
+        continue;
+      }
+
+      if (hitShield(bullet, 1)) {
+        state.bullets.splice(i, 1);
+        continue;
+      }
+
+      const target = state.invaders.find((invader) =>
+        invader.alive &&
+        Math.abs(bullet.x - invader.x) <= 16 &&
+        Math.abs(bullet.y - invader.y) <= 14
+      );
+
+      if (!target) continue;
+      target.hp -= 1;
+      target.hitFlash = 1;
+      const hitColor = target.type === 'alpha' ? '#ffe07a' : target.type === 'beta' ? '#8cf5ff' : '#a9ff9c';
+      if (target.hp <= 0) {
+        target.alive = false;
+        state.score += target.points;
+        updateHud();
+        spawnParticles(target.x, target.y, hitColor, 14, 110);
+      } else {
+        spawnParticles(target.x, target.y, hitColor, 7, 64);
+      }
+      state.bullets.splice(i, 1);
+    }
+
+    for (let i = state.enemyBullets.length - 1; i >= 0; i--) {
+      const bullet = state.enemyBullets[i];
+      bullet.y += bullet.vy * dt;
+
+      if (bullet.y > STAGE_H + 20) {
+        state.enemyBullets.splice(i, 1);
+        continue;
+      }
+
+      if (hitShield(bullet, 2)) {
+        state.enemyBullets.splice(i, 1);
+        continue;
+      }
+
+      if (Math.abs(bullet.x - state.player.x) <= 18 && Math.abs(bullet.y - state.player.y) <= 16) {
+        state.enemyBullets.splice(i, 1);
+        damagePlayer();
+        break;
+      }
+    }
+
+    const aliveInvaders = state.invaders.filter((invader) => invader.alive);
+    if (!aliveInvaders.length) {
+      state.wave += 1;
+      buildWave();
+      return;
+    }
+
+    state.invaderStepTimer += dt;
+    if (state.invaderStepTimer >= state.invaderStepInterval) {
+      state.invaderStepTimer = 0;
+      const step = 14 + state.wave * 1.6;
+      const minX = Math.min(...aliveInvaders.map((invader) => invader.x));
+      const maxX = Math.max(...aliveInvaders.map((invader) => invader.x));
+      const willBounce =
+        (state.invaderDir > 0 && maxX + step > STAGE_W - 40) ||
+        (state.invaderDir < 0 && minX - step < 40);
+
+      if (willBounce) {
+        state.invaderDir *= -1;
+        for (const invader of aliveInvaders) {
+          invader.y += 18;
+          invader.frame = 1 - invader.frame;
+        }
+      } else {
+        for (const invader of aliveInvaders) {
+          invader.x += step * state.invaderDir;
+          invader.frame = 1 - invader.frame;
+        }
+      }
+
+      state.invaderStepInterval = Math.max(0.08, 0.55 - aliveInvaders.length * 0.005 - state.wave * 0.03);
+    }
+
+    if (aliveInvaders.some((invader) => invader.y + 18 >= state.player.y - 10)) {
+      endGame(
+        'Orbit breached',
+        'Moon colony lost',
+        'The formation touched down on the guide. Press Enter or relaunch to defend it again.'
+      );
+      return;
+    }
+
+    state.enemyFireTimer -= dt;
+    if (state.enemyFireTimer <= 0) {
+      enemyFire(aliveInvaders);
+      state.enemyFireTimer = getEnemyFireDelay(aliveInvaders.length);
+    }
+  }
+
+  function loop(timestamp) {
+    if (!state.active) return;
+    if (!state.lastTime) state.lastTime = timestamp;
+    const dt = Math.min((timestamp - state.lastTime) / 1000, 0.033);
+    state.lastTime = timestamp;
+    updateGame(dt);
+    drawGame();
+    state.raf = requestAnimationFrame(loop);
+  }
+
+  function open() {
+    if (state.active || document.body.classList.contains('galaxy-invite-open')) return;
+    clearTimeout(hideTimer);
+    if (getTheme() !== 'dark') setTheme('dark');
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
+    root.hidden = false;
+    root.setAttribute('aria-hidden', 'false');
+    startGame();
+    state.active = true;
+    state.lastTime = 0;
+    cancelAnimationFrame(state.raf);
+    requestAnimationFrame(() => document.body.classList.add('space-invaders-open'));
+    state.raf = requestAnimationFrame(loop);
+  }
+
+  function close() {
+    if (!state.active && root.hidden) return;
+    state.active = false;
+    state.running = false;
+    state.gameOver = false;
+    state.keys.ArrowLeft = false;
+    state.keys.ArrowRight = false;
+    state.keys.ArrowUp = false;
+    state.keys.ArrowDown = false;
+    cancelAnimationFrame(state.raf);
+    hideOverlay();
+    document.body.classList.remove('space-invaders-open');
+    root.setAttribute('aria-hidden', 'true');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      if (!state.active) root.hidden = true;
+    }, 460);
+  }
+
+  function isMoonTarget(x, y) {
+    if (state.active || document.body.classList.contains('galaxy-invite-open') || getTheme() !== 'dark') {
+      return false;
+    }
+    return moonTargets.some((target) => Math.hypot(x - target.x, y - target.y) <= target.r);
+  }
+
+  restartBtn.addEventListener('click', () => {
+    if (!state.active) {
+      open();
+      return;
+    }
+    startGame();
+  });
+
+  exitBtn.addEventListener('click', close);
+
+  document.addEventListener('keydown', (e) => {
+    if (!state.active) return;
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close();
+      return;
+    }
+
+    if ((e.key === 'Enter' || e.key === ' ') && state.gameOver) {
+      e.preventDefault();
+      startGame();
+      return;
+    }
+
+    if (e.key in state.keys) {
+      state.keys[e.key] = true;
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (!state.active) return;
+    if (e.key in state.keys) {
+      state.keys[e.key] = false;
+      e.preventDefault();
+    }
+  });
+
+  return {
+    open,
+    close,
+    isActive() {
+      return state.active;
+    },
+    setMoonTargets(targets) {
+      moonTargets.length = 0;
+      for (const target of targets) {
+        if (!target) continue;
+        moonTargets.push(target);
+      }
+    },
+    tryLaunchFromPoint(x, y) {
+      if (!isMoonTarget(x, y)) return false;
+      open();
+      return true;
+    },
+    isPointerOverMoon(x, y) {
+      return isMoonTarget(x, y);
+    },
+  };
 }
 
 /* -- SEARCH -- */
@@ -3167,6 +4742,7 @@ function initSearch() {
 
   // "/" shortcut to focus search
   document.addEventListener('keydown', (e) => {
+    if (document.body.classList.contains('space-invaders-open')) return;
     if (e.key === '/' && !e.ctrlKey && !e.metaKey && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
       e.preventDefault();
       input.focus();
@@ -3177,65 +4753,513 @@ function initSearch() {
 
 /* -- INIT -- */
 document.addEventListener('DOMContentLoaded', () => {
-  try { hljs.highlightAll(); } catch(e) { console.error('hljs error:', e); }
+  if (window.hljs && typeof window.hljs.highlightAll === 'function') hljs.highlightAll();
   initThemeToggle();
   initTabs();
   initCopyButtons();
   initSearch();
+  const galaxyInvite = initGalaxyInvite();
+  const moonInvaders = initMoonInvaders();
 
-  /* Starfield */
+  /* ═══ Immersive Starfield — "Flying Through Space" ═══ */
   const canvas = document.getElementById('starfield');
   if (canvas) {
     const ctx = canvas.getContext('2d');
-    let w, h, stars = [];
-    const STAR_COUNT = 180;
+    let w, h;
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    /* ── Depth layers ── */
     const LAYERS = [
-      { speed: 0.15, size: [0.4, 1.0], alpha: [0.15, 0.35] },
-      { speed: 0.35, size: [0.8, 1.6], alpha: [0.25, 0.5] },
-      { speed: 0.7,  size: [1.2, 2.2], alpha: [0.4, 0.75] },
+      { count: 220, drift: 0.08, size: [0.3, 0.8],  alpha: [0.08, 0.25], parallax: 0.1 },
+      { count: 140, drift: 0.22, size: [0.6, 1.4],  alpha: [0.2,  0.45], parallax: 0.3 },
+      { count: 80,  drift: 0.5,  size: [1.0, 2.0],  alpha: [0.35, 0.65], parallax: 0.55 },
+      { count: 30,  drift: 0.9,  size: [1.6, 2.8],  alpha: [0.5,  0.85], parallax: 0.8 },
     ];
 
-    function rand(min, max) { return min + Math.random() * (max - min); }
+    const STAR_COLORS = [
+      '#ffffff', '#ffffff', '#ffffff', '#ffffff',
+      '#c8d8ff', '#aaccff', '#ffe8c8', '#ffd2a0',
+      '#d0e0ff', '#ffccbb', '#b8d0ff',
+    ];
+
+    let stars = [], shootingStars = [], nebulae = [], moons = [];
+
+    /* ── Rocketship fly-bys ── */
+    const rocketImg = new Image();
+    rocketImg.src = 'Rocketship.png';
+    let rocketReady = false;
+    rocketImg.onload = () => { rocketReady = true; };
+    let rockets = [];
+
+    /* ── Drifting moon fly-bys ── */
+    const moonImg = new Image();
+    moonImg.src = 'Moon.png';
+    let moonReady = false;
+    moonImg.onload = () => { moonReady = true; };
+
+    function spawnMoon(initial = false) {
+      const lane = Math.random() > 0.5 ? 'left' : 'right';
+      const size = initial
+        ? rand(Math.max(210, w * 0.18), Math.min(340, w * 0.27))
+        : rand(Math.max(180, w * 0.15), Math.min(300, w * 0.23));
+      const goingRight = initial ? lane === 'left' : Math.random() > 0.5;
+      moons.push({
+        x: initial
+          ? (lane === 'left' ? rand(w * 0.06, w * 0.24) : rand(w * 0.76, w * 0.94))
+          : (goingRight ? -size * 1.4 : w + size * 1.4),
+        y: initial ? rand(h * 0.14, h * 0.42) : rand(h * 0.14, h * 0.58),
+        vx: rand(0.08, 0.2) * (goingRight ? 1 : -1),
+        vy: rand(-0.035, 0.035),
+        size,
+        rotation: rand(-0.12, 0.12),
+        spin: rand(-0.0009, 0.0009),
+        bobAmp: rand(14, 30),
+        bobSpeed: rand(0.18, 0.42),
+        swayAmp: rand(8, 18),
+        swaySpeed: rand(0.22, 0.48),
+        phase: Math.random() * Math.PI * 2,
+        opacity: initial ? 0.18 : 0,
+        fadeIn: true,
+        maxOpacity: rand(0.34, 0.5),
+        glow: rand(0.12, 0.22),
+        pulseAmp: rand(0.01, 0.03),
+        pulseSpeed: rand(0.2, 0.45),
+        parallax: rand(0.05, 0.12),
+      });
+    }
+
+    function spawnRocket() {
+      const size = rand(32, 56);
+      const goingRight = Math.random() > 0.5;
+      const angle = rand(0.15, 0.55) * (goingRight ? 1 : -1);
+      const speed = rand(1.8, 3.5);
+      rockets.push({
+        x: goingRight ? -size * 2 : w + size * 2,
+        y: rand(h * 0.1, h * 0.7),
+        vx: Math.cos(angle) * speed * (goingRight ? 1 : -1),
+        vy: -Math.abs(Math.sin(angle)) * speed,
+        size,
+        rotation: goingRight ? -0.9 : 0.9 + Math.PI,
+        wobble: rand(1.5, 3),
+        wobbleAmp: rand(0.04, 0.1),
+        phase: Math.random() * Math.PI * 2,
+        opacity: 0,
+        fadeIn: true,
+        trail: [],
+      });
+    }
+
+    /* ── Rocketman (astronaut) float-bys ── */
+    const rocketmanImg = new Image();
+    rocketmanImg.src = 'rocketman.png';
+    let rocketmanReady = false;
+    rocketmanImg.onload = () => { rocketmanReady = true; };
+    let rocketmen = [];
+
+    function spawnRocketman() {
+      const size = rand(28, 48);
+      const goingRight = Math.random() > 0.5;
+      const speed = rand(0.4, 1.1);
+      const angle = rand(-0.2, 0.2);
+      rocketmen.push({
+        x: goingRight ? -size * 2 : w + size * 2,
+        y: rand(h * 0.15, h * 0.75),
+        vx: speed * (goingRight ? 1 : -1),
+        vy: rand(-0.15, 0.15),
+        size,
+        spin: rand(-0.008, 0.008),
+        rotation: rand(0, Math.PI * 2),
+        bobSpeed: rand(0.8, 1.8),
+        bobAmp: rand(8, 20),
+        phase: Math.random() * Math.PI * 2,
+        opacity: 0,
+        fadeIn: true,
+        puffs: [],
+        puffTimer: 0,
+      });
+    }
 
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
+      if (!mouseX && !mouseY) { mouseX = w / 2; mouseY = h / 2; }
     }
 
     function seed() {
       stars = [];
-      for (let i = 0; i < STAR_COUNT; i++) {
-        const layer = LAYERS[Math.floor(Math.random() * LAYERS.length)];
-        stars.push({
+      moons = [];
+      for (const L of LAYERS) {
+        for (let i = 0; i < L.count; i++) {
+          stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: rand(L.size[0], L.size[1]),
+            alpha: rand(L.alpha[0], L.alpha[1]),
+            drift: L.drift,
+            parallax: L.parallax,
+            twinkleSpeed: rand(0.4, 3.0),
+            twinkleAmp: rand(0.15, 0.4),
+            phase: Math.random() * Math.PI * 2,
+            color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+            driftAngle: rand(-0.3, 0.3),
+          });
+        }
+      }
+
+      if (moonReady) spawnMoon(true);
+
+      /* Nebula clouds — subtle colored glow patches */
+      nebulae = [];
+      const nebulaCount = Math.max(3, Math.floor(w * h / 300000));
+      const nebulaColors = [
+        'rgba(88,166,255,', 'rgba(63,185,80,', 'rgba(136,100,255,',
+        'rgba(255,120,100,', 'rgba(100,180,255,',
+      ];
+      for (let i = 0; i < nebulaCount; i++) {
+        nebulae.push({
           x: Math.random() * w,
-          baseY: Math.random() * (document.documentElement.scrollHeight || h * 3),
-          r: rand(layer.size[0], layer.size[1]),
-          alpha: rand(layer.alpha[0], layer.alpha[1]),
-          speed: layer.speed,
-          twinkle: rand(0.5, 2.5),
+          y: Math.random() * h,
+          radius: rand(120, 350),
+          color: nebulaColors[Math.floor(Math.random() * nebulaColors.length)],
+          alpha: rand(0.012, 0.035),
+          driftX: rand(-0.04, 0.04),
+          driftY: rand(-0.02, 0.02),
+          pulse: rand(0.3, 0.8),
           phase: Math.random() * Math.PI * 2,
         });
       }
     }
 
+    /* ── Shooting stars ── */
+    function spawnShootingStar() {
+      const angle = rand(0.3, 0.9);
+      const speed = rand(6, 14);
+      shootingStars.push({
+        x: rand(-100, w * 0.7),
+        y: rand(-50, h * 0.3),
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 1,
+        decay: rand(0.008, 0.018),
+        length: rand(60, 160),
+        width: rand(1.0, 2.2),
+      });
+    }
+
     let scrollY = 0;
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.addEventListener('scroll', () => { scrollY = mainContent.scrollTop; }, { passive: true });
+    }
     window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
 
-    let frame = 0;
+    let t = 0;
+    let mouseX = 0, mouseY = 0;
+    function syncMoonPointer(clientX, clientY) {
+      const overMoon = moonInvaders.isPointerOverMoon(clientX, clientY);
+      document.body.classList.toggle('moon-target-hover', overMoon);
+      canvas.style.cursor = overMoon ? 'pointer' : 'default';
+    }
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      syncMoonPointer(e.clientX, e.clientY);
+    }, { passive: true });
+    document.addEventListener('click', (e) => {
+      if (!moonInvaders.tryLaunchFromPoint(e.clientX, e.clientY)) return;
+      document.body.classList.remove('moon-target-hover');
+      canvas.style.cursor = 'default';
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+    document.addEventListener('mouseleave', () => {
+      document.body.classList.remove('moon-target-hover');
+      canvas.style.cursor = 'default';
+    });
+
     function draw() {
-      frame++;
+      t += 0.016;
       ctx.clearRect(0, 0, w, h);
-      const t = frame * 0.02;
+
+      /* Subtle radial vignette */
+      const vignette = ctx.createRadialGradient(w / 2, h / 2, w * 0.2, w / 2, h / 2, w * 0.9);
+      vignette.addColorStop(0, 'rgba(10,14,20,0)');
+      vignette.addColorStop(1, 'rgba(5,7,12,0.3)');
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, w, h);
+
+      /* Nebulae */
+      for (const n of nebulae) {
+        n.x += n.driftX;
+        n.y += n.driftY;
+        if (n.x < -n.radius) n.x = w + n.radius;
+        if (n.x > w + n.radius) n.x = -n.radius;
+        if (n.y < -n.radius) n.y = h + n.radius;
+        if (n.y > h + n.radius) n.y = -n.radius;
+
+        const pulse = 1 + 0.3 * Math.sin(t * n.pulse + n.phase);
+        const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius * pulse);
+        grad.addColorStop(0, n.color + (n.alpha * 1.5) + ')');
+        grad.addColorStop(0.5, n.color + (n.alpha * 0.5) + ')');
+        grad.addColorStop(1, n.color + '0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(n.x - n.radius * 1.5, n.y - n.radius * 1.5, n.radius * 3, n.radius * 3);
+      }
+
+      /* Mouse parallax offset (subtle) */
+      const mx = (mouseX / w - 0.5) * 12;
+      const my = (mouseY / h - 0.5) * 12;
+
+      /* Stars */
       for (const s of stars) {
-        const y = s.baseY - scrollY * s.speed;
-        const screenY = ((y % h) + h) % h;
-        const flicker = 0.7 + 0.3 * Math.sin(t * s.twinkle + s.phase);
-        ctx.globalAlpha = s.alpha * flicker;
-        ctx.fillStyle = '#ffffff';
+        /* Continuous drift — feels like flying */
+        s.y += s.drift * 0.3;
+        s.x += Math.sin(t * 0.5 + s.phase) * s.driftAngle * 0.15;
+
+        /* Wrap around edges */
+        if (s.y > h + 5) { s.y = -5; s.x = Math.random() * w; }
+        if (s.x < -5) s.x = w + 5;
+        if (s.x > w + 5) s.x = -5;
+
+        /* Parallax from scroll + mouse */
+        const px = s.x + mx * s.parallax;
+        const py = s.y - scrollY * s.parallax * 0.15 + my * s.parallax;
+        const screenY = ((py % h) + h) % h;
+
+        /* Twinkle */
+        const flicker = 1 - s.twinkleAmp + s.twinkleAmp * Math.sin(t * s.twinkleSpeed + s.phase);
+        const a = s.alpha * flicker;
+
+        /* Draw glow for brighter stars */
+        if (s.r > 1.4) {
+          const hex = s.color;
+          const cr = parseInt(hex.slice(1,3),16), cg = parseInt(hex.slice(3,5),16), cb = parseInt(hex.slice(5,7),16);
+          const glowGrad = ctx.createRadialGradient(px, screenY, 0, px, screenY, s.r * 4);
+          glowGrad.addColorStop(0, `rgba(${cr},${cg},${cb},${a * 0.25})`);
+          glowGrad.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = glowGrad;
+          ctx.fillRect(px - s.r * 4, screenY - s.r * 4, s.r * 8, s.r * 8);
+        }
+
+        ctx.globalAlpha = a;
+        ctx.fillStyle = s.color;
         ctx.beginPath();
-        ctx.arc(s.x, screenY, s.r, 0, Math.PI * 2);
+        ctx.arc(px, screenY, s.r, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      /* Shooting stars */
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        ss.x += ss.vx;
+        ss.y += ss.vy;
+        ss.life -= ss.decay;
+
+        if (ss.life <= 0) { shootingStars.splice(i, 1); continue; }
+
+        const tailX = ss.x - (ss.vx / Math.hypot(ss.vx, ss.vy)) * ss.length * ss.life;
+        const tailY = ss.y - (ss.vy / Math.hypot(ss.vx, ss.vy)) * ss.length * ss.life;
+
+        const grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+        grad.addColorStop(0, 'rgba(255,255,255,0)');
+        grad.addColorStop(0.7, `rgba(200,220,255,${0.3 * ss.life})`);
+        grad.addColorStop(1, `rgba(255,255,255,${0.9 * ss.life})`);
+
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = ss.width * ss.life;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(ss.x, ss.y);
+        ctx.stroke();
+
+        /* Bright head */
+        ctx.globalAlpha = ss.life * 0.8;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(ss.x, ss.y, ss.width * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      /* Spawn shooting stars randomly */
+      if (Math.random() < 0.005) spawnShootingStar();
+
+      /* ── Moon drift-bys ── */
+      if (moonReady) {
+        if (moons.length === 0) spawnMoon(true);
+
+        for (let i = moons.length - 1; i >= 0; i--) {
+          const moon = moons[i];
+          moon.x += moon.vx;
+          moon.y += moon.vy;
+          moon.rotation += moon.spin;
+
+          const drawX = moon.x + Math.cos(t * moon.swaySpeed + moon.phase) * moon.swayAmp + mx * moon.parallax;
+          const drawY = moon.y + Math.sin(t * moon.bobSpeed + moon.phase) * moon.bobAmp - scrollY * moon.parallax * 0.08 + my * moon.parallax * 0.4;
+          const drawSize = moon.size * (1 + Math.sin(t * moon.pulseSpeed + moon.phase) * moon.pulseAmp);
+          moon.renderX = drawX;
+          moon.renderY = drawY;
+          moon.renderSize = drawSize;
+
+          if (moon.fadeIn) {
+            moon.opacity = Math.min(moon.opacity + 0.0045, moon.maxOpacity);
+            if (moon.opacity >= moon.maxOpacity) moon.fadeIn = false;
+          }
+
+          if (moon.x < -moon.size * 1.8 || moon.x > w + moon.size * 1.8 ||
+              moon.y < -moon.size * 1.6 || moon.y > h + moon.size * 1.6) {
+            moons.splice(i, 1);
+            continue;
+          }
+
+          const glow = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, drawSize * 0.8);
+          glow.addColorStop(0, `rgba(172,198,255,${moon.glow * moon.opacity})`);
+          glow.addColorStop(0.55, `rgba(104,137,227,${moon.glow * moon.opacity * 0.5})`);
+          glow.addColorStop(1, 'rgba(40,60,120,0)');
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = glow;
+          ctx.fillRect(drawX - drawSize, drawY - drawSize, drawSize * 2, drawSize * 2);
+
+          ctx.globalAlpha = moon.opacity;
+          ctx.save();
+          ctx.translate(drawX, drawY);
+          ctx.rotate(moon.rotation);
+          ctx.drawImage(moonImg, -drawSize / 2, -drawSize / 2, drawSize, drawSize);
+          ctx.restore();
+        }
+      }
+      moonInvaders.setMoonTargets(moons.map((moon) =>
+        Number.isFinite(moon.renderX) && Number.isFinite(moon.renderY) && Number.isFinite(moon.renderSize)
+          ? { x: moon.renderX, y: moon.renderY, r: moon.renderSize * 0.36 }
+          : null
+      ));
+
+      /* ── Rocketship fly-bys ── */
+      if (rocketReady) {
+        /* Spawn a rocket occasionally */
+        if (rockets.length === 0 && Math.random() < 0.0012) spawnRocket();
+
+        for (let i = rockets.length - 1; i >= 0; i--) {
+          const rk = rockets[i];
+          rk.x += rk.vx;
+          rk.y += rk.vy;
+
+          /* Gentle wobble */
+          const wobbleOffset = Math.sin(t * rk.wobble + rk.phase) * rk.wobbleAmp;
+          const drawRotation = rk.rotation + wobbleOffset;
+
+          /* Fade in/out */
+          if (rk.fadeIn) {
+            rk.opacity = Math.min(rk.opacity + 0.015, 0.85);
+            if (rk.opacity >= 0.85) rk.fadeIn = false;
+          }
+
+          /* Remove when off-screen */
+          if (rk.x < -rk.size * 4 || rk.x > w + rk.size * 4 ||
+              rk.y < -rk.size * 4 || rk.y > h + rk.size * 4) {
+            rockets.splice(i, 1);
+            continue;
+          }
+
+          /* Engine exhaust trail */
+          rk.trail.push({ x: rk.x, y: rk.y, life: 1 });
+          if (rk.trail.length > 30) rk.trail.shift();
+
+          for (let j = 0; j < rk.trail.length; j++) {
+            const tp = rk.trail[j];
+            tp.life -= 0.035;
+            if (tp.life <= 0) continue;
+            const tr = rk.size * 0.15 * tp.life;
+            const trGrad = ctx.createRadialGradient(tp.x, tp.y, 0, tp.x, tp.y, tr * 3);
+            trGrad.addColorStop(0, `rgba(255,180,60,${0.25 * tp.life * rk.opacity})`);
+            trGrad.addColorStop(0.4, `rgba(255,100,30,${0.12 * tp.life * rk.opacity})`);
+            trGrad.addColorStop(1, 'rgba(255,80,20,0)');
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = trGrad;
+            ctx.fillRect(tp.x - tr * 3, tp.y - tr * 3, tr * 6, tr * 6);
+          }
+
+          /* Draw the rocket */
+          ctx.globalAlpha = rk.opacity;
+          ctx.save();
+          ctx.translate(rk.x, rk.y);
+          ctx.rotate(drawRotation);
+          ctx.drawImage(rocketImg, -rk.size / 2, -rk.size / 2, rk.size, rk.size);
+          ctx.restore();
+        }
+      }
+
+      /* ── Rocketman (astronaut) float-bys ── */
+      if (rocketmanReady) {
+        if (rocketmen.length === 0 && Math.random() < 0.0008) spawnRocketman();
+
+        for (let i = rocketmen.length - 1; i >= 0; i--) {
+          const rm = rocketmen[i];
+          rm.x += rm.vx;
+          rm.y += rm.vy;
+          rm.rotation += rm.spin;
+
+          /* Dreamy vertical bob */
+          const bobY = Math.sin(t * rm.bobSpeed + rm.phase) * rm.bobAmp;
+
+          /* Fade in */
+          if (rm.fadeIn) {
+            rm.opacity = Math.min(rm.opacity + 0.01, 0.75);
+            if (rm.opacity >= 0.75) rm.fadeIn = false;
+          }
+
+          /* Remove off-screen */
+          if (rm.x < -rm.size * 4 || rm.x > w + rm.size * 4 ||
+              rm.y < -rm.size * 4 || rm.y > h + rm.size * 4) {
+            rocketmen.splice(i, 1);
+            continue;
+          }
+
+          const drawX = rm.x;
+          const drawY = rm.y + bobY;
+
+          /* Jetpack puffs — small occasional bursts */
+          rm.puffTimer -= 0.016;
+          if (rm.puffTimer <= 0) {
+            rm.puffs.push({
+              x: drawX + rand(-4, 4),
+              y: drawY + rm.size * 0.3,
+              life: 1,
+              r: rand(2, 5),
+              vx: rand(-0.3, 0.3),
+              vy: rand(0.2, 0.6),
+            });
+            rm.puffTimer = rand(0.3, 0.8);
+          }
+
+          for (let j = rm.puffs.length - 1; j >= 0; j--) {
+            const p = rm.puffs[j];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.02;
+            p.r += 0.08;
+            if (p.life <= 0) { rm.puffs.splice(j, 1); continue; }
+            ctx.globalAlpha = p.life * 0.2 * rm.opacity;
+            ctx.fillStyle = '#aaccff';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          /* Draw the astronaut */
+          ctx.globalAlpha = rm.opacity;
+          ctx.save();
+          ctx.translate(drawX, drawY);
+          ctx.rotate(rm.rotation);
+          ctx.drawImage(rocketmanImg, -rm.size / 2, -rm.size / 2, rm.size, rm.size);
+          ctx.restore();
+        }
+      }
+
+      ctx.globalAlpha = 1;
       requestAnimationFrame(draw);
     }
 
@@ -3250,8 +5274,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (splash) {
     setTimeout(() => {
       splash.classList.add('load-splash--hidden');
-      setTimeout(() => splash.remove(), 600);
+      setTimeout(() => {
+        splash.remove();
+        galaxyInvite.open();
+      }, 600);
     }, 600);
+  } else {
+    galaxyInvite.open();
   }
 
   /* 3. Scroll progress indicator */
