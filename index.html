@@ -2507,20 +2507,62 @@ function initSearch() {
   const results = document.getElementById('search-results');
   if (!input || !results) return;
 
-  // Build index from h2, h3, summary elements
+  // Build index from headings, collapsibles, and inline code terms
   const index = [];
+  const seen  = new Set();
   const tabMap = { 'section-cli-intro': 'CLI Intro', 'section-agents': 'Agents', 'section-skills': 'Skills', 'section-mcp': 'MCP' };
+
+  function addEntry(text, el, tabKey, tabLabel) {
+    const key = text.toLowerCase() + '|' + tabKey;
+    if (seen.has(key) || !text) return;
+    seen.add(key);
+    index.push({ text, lower: text.toLowerCase(), el, tabKey, tabLabel });
+  }
+
+  function nearestHeading(el) {
+    // Walk up to find closest heading or summary to anchor to
+    let node = el;
+    while (node && node.tagName !== 'ARTICLE') {
+      if (/^H[23]$/.test(node.tagName)) return node;
+      if (node.tagName === 'DETAILS') {
+        const s = node.querySelector('summary .collapsible__title');
+        if (s) return node.querySelector('summary');
+      }
+      // Check preceding siblings for headings
+      let sib = node.previousElementSibling;
+      while (sib) {
+        if (/^H[23]$/.test(sib.tagName)) return sib;
+        sib = sib.previousElementSibling;
+      }
+      node = node.parentElement;
+    }
+    return el;
+  }
 
   document.querySelectorAll('article[role="tabpanel"]').forEach(panel => {
     const tabLabel = tabMap[panel.id] || panel.id;
     const tabKey   = panel.id.replace('section-', '');
 
+    // Index headings and collapsible titles
     panel.querySelectorAll('h2, h3, summary.collapsible__trigger').forEach(el => {
       const titleEl = el.tagName === 'SUMMARY' ? el.querySelector('.collapsible__title') : el;
       if (!titleEl) return;
-      const text = titleEl.textContent.trim();
-      if (!text) return;
-      index.push({ text, lower: text.toLowerCase(), el, tabKey, tabLabel });
+      addEntry(titleEl.textContent.trim(), el, tabKey, tabLabel);
+    });
+
+    // Index code terms in table cells (commands like /fleet, --flag, etc.)
+    panel.querySelectorAll('td > code:first-child').forEach(code => {
+      const text = code.textContent.trim();
+      if (text.length < 2 || text.length > 60) return;
+      addEntry(text, nearestHeading(code), tabKey, tabLabel);
+    });
+
+    // Index code terms in paragraphs/lists that look like commands or flags
+    panel.querySelectorAll('p > code, li > code, dt > code').forEach(code => {
+      const text = code.textContent.trim();
+      if (text.startsWith('/') || text.startsWith('--') || text.startsWith('copilot')) {
+        addEntry(text, nearestHeading(code), tabKey, tabLabel);
+      }
     });
   });
 
