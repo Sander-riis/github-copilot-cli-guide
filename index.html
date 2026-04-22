@@ -62,6 +62,39 @@
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
       --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
       --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
+
+      /* Inline code text */
+      --color-code-text: #c9d6e4;
+    }
+
+    /* Light theme overrides */
+    [data-theme="light"] {
+      --color-bg-canvas:     #ffffff;
+      --color-bg-surface:    #f6f8fa;
+      --color-bg-overlay:    #f0f2f5;
+      --color-bg-subtle:     #e8ecf0;
+
+      --color-border:        #d1d9e0;
+      --color-border-muted:  #e0e6eb;
+      --color-border-subtle: #bbc3cd;
+
+      --color-text-primary:  #1f2328;
+      --color-text-secondary:#59636e;
+      --color-text-link:     #0969da;
+
+      --color-accent:        #1a7f37;
+      --color-accent-subtle: #dafbe1;
+
+      --color-success:       #1a7f37;
+      --color-warning:       #9a6700;
+      --color-danger:        #d1242f;
+      --color-info:          #0969da;
+
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.07);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+
+      --color-code-text: #1f2328;
     }
 
     /* Section 2: Reset / Base */
@@ -77,7 +110,7 @@
       letter-spacing: -0.01em;
     }
     a { color: var(--color-text-link); transition: color 0.15s ease; }
-    a:hover { color: #79b8ff; }
+    a:hover { color: var(--color-text-link); opacity: 0.8; }
     p { margin-bottom: 14px; }
     p:last-child { margin-bottom: 0; }
 
@@ -91,7 +124,7 @@
       background: var(--color-bg-overlay);
       padding: 2px 6px;
       border-radius: 4px;
-      color: #c9d6e4;
+      color: var(--color-code-text);
       border: 1px solid var(--color-border-muted);
     }
 
@@ -641,6 +674,55 @@
   Updated: 2021-05-15  Outdated base version: https://github.com/primer/github-syntax-dark
   Current colors taken from GitHub's CSS
 */.hljs{color:#c9d1d9;background:var(--color-bg-overlay, #181d27)}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}
+
+    /* Section 16b: github-light highlight.js theme */
+    [data-theme="light"] .hljs{color:#24292e;background:var(--color-bg-overlay)}
+    [data-theme="light"] .hljs-doctag,[data-theme="light"] .hljs-keyword,[data-theme="light"] .hljs-meta .hljs-keyword,[data-theme="light"] .hljs-template-tag,[data-theme="light"] .hljs-template-variable,[data-theme="light"] .hljs-type,[data-theme="light"] .hljs-variable.language_{color:#d73a49}
+    [data-theme="light"] .hljs-title,[data-theme="light"] .hljs-title.class_,[data-theme="light"] .hljs-title.class_.inherited__,[data-theme="light"] .hljs-title.function_{color:#6f42c1}
+    [data-theme="light"] .hljs-attr,[data-theme="light"] .hljs-attribute,[data-theme="light"] .hljs-literal,[data-theme="light"] .hljs-meta,[data-theme="light"] .hljs-number,[data-theme="light"] .hljs-operator,[data-theme="light"] .hljs-selector-attr,[data-theme="light"] .hljs-selector-class,[data-theme="light"] .hljs-selector-id,[data-theme="light"] .hljs-variable{color:#005cc5}
+    [data-theme="light"] .hljs-meta .hljs-string,[data-theme="light"] .hljs-regexp,[data-theme="light"] .hljs-string{color:#032f62}
+    [data-theme="light"] .hljs-built_in,[data-theme="light"] .hljs-symbol{color:#e36209}
+    [data-theme="light"] .hljs-code,[data-theme="light"] .hljs-comment,[data-theme="light"] .hljs-formula{color:#6a737d}
+    [data-theme="light"] .hljs-name,[data-theme="light"] .hljs-quote,[data-theme="light"] .hljs-selector-pseudo,[data-theme="light"] .hljs-selector-tag{color:#22863a}
+    [data-theme="light"] .hljs-subst{color:#24292e}
+    [data-theme="light"] .hljs-section{color:#005cc5;font-weight:700}
+    [data-theme="light"] .hljs-bullet{color:#735c0f}
+    [data-theme="light"] .hljs-emphasis{color:#24292e;font-style:italic}
+    [data-theme="light"] .hljs-strong{color:#24292e;font-weight:700}
+    [data-theme="light"] .hljs-addition{color:#22863a;background-color:#f0fff4}
+    [data-theme="light"] .hljs-deletion{color:#b31d28;background-color:#ffeef0}
+
+    /* Section 16c: Light theme extra overrides */
+    [data-theme="light"] .site-header__icon { filter: drop-shadow(0 0 4px rgba(26,127,55,0.2)); }
+    [data-theme="light"] .tab-nav__tab--active { color: #1a7f37; }
+    [data-theme="light"] .search__results { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    [data-theme="light"] .code-block__copy--copied { background: #dafbe1; color: #1a7f37; }
+    [data-theme="light"] kbd { background: #e8ecf0; box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
+
+    /* Section 16d: Theme toggle button */
+    .theme-toggle {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      background: var(--color-bg-canvas);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-border-subtle);
+    }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    .theme-toggle__sun  { display: none; }
+    .theme-toggle__moon { display: block; }
+    [data-theme="light"] .theme-toggle__sun  { display: block; }
+    [data-theme="light"] .theme-toggle__moon { display: none; }
   </style>
 </head>
 <body>
@@ -694,6 +776,10 @@
       <span class="search__kbd">/</span>
       <div class="search__results" id="search-results"></div>
     </div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg class="theme-toggle__moon" viewBox="0 0 16 16" fill="currentColor"><path d="M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.221-7.832Z"/></svg>
+      <svg class="theme-toggle__sun" viewBox="0 0 16 16" fill="currentColor"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Zm5.657-8.157a.75.75 0 0 1 0 1.06l-1.061 1.06a.749.749 0 1 1-1.06-1.06l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM16 8a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8ZM3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8Zm10.657 5.657a.75.75 0 0 1-1.06 0l-1.061-1.06a.749.749 0 1 1 1.06-1.061l1.061 1.06a.75.75 0 0 1 0 1.061Zm-9.193-9.193a.75.75 0 0 1-1.06 0L2.343 3.404a.75.75 0 1 1 1.06-1.06l1.061 1.06a.75.75 0 0 1 0 1.06ZM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0Zm0 13a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13Z"/></svg>
+    </button>
     <span class="site-header__meta">Last verified: 2026-04-22</span>
   </header>
 
@@ -2501,6 +2587,23 @@ function initCopyButtons() {
   });
 }
 
+/* -- THEME TOGGLE -- */
+function initThemeToggle() {
+  const toggle = document.getElementById('theme-toggle');
+  if (!toggle) return;
+  const html = document.documentElement;
+
+  // Restore saved preference
+  const saved = localStorage.getItem('theme');
+  if (saved) html.setAttribute('data-theme', saved);
+
+  toggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+}
+
 /* -- SEARCH -- */
 function initSearch() {
   const input   = document.getElementById('search-input');
@@ -2679,6 +2782,7 @@ function initSearch() {
 /* -- INIT -- */
 document.addEventListener('DOMContentLoaded', () => {
   try { hljs.highlightAll(); } catch(e) { console.error('hljs error:', e); }
+  initThemeToggle();
   initTabs();
   initCopyButtons();
   initSearch();
