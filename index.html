@@ -162,24 +162,12 @@
       gap: 16px;
       z-index: 10;
     }
-    .site-header__brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
     .site-header__icon {
-      width: 22px;
-      height: 22px;
+      width: 32px;
+      height: 32px;
       flex-shrink: 0;
       border-radius: 4px;
-    }
-    .site-header__title {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--color-text-primary);
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+      margin-right: 4px;
     }
     .site-header__actions {
       display: flex;
@@ -634,8 +622,7 @@
       .search__input:focus { width: 220px; }
     }
     @media (max-width: 600px) {
-      .site-header__brand { gap: 8px; }
-      .site-header__title { font-size: 15px; }
+      .site-header__icon { width: 26px; height: 26px; }
       .tab-nav { gap: 2px; }
       .tab-nav__tab { padding: 5px 10px; font-size: 11.5px; }
       table { font-size: 12px; }
@@ -652,6 +639,179 @@
     }
     .content-panel--active {
       animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ICON INTEGRATIONS — 5 creative uses of the Copilot icon
+       ═══════════════════════════════════════════════════════ */
+
+    /* 1. GHOST WATERMARK — faded icon behind each tab panel */
+    .content-panel {
+      position: relative;
+    }
+    .content-panel::after {
+      content: '';
+      position: absolute;
+      bottom: 40px;
+      right: -60px;
+      width: 280px;
+      height: 280px;
+      background: url('Icon.png') center/contain no-repeat;
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+      filter: grayscale(0.5);
+      transition: opacity 0.6s ease;
+    }
+    .content-panel:hover::after {
+      opacity: 0.04;
+    }
+    [data-theme="light"] .content-panel::after {
+      opacity: 0.04;
+      filter: grayscale(0.3);
+    }
+    [data-theme="light"] .content-panel:hover::after {
+      opacity: 0.07;
+    }
+
+    /* 2. SECTION DIVIDER — icon separator between sections */
+    .icon-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 36px 0;
+      opacity: 0.2;
+      user-select: none;
+    }
+    .icon-divider::before,
+    .icon-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-border-subtle), transparent);
+    }
+    .icon-divider__img {
+      width: 20px;
+      height: 20px;
+      animation: iconDividerSpin 20s linear infinite;
+      filter: grayscale(0.4);
+      transition: filter 0.3s, opacity 0.3s;
+    }
+    .icon-divider:hover .icon-divider__img {
+      filter: grayscale(0);
+      animation-duration: 3s;
+    }
+    .icon-divider:hover {
+      opacity: 0.5;
+    }
+    @keyframes iconDividerSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* 3. SCROLL PROGRESS — icon fills as you scroll the content */
+    .scroll-progress {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      z-index: 50;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .scroll-progress--visible {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+    .scroll-progress__ring {
+      position: absolute;
+      inset: 0;
+    }
+    .scroll-progress__ring circle {
+      fill: none;
+      stroke-width: 2.5;
+    }
+    .scroll-progress__ring-bg {
+      stroke: var(--color-border);
+    }
+    .scroll-progress__ring-fill {
+      stroke: var(--color-accent);
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke-dashoffset 0.15s ease-out;
+      filter: drop-shadow(0 0 4px rgba(63,185,80,0.3));
+    }
+    [data-theme="light"] .scroll-progress__ring-fill {
+      stroke: #0969da;
+      filter: drop-shadow(0 0 4px rgba(9,105,218,0.2));
+    }
+    .scroll-progress__icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+    }
+    .scroll-progress:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+
+    /* 4. EMPTY SEARCH — bouncing icon for no-results state */
+    .search__empty-icon {
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 10px;
+      animation: emptyBounce 2s ease-in-out infinite;
+      opacity: 0.5;
+      filter: grayscale(0.5);
+    }
+    @keyframes emptyBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25%      { transform: translateY(-6px) rotate(-5deg); }
+      75%      { transform: translateY(-3px) rotate(5deg); }
+    }
+
+    /* 5. PAGE LOAD SPLASH — icon pulses in on initial load */
+    .load-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg-canvas);
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .load-splash--hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .load-splash__icon {
+      width: 64px;
+      height: 64px;
+      animation: splashPulse 1.2s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 24px rgba(63,185,80,0.3));
+    }
+    [data-theme="light"] .load-splash {
+      background: #ffffff;
+    }
+    [data-theme="light"] .load-splash__icon {
+      filter: drop-shadow(0 0 24px rgba(9,105,218,0.2));
+    }
+    @keyframes splashPulse {
+      from { transform: scale(0.9); opacity: 0.6; }
+      to   { transform: scale(1.1); opacity: 1; }
     }
 
     /* Section 16: github-dark highlight.js theme(inlined — do NOT add CDN link) */
@@ -719,13 +879,15 @@
 </head>
 <body>
 
+  <!-- 5. PAGE LOAD SPLASH -->
+  <div class="load-splash" id="load-splash">
+    <img class="load-splash__icon" src="Icon.png" alt="" />
+  </div>
+
   <!-- HEADER: brand + tab nav -->
   <header class="site-header">
-    <div class="site-header__brand">
-      <img class="site-header__icon" src="Icon2.png" alt="Copilot icon" width="22" height="22" />
-      <span class="site-header__title">GitHub Copilot CLI</span>
-    </div>
     <nav class="tab-nav" role="tablist" aria-label="Guide sections">
+      <img class="site-header__icon" src="Icon2.png" alt="Copilot icon" width="32" height="32" />
       <button class="tab-nav__tab tab-nav__tab--active"
               role="tab"
               id="tab-cli-intro"
@@ -2916,6 +3078,16 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
 });
   </script>
+
+  <!-- 3. SCROLL PROGRESS INDICATOR -->
+  <div class="scroll-progress" id="scroll-progress" title="Scroll to top">
+    <svg class="scroll-progress__ring" viewBox="0 0 44 44">
+      <circle class="scroll-progress__ring-bg" cx="22" cy="22" r="19" />
+      <circle class="scroll-progress__ring-fill" cx="22" cy="22" r="19"
+        stroke-dasharray="119.38" stroke-dashoffset="119.38" />
+    </svg>
+    <img class="scroll-progress__icon" src="Icon.png" alt="" />
+  </div>
 
 </body>
 </html>
