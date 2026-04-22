@@ -982,6 +982,73 @@ copilot --resume</code></pre>
           </details>
         </section>
 
+        <section id="cli-tools" class="content-section">
+          <h2 class="section-heading">Tool Access &amp; Permissions</h2>
+          <p>The CLI agent's effectiveness depends entirely on which tools it can use. Without tool access, Copilot can only suggest — it cannot read your code, run commands, or make changes. Every meaningful action flows through the tool permission system.</p>
+
+          <h3>Available Tools</h3>
+          <p>Copilot CLI has four core tools. Each one unlocks a different category of work:</p>
+          <table>
+            <thead>
+              <tr><th>Tool</th><th>What It Enables</th><th>Without It</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>view</code></td><td>Read files, list directories, inspect project structure</td><td>Agent cannot see your code — answers are based on guesswork</td></tr>
+              <tr><td><code>shell</code></td><td>Run terminal commands (build, test, lint, git, package managers)</td><td>Agent cannot verify its changes work, run tests, or install dependencies</td></tr>
+              <tr><td><code>write</code></td><td>Create and edit files</td><td>Agent can only suggest changes — you must apply them manually</td></tr>
+              <tr><td><code>search</code></td><td>Grep, glob, and code search across the codebase</td><td>Agent cannot find symbols, trace imports, or locate usages</td></tr>
+            </tbody>
+          </table>
+
+          <h3>The Permission Model</h3>
+          <p>By default, Copilot asks for confirmation before each tool use. This is safe but slow — especially for multi-step tasks where the agent needs dozens of tool calls. The three execution modes control how permissions flow:</p>
+          <table>
+            <thead>
+              <tr><th>Mode</th><th>Behavior</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Interactive</strong> (default)</td><td>Asks permission for every tool call</td><td>Unfamiliar tasks, learning what Copilot does</td></tr>
+              <tr><td><strong>Plan</strong> (<kbd>Shift+Tab</kbd>)</td><td>Agent plans but doesn't execute until you approve</td><td>Complex changes where you want to review the approach first</td></tr>
+              <tr><td><strong>Autopilot</strong> (<kbd>Shift+Tab</kbd> ×2)</td><td>Agent executes freely — no confirmations</td><td>Trusted tasks, scripted pipelines, bulk operations</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--warning">
+            <span class="callout__type">Key Insight</span>
+            <p><strong>Denying tool access doesn't make Copilot safer — it makes it less useful.</strong> If you block <code>shell</code>, the agent can write code but can't verify it compiles. If you block <code>view</code>, it can't read your existing code and will hallucinate file structures. Grant the tools the task requires, and use <strong>plan mode</strong> if you want oversight without sacrificing capability.</p>
+          </div>
+
+          <h3>Fine-Grained Control</h3>
+          <p>For cases where you want selective permissions, use startup flags to pre-approve or deny specific tools:</p>
+          <div class="code-block" data-lang="bash">
+            <div class="code-block__header">
+              <span class="code-block__lang">bash</span>
+              <button class="code-block__copy" aria-label="Copy to clipboard">
+                <svg class="icon icon--copy" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"/>
+                </svg>
+                <svg class="icon icon--check icon--hidden" aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/>
+                </svg>
+                <span class="code-block__copy-label">Copy code</span>
+              </button>
+            </div>
+            <pre class="code-block__pre"><code class="language-bash"># Allow all tools — fully autonomous
+copilot --allow-all-tools -p "refactor the auth module"
+
+# Allow everything (tools + paths + URLs)
+copilot --yolo -p "set up the CI pipeline"
+
+# Pre-approve a specific tool pattern
+copilot --allow-tool='shell(npm test)' -p "fix the failing tests"
+
+# Block write access — read-only audit
+copilot --deny-tool='write' -p "review src/ for security issues"</code></pre>
+          </div>
+
+          <p>For custom agents, use the <code>tools:</code> field in the agent's YAML frontmatter to permanently restrict what an agent can do — regardless of session-level permissions. An agent with only <code>[view, search]</code> can never modify files, even in autopilot mode.</p>
+        </section>
+
         <section id="cli-environment" class="content-section">
           <h2 class="section-heading">Environment &amp; Configuration</h2>
           <p>Copilot CLI adapts to your project through instruction files, model selection, and intelligent context management. These features work automatically but are highly configurable.</p>
