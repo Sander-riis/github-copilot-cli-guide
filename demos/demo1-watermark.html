@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo 1 — Ghost Watermark</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { background: #0a0e14; color: #e2e8f0; font-family: "SF Pro Display", -apple-system, system-ui, sans-serif; min-height: 200vh; }
+  .badge { position: fixed; top: 20px; left: 20px; background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); color: #3fb950; padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 100; backdrop-filter: blur(8px); }
+  .hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: #7b8794; font-size: 12px; z-index: 100; text-align: center; }
+  .content { max-width: 700px; margin: 80px auto; padding: 0 24px; position: relative; }
+  .content h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; border-bottom: 1px solid #262d3a; padding-bottom: 10px; }
+  .content p { line-height: 1.65; color: #7b8794; margin-bottom: 14px; }
+  code { background: #1e2430; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #e2e8f0; }
+
+  /* THE INTEGRATION: ghost watermark behind content */
+  .content::after {
+    content: '';
+    position: absolute;
+    bottom: 40px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    background: url('../Icon.png') center/contain no-repeat;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+    filter: grayscale(0.5);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .content:hover::after {
+    opacity: 0.06;
+    transform: scale(1.05);
+    filter: grayscale(0);
+  }
+</style>
+</head>
+<body>
+  <div class="badge">1 / 5 — Ghost Watermark</div>
+  <div class="content">
+    <h2>CLI Overview</h2>
+    <p>GitHub Copilot CLI runs as a terminal-native AI assistant. It reads your codebase, executes commands, and makes changes — all through natural language.</p>
+    <p>The agent operates in your working directory with access to tools like <code>grep</code>, <code>view</code>, <code>edit</code>, and <code>bash</code>.</p>
+    <h2>Environment & Configuration</h2>
+    <p>Configuration lives in <code>.github/copilot-instructions.md</code> at the repository root. This file provides project-specific context that persists across sessions.</p>
+    <p>Custom instructions shape how the agent approaches your codebase — coding style, preferred tools, testing patterns, and architecture conventions.</p>
+    <h2>Best Practices</h2>
+    <p>Start broad, then narrow. Give the agent context about what you're trying to achieve before diving into specific file changes.</p>
+    <p>Use slash commands like <code>/help</code> and <code>/clear</code> to manage your session.</p>
+  </div>
+  <div class="hint">Hover over the content area — the watermark icon brightens and scales up</div>
+</body>
+</html>

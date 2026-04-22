@@ -1133,6 +1133,8 @@ copilot --resume</code></pre>
           </details>
         </section>
 
+        <div class="icon-divider"><img class="icon-divider__img" src="Icon.png" alt="" /></div>
+
         <section id="cli-tools" class="content-section">
           <h2 class="section-heading">Tool Access &amp; Permissions</h2>
           <p>The CLI agent's effectiveness depends entirely on which tools it can use. Without tool access, Copilot can only suggest — it cannot read your code, run commands, or make changes. Every meaningful action flows through the tool permission system.</p>
@@ -1760,6 +1762,8 @@ style violations.
             </div>
           </details>
         </section>
+
+        <div class="icon-divider"><img class="icon-divider__img" src="Icon.png" alt="" /></div>
 
         <section id="agents-reference" class="content-section">
           <h2 class="section-heading">Agents Reference</h2>
@@ -2969,7 +2973,7 @@ function initSearch() {
     activeIdx = -1;
 
     if (matches.length === 0) {
-      results.innerHTML = '<div class="search__empty">No results found</div>';
+      results.innerHTML = '<div class="search__empty"><img class="search__empty-icon" src="Icon.png" alt="" />No results found</div>';
     } else {
       results.innerHTML = matches.map((m, i) => {
         const highlighted = highlightMatch(m.text, q);
@@ -3076,6 +3080,29 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initCopyButtons();
   initSearch();
+
+  /* 5. Dismiss load splash */
+  const splash = document.getElementById('load-splash');
+  if (splash) {
+    setTimeout(() => {
+      splash.classList.add('load-splash--hidden');
+      setTimeout(() => splash.remove(), 600);
+    }, 600);
+  }
+
+  /* 3. Scroll progress indicator */
+  const prog = document.getElementById('scroll-progress');
+  if (prog) {
+    const fill = prog.querySelector('.scroll-progress__ring-fill');
+    const circ = 119.38;
+    prog.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = h > 0 ? Math.min(window.scrollY / h, 1) : 0;
+      fill.style.strokeDashoffset = circ * (1 - pct);
+      prog.classList.toggle('scroll-progress--visible', window.scrollY > 200);
+    }, { passive: true });
+  }
 });
   </script>
 

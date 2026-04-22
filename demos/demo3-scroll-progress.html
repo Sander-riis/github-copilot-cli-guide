@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo 3 — Scroll Progress</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { background: #0a0e14; color: #e2e8f0; font-family: "SF Pro Display", -apple-system, system-ui, sans-serif; min-height: 300vh; }
+  .badge { position: fixed; top: 20px; left: 20px; background: rgba(227,179,65,0.1); border: 1px solid rgba(227,179,65,0.3); color: #e3b341; padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 100; backdrop-filter: blur(8px); }
+  .hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: #7b8794; font-size: 12px; z-index: 100; text-align: center; }
+  .content { max-width: 700px; margin: 60px auto; padding: 0 24px; }
+  .content h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; border-bottom: 1px solid #262d3a; padding-bottom: 10px; margin-top: 48px; }
+  .content h2:first-child { margin-top: 0; }
+  .content p { line-height: 1.65; color: #7b8794; margin-bottom: 14px; }
+
+  /* THE INTEGRATION: scroll progress ring with icon */
+  .scroll-progress {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 52px;
+    height: 52px;
+    z-index: 50;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.4s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+  }
+  .scroll-progress--visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .scroll-progress:hover {
+    transform: scale(1.15);
+  }
+  .scroll-progress__ring {
+    position: absolute;
+    inset: 0;
+  }
+  .scroll-progress__ring circle {
+    fill: none;
+    stroke-width: 2.5;
+  }
+  .ring-bg { stroke: #262d3a; }
+  .ring-fill {
+    stroke: #3fb950;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 0.12s ease-out;
+    filter: drop-shadow(0 0 6px rgba(63,185,80,0.4));
+  }
+  .scroll-progress__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    transition: transform 0.2s;
+  }
+  .scroll-progress:hover .scroll-progress__icon {
+    transform: translate(-50%, -50%) rotate(15deg);
+  }
+</style>
+</head>
+<body>
+  <div class="badge">3 / 5 — Scroll Progress</div>
+  <div class="content">
+    <h2>CLI Overview</h2>
+    <p>GitHub Copilot CLI runs as a terminal-native AI assistant. It reads your codebase, executes commands, and makes changes — all through natural language.</p>
+    <p>The agent operates in your working directory with access to tools. Every action goes through the permission system.</p>
+    <h2>Tool Access</h2>
+    <p>Four core tools power the agent: file system (view, edit, create, glob, grep), shell execution (bash/powershell), sub-agents (task delegation), and web fetch.</p>
+    <p>Permission modes control what Copilot can do without asking: suggest (read-only), auto-edit (file changes without confirmation), and yolo (full autonomy).</p>
+    <h2>Environment & Config</h2>
+    <p>Configuration lives in <code style="background:#1e2430;padding:2px 6px;border-radius:4px;font-size:13px;color:#e2e8f0">.github/copilot-instructions.md</code>. Custom instructions shape coding style, tools, and architecture preferences.</p>
+    <h2>Best Practices</h2>
+    <p>Start broad, then narrow. Give context about goals before specific changes. Use slash commands to manage sessions.</p>
+    <h2>Agents</h2>
+    <p>Five built-in agents handle exploration, testing, code review, general tasks, and plan validation. Custom agents extend this with domain knowledge.</p>
+    <h2>Skills</h2>
+    <p>Skills teach domain knowledge. They augment the main agent rather than running autonomously. Trigger by keyword or explicit invocation.</p>
+    <h2>MCP Servers</h2>
+    <p>Model Context Protocol servers connect Copilot to external services — GitHub APIs, databases, web fetching, and custom integrations.</p>
+  </div>
+
+  <div class="scroll-progress" id="sp">
+    <svg class="scroll-progress__ring" viewBox="0 0 52 52">
+      <circle class="ring-bg" cx="26" cy="26" r="22" />
+      <circle class="ring-fill" cx="26" cy="26" r="22" stroke-dasharray="138.23" stroke-dashoffset="138.23" />
+    </svg>
+    <img class="scroll-progress__icon" src="../Icon.png" alt="" />
+  </div>
+
+  <div class="hint">Scroll down — the ring fills with progress. Click to jump to top.</div>
+
+  <script>
+    const sp = document.getElementById('sp');
+    const fill = sp.querySelector('.ring-fill');
+    const circ = 138.23;
+    sp.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = h > 0 ? Math.min(window.scrollY / h, 1) : 0;
+      fill.style.strokeDashoffset = circ * (1 - pct);
+      sp.classList.toggle('scroll-progress--visible', window.scrollY > 100);
+    }, { passive: true });
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo 4 — Empty Search State</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { background: #0a0e14; color: #e2e8f0; font-family: "SF Pro Display", -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 80px; }
+  .badge { position: fixed; top: 20px; left: 20px; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); color: #f85149; padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 100; backdrop-filter: blur(8px); }
+  .hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: #7b8794; font-size: 12px; z-index: 100; text-align: center; }
+
+  /* Search bar */
+  .search-box {
+    position: relative;
+    width: 340px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 10px 14px 10px 36px;
+    background: #12161e;
+    border: 1px solid #262d3a;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-box input:focus {
+    border-color: #3fb950;
+    box-shadow: 0 0 0 3px rgba(63,185,80,0.15);
+  }
+  .search-box svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: #7b8794;
+  }
+
+  /* Results dropdown */
+  .results {
+    margin-top: 4px;
+    background: #12161e;
+    border: 1px solid #262d3a;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    display: none;
+  }
+  .results--open { display: block; }
+  .result-item {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #e2e8f0;
+    border-bottom: 1px solid #1e2430;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .result-item:hover { background: rgba(63,185,80,0.08); }
+  .result-item:last-child { border-bottom: none; }
+  .result-badge {
+    display: inline-block;
+    background: rgba(63,185,80,0.12);
+    color: #3fb950;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: 8px;
+    font-weight: 600;
+  }
+
+  /* THE INTEGRATION: bouncing icon in empty state */
+  .empty-state {
+    padding: 24px 14px;
+    text-align: center;
+    color: #7b8794;
+    font-size: 13px;
+  }
+  .empty-state__icon {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 12px;
+    animation: emptyBounce 2s ease-in-out infinite;
+    opacity: 0.45;
+    filter: grayscale(0.5);
+  }
+  @keyframes emptyBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25%      { transform: translateY(-8px) rotate(-8deg); }
+    75%      { transform: translateY(-4px) rotate(8deg); }
+  }
+</style>
+</head>
+<body>
+  <div class="badge">4 / 5 — Empty Search State</div>
+
+  <div class="search-box">
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>
+    <input id="search" type="text" placeholder="Search guide…" autocomplete="off" />
+    <div class="results" id="results"></div>
+  </div>
+
+  <div class="hint">Type something with no matches (e.g. "xyzzy") to see the bouncing icon</div>
+
+  <script>
+    const items = [
+      { title: 'CLI Overview', tab: 'CLI Intro' },
+      { title: 'Tool Access & Permissions', tab: 'CLI Intro' },
+      { title: 'Agents Overview', tab: 'Agents' },
+      { title: 'Agents Reference', tab: 'Agents' },
+      { title: 'Skills Overview', tab: 'Skills' },
+      { title: 'MCP Servers', tab: 'MCP' },
+      { title: '/fleet — orchestrate agents', tab: 'CLI Intro' },
+      { title: '/research — deep investigation', tab: 'Agents' },
+    ];
+
+    const input = document.getElementById('search');
+    const results = document.getElementById('results');
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) { results.classList.remove('results--open'); return; }
+
+      const matches = items.filter(i => i.title.toLowerCase().includes(q));
+      results.classList.add('results--open');
+
+      if (matches.length === 0) {
+        results.innerHTML = `
+          <div class="empty-state">
+            <img class="empty-state__icon" src="../Icon.png" alt="" />
+            No results for "<strong style="color:#e2e8f0">${q}</strong>"
+          </div>`;
+      } else {
+        results.innerHTML = matches.map(m =>
+          `<div class="result-item">${m.title}<span class="result-badge">${m.tab}</span></div>`
+        ).join('');
+      }
+    });
+  </script>
+</body>
+</html>
