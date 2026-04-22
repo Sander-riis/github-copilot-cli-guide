@@ -786,6 +786,7 @@
       position: fixed;
       inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: var(--color-bg-canvas);
@@ -798,10 +799,22 @@
       pointer-events: none;
     }
     .load-splash__icon {
-      width: 64px;
-      height: 64px;
+      width: 120px;
+      height: 120px;
       animation: splashPulse 1.2s ease-in-out infinite alternate;
-      filter: drop-shadow(0 0 24px rgba(63,185,80,0.3));
+      filter: drop-shadow(0 0 32px rgba(63,185,80,0.3));
+    }
+    .load-splash__text {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      letter-spacing: 0.05em;
+      opacity: 0;
+      animation: splashTextIn 0.5s ease 0.4s forwards;
+    }
+    @keyframes splashTextIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     [data-theme="light"] .load-splash {
       background: #ffffff;
@@ -882,6 +895,7 @@
   <!-- 5. PAGE LOAD SPLASH -->
   <div class="load-splash" id="load-splash">
     <img class="load-splash__icon" src="Icon.png" alt="" />
+    <span class="load-splash__text">Loading guide…</span>
   </div>
 
   <!-- HEADER: brand + tab nav -->
